@@ -1,4 +1,3 @@
-
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 import colors from 'vuetify/lib/util/colors'
@@ -10,13 +9,17 @@ const theme = {
     accent: '#9C27b0',
     info: '#00CAE3',
     success : colors.green.darken1,
-    danger : colors.red.darken2
+    danger : colors.red.darken2,
 }
 export default new Vuetify({
     theme: {
-        themes : {
-            light : theme
+            themes:{
+                light:{
+                    background: colors.yellow.accent4,
+                },
+                dark: {
+                    background: colors.yellow,
+                },
+            },
         }
-
-    }
 });
