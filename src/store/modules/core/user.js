@@ -34,6 +34,17 @@ export default {
                     console.error(error)
                     return null
                 })
+        },
+
+        registerUser: async function (context, params) {
+            return await axios.post(`/rest-auth/registration/`, params)
+                .then((response) => {
+                    return response.data
+                })
+                .catch((error) => {
+                    console.error(error)
+                    return null
+                })
         }
     },
     modules: {}

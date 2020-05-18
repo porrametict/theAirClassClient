@@ -41,9 +41,9 @@
 
             <div class="mt-5 text-center text-md-end">
                 <p>
-                    <span>สมัครสมาชิกใหม่ ?</span>
-                    <a> ลงทะเบียน </a>
-                    <span>ที่นี่</span>
+                    <span>สมัครสมาชิกใหม่ ? </span>
+                    <router-link to="/register" >ลงทะเบียน</router-link>
+                    <span> ที่นี่</span>
                 </p>
             </div>
 
