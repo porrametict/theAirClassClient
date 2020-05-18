@@ -21,6 +21,7 @@
                         :type="show_password ? 'text' : 'password'"
                         @click:append="show_password = !show_password"
                         :rules="[rules.required]"
+                        @keypress.13="getUserToken"
                 >
                 </v-text-field>
                 <div class=" d-flex align-center flex-column flex-md-row justify-space-between mb-8">
@@ -42,7 +43,7 @@
             <div class="mt-5 text-center text-md-end">
                 <p>
                     <span>สมัครสมาชิกใหม่ ? </span>
-                    <router-link to="/register" >ลงทะเบียน</router-link>
+                    <router-link to="/register">ลงทะเบียน</router-link>
                     <span> ที่นี่</span>
                 </p>
             </div>
