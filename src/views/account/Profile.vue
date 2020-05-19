@@ -1,12 +1,16 @@
 <template>
     <div>
-            Student Profile
+        <h1>Student Profile</h1>
     </div>
 </template>
 
 <script>
     export default {
-        name: "Profile"
+        name: "Profile",
+        data: () => ({
+
+        }),
+
     }
 </script>
 
