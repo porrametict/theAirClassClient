@@ -17,7 +17,7 @@
                                             >
                                                 <template v-slot:append>
                                                     <v-fade-transition leave-absolute>
-                                                        <v-icon color="yellow">mdi-magnify</v-icon>
+                                                        <v-icon color="#FFD600">mdi-magnify</v-icon>
                                                     </v-fade-transition>
                                                 </template>
                                                 <v-icon color="blank">mdi-bell</v-icon>
@@ -47,7 +47,7 @@
                                                 </v-hover>
                                                 <div class="font-weight-medium mt-12 text-center subtitle-1" >
                                                     <div class="my-6">
-                                                        <v-btn large color="primary">CREATE CLASS</v-btn>
+                                                        <v-btn large color="#FFD600">CREATE CLASS</v-btn>
                                                     </div>
                                                 </div>
                                             </v-col>
@@ -73,7 +73,7 @@
                                                 </v-hover>
                                                 <div class="font-weight-medium mt-12 text-center subtitle-1" >
                                                     <div class="my-6">
-                                                        <v-btn large color="primary">JOIN NEW CLASS</v-btn>
+                                                        <v-btn large color="#FFD600">JOIN NEW CLASS</v-btn>
                                                     </div>
                                                 </div>
                                             </v-col>
@@ -108,7 +108,7 @@
                                                     </v-hover>
                                                     <div class="font-weight-medium mt-12 text-center subtitle-1" >
                                                         <div class="my-6">
-                                                            <v-btn large color="primary">JOIN CLASSROOM</v-btn>
+                                                            <v-btn large color="#FFD600">JOIN CLASSROOM</v-btn>
                                                         </div>
                                                     </div>
                                                 </v-col>
@@ -133,17 +133,14 @@
                                                     </v-hover>
                                                     <div class="font-weight-medium mt-12 text-center subtitle-1" >
                                                         <div class="my-6">
-                                                            <v-btn large color="primary">JOIN CLASSROOM</v-btn>
+                                                            <v-btn large color="#FFD600">JOIN CLASSROOM</v-btn>
                                                         </div>
                                                     </div>
                                                 </v-col>
-
                                             </v-row>
-
                                         </v-col>
                                     </v-container>
                                 </v-row>
-
                             </v-container>
                         </v-col>
                     </v-row>
@@ -176,6 +173,7 @@
 <style scoped>
     .rounded{
         border-radius: 30px;
+        width: 1500px;
     }
 
 </style>
