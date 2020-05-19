@@ -22,7 +22,6 @@
                     </v-list>
                 </v-navigation-drawer>
             </nav>
-
             <v-content>
                 <router-view></router-view>
             </v-content>
@@ -32,7 +31,7 @@
 
 <script>
     export default {
-        name: "MainTemplate",
+        name: "Navbar",
         data :() =>({
             drawer: true,
             links: [
