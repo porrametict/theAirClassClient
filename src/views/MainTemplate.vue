@@ -1,8 +1,8 @@
 <template>
     <v-app>
-        Main
         <Navbar />
         <v-content>
+            Main
             <router-view></router-view>
         </v-content>
     </v-app>
@@ -12,6 +12,9 @@
     import Navbar from "../components/Navbar";
     export default {
         name: "MainTemplate",
+        created () {
+            alert("man")
+        },
         components: {
             Navbar
         },
