@@ -1,17 +1,11 @@
 <template>
-    <div>
-        <!--        menu-->
-        <div>
-
-        </div>
-
-        <!--        content-->
-        <div v-if="user">
-            {{this.user}}
+    <v-app>
+        <Navbar />
+        <v-content>
+            Main
             <router-view></router-view>
-        </div>
-
-    </div>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
@@ -48,5 +42,8 @@
 </script>
 
 <style scoped>
+    .border{
+        border-left: 4px solid #2c3e50;
+    }
 
 </style>
