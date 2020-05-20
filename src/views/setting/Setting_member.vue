@@ -11,8 +11,6 @@
                     fixed-tabs
                     background-color="#FFFFFF"
 
-
-
             >
 
                 <v-tab class="black--text"

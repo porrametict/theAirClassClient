@@ -42,19 +42,19 @@
         <v-btn
                 color="#FFD600"
                 type="button"
-                @click="ClassroomDetail "
+                @click="ClassroomSetting"
         >
             view
         </v-btn>
-                <v-btn
-                        class="ma-2"
-                        tile outlined color="#C4C4C4"
-                        @click="gotoEditClassroom"
+                <!--<v-btn-->
+                        <!--class="ma-2"-->
+                        <!--tile outlined color="#C4C4C4"-->
+                        <!--@click="gotoEditClassroom"-->
 
 
-                >
-                    <v-icon left>mdi-pencil</v-icon> Edit
-                </v-btn>
+                <!--&gt;-->
+                    <!--<v-icon left>mdi-pencil</v-icon> Edit-->
+                <!--</v-btn>-->
             </div>
 
         </v-col>
@@ -72,12 +72,10 @@
 
         }),
         methods : {
-            async ClassroomDetail(){
-                this.$router.push('classroom-detail')
+            async ClassroomSetting(){
+                this.$router.push('setting-member')
             },
-            async gotoEditClassroom(){
-                this.$router.push('classroom-edit')
-            }
+
         }
     }
 </script>

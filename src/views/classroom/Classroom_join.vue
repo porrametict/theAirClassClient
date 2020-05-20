@@ -1,15 +1,13 @@
 <template>
     <div>
-        <v-container>
-        <v-card>
+        <v-container class=" justify-center d-outline-flex  pa-10 ">
+        <v-card
+                class="pa-10 "
+        >
 
-
-
-
-            <v-col cols="12" sm="6" md="4" >
+            <v-col cols="12" md="4" class="mx-auto"  >
         <h1 >Join Classroom</h1>
         <br>
-
 
         <v-form >
 
@@ -22,6 +20,7 @@
                 ></v-text-field>
 
             <v-spacer></v-spacer>
+
 
         <div class="mb-6">
 
