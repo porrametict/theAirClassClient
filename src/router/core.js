@@ -1,4 +1,5 @@
 import Login from "../views/Login";
+import ProfileSettings from "../views/account/ProfileSettings";
 
 export default {
     path: '/core',
@@ -9,6 +10,11 @@ export default {
             path: "/home",
             name: "Home",
             component: () => import('../views/Home')
-        }
+        },
+        {
+            path: "/profileSettings",
+            name: "ProfileSettings",
+            component: ProfileSettings
+        },
     ]
 }

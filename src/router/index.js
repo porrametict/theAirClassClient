@@ -8,16 +8,21 @@ import MainTemplate from "../views/MainTemplate";
 Vue.use(VueRouter)
 
 const routes = [
+    // {
+    //     path: "/home",
+    //     name: "Home",
+    //     component: () => import('../views/Home')
+    // },
     {
         path: "/mainTemplate",
         name: "MainTemplate",
         component: MainTemplate
     },
-    {
-        path: "/profileSettings",
-        name: "ProfileSettings",
-        component: ProfileSettings
-    },
+    // {
+    //     path: "/profileSettings",
+    //     name: "ProfileSettings",
+    //     component: ProfileSettings
+    // },
     {
         path: '/',
         name: 'Login',
