@@ -1,72 +1,73 @@
 <template>
-    <v-container fluid class="fill-height ma-0 pa-0">
-        <div class="flex-grow-1 fill-height primary  justify-center align-center d-none d-md-flex">
-            <p class="display-2">IMAGE</p>
-        </div>
-        <div class="d-flex flex-column flex-grow-1 pa-5">
-            <h1 class="display-3 text-center my-5">Register</h1>
-            <div>
-                <v-text-field
-                        label="Username"
-                        v-model="form.username"
-                        :rules="[rules.required]"
-                >
-                </v-text-field>
-                <v-text-field
-                        label="Firstname"
-                        v-model="form.first_name"
-                >
-                </v-text-field>
-                <v-text-field
-                        label="Lastname"
-                        v-model="form.last_name"
-                >
-                </v-text-field>
-                <v-text-field
-                        label="Email"
-                        v-model="form.email"
-                        type="email"
-                        :rules="[rules.required]"
-                >
-                </v-text-field>
-                <v-text-field
-                        label="Password"
-                        v-model="form.password1"
-                        :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
-                        :type="show_password ? 'text' : 'password'"
-                        @click:append="show_password = !show_password"
-                        :rules="[rules.required,rules.min]"
-                        hint="At least 8 characters"
-                >
-                </v-text-field>
-                <v-text-field
-                        label="Password Confirmed"
-                        v-model="form.password2"
-                        :append-icon="show_password2 ? 'mdi-eye' : 'mdi-eye-off'"
-                        :type="show_password2 ? 'text' : 'password'"
-                        @click:append="show_password2 = !show_password2"
-                        :rules="[rules.required,rules.min,rulePasswordMatch]"
-                >
-                </v-text-field>
-                <div class="text-center ">
-                    <v-btn
-                            color="primary"
-                            class="black--text"
-                            large
-                            @click="registerUser"
+    <v-content>
+        <v-container fluid class="fill-height ma-0 pa-0">
+            <div class="flex-grow-1 fill-height primary  justify-center align-center d-none d-md-flex">
+                <p class="display-2">IMAGE</p>
+            </div>
+            <div class="d-flex flex-column flex-grow-1 pa-5">
+                <h1 class="display-3 text-center my-5">Register</h1>
+                <div>
+                    <v-text-field
+                            label="Username"
+                            v-model="form.username"
+                            :rules="[rules.required]"
                     >
-                        Register
-                    </v-btn>
+                    </v-text-field>
+                    <v-text-field
+                            label="Firstname"
+                            v-model="form.first_name"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                            label="Lastname"
+                            v-model="form.last_name"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                            label="Email"
+                            v-model="form.email"
+                            type="email"
+                            :rules="[rules.required]"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                            label="Password"
+                            v-model="form.password1"
+                            :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="show_password ? 'text' : 'password'"
+                            @click:append="show_password = !show_password"
+                            :rules="[rules.required,rules.min]"
+                            hint="At least 8 characters"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                            label="Password Confirmed"
+                            v-model="form.password2"
+                            :append-icon="show_password2 ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="show_password2 ? 'text' : 'password'"
+                            @click:append="show_password2 = !show_password2"
+                            :rules="[rules.required,rules.min,rulePasswordMatch]"
+                    >
+                    </v-text-field>
+                    <div class="text-center ">
+                        <v-btn
+                                color="primary"
+                                class="black--text"
+                                large
+                                @click="registerUser"
+                        >
+                            Register
+                        </v-btn>
+                    </div>
                 </div>
             </div>
-        </div>
-
-    </v-container>
+        </v-container>
+    </v-content>
 </template>
 
 <script>
     export default {
-        name: 'Login',
+        name: 'Register',
         components: {},
         data: () => ({
             show_password: false,

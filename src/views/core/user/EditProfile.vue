@@ -1,5 +1,5 @@
 <template>
-    <v-app :style="{background: $vuetify.theme.themes.light.background}">
+    <v-app >
         <v-container >
             <v-layout row class="ma-4" >
                 <v-app style="background-color: white" class="rounded" >
@@ -168,7 +168,7 @@
 
 <script>
     export default {
-        name: "ProfileSettings",
+        name: "UserEditProfile",
         components: {
 
         },

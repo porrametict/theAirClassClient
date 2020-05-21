@@ -1,10 +1,12 @@
 <template>
-    
+    <div>
+        Score Index
+    </div>
 </template>
 
 <script>
     export default {
-        name: "create"
+        name: "ScoreIndex"
     }
 </script>
 

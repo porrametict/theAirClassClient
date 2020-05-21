@@ -10,7 +10,11 @@ export default {
     },
     actions: {
         getUserToken: async function (context, params) {
-            localStorage.clear()  // clear old access_token
+
+            // clear old access_token
+            delete axios.defaults.headers.common["Authorization"];
+            localStorage.clear()
+
             let data = await axios.post(`/rest-auth/login/`, params)
                 .then((response) => {
                     // console.log("response", response.data)

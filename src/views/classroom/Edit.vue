@@ -167,7 +167,7 @@
 
 <script>
     export default {
-        name: "Classroom_edit",
+        name: "ClassroomEdit",
         data: () => ({
             show: false,
         })

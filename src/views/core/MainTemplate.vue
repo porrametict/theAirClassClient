@@ -1,18 +1,25 @@
 <template>
-    <v-app>
-        <Navbar />
-        <v-content>
-            Main
-            <router-view></router-view>
+    <div class="d-flex fill-height" >
+        <Navbar/>
+        <v-content  class="fill-height" :style="{background: $vuetify.theme.themes.light.background}">
+            <v-layout class=" pa-6 fill-height">
+                <v-container class="white rounded" >
+                    <router-view/>
+                </v-container>
+            </v-layout>
         </v-content>
-    </v-app>
+    </div>
 </template>
 
 <script>
+    import Navbar from "../../components/Navbar";
     import {mapState} from 'vuex'
 
     export default {
         name: "MainTemplate",
+        components: {
+            Navbar
+        },
         mounted() {
             this.checkHasUser()
         },
@@ -42,8 +49,8 @@
 </script>
 
 <style scoped>
-    .border{
-        border-left: 4px solid #2c3e50;
+    .rounded{
+        border-radius: 2em;
     }
 
 </style>
