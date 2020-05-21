@@ -50,7 +50,11 @@ export default {
                     console.error(error)
                     return null
                 })
-        }
+        },
+        logout(context) {
+            delete axios.defaults.headers.common["Authorization"];
+            localStorage.clear()
+        },
     },
     modules: {}
 }
