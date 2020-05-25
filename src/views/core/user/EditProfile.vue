@@ -1,205 +1,187 @@
 <template>
-    <v-app >
-        <v-container >
-            <v-layout row class="ma-4" >
-                <v-app style="background-color: white" class="rounded" >
-                    <v-row >
-                        <v-col cols="12" md="8">
-                            <v-container >
+    <div>
+        <div class="ma-8">
+            <div class="d-flex justify-space-around  flex-wrap" >
+                <!-- image-->
+                <div>
+                    <div class="ma-2" >
+                            <v-card-text class="d-flex flex-column fill-height">
+                                <div class="text-center flex-grow-1">
+                                    <img src="mdi-image" height="200" width="200">
+                                </div>
+                                <div class="text-center">
+                                    <div class="ma-2" ></div>
+                                    <v-btn
+                                            rounded
+                                            color="primary"
+                                            class="black--text"
+                                            @click.stop="dialog = true"
+                                    >Edit
+                                    </v-btn>
                                     <div>
-                                        <v-container class="my-9">
-                                            <v-card flat class="pa-3">
-                                                <v-layout row wrap  >
-                                                    <v-flex xs12 md6>
-                                                        <!--image-->
-                                                        <v-col
-                                                                cols="12"
-                                                                md="20"
-                                                        >
-                                                            <v-hover
-                                                                    v-slot:default="{ hover }"
-                                                                    open-delay="200"
-                                                            >
-                                                                <v-card
-                                                                        :elevation="hover ? 16 : 2"
-                                                                        class="mx-auto"
-                                                                        height="250"
-                                                                        max-width="250"
-                                                                >
-                                                                    <!--edit-->
-                                                                    <v-row align="end" justify="center" >
-                                                                        <v-btn >
-                                                                            <v-icon>mdi-camera</v-icon>
-                                                                        </v-btn>
-                                                                    </v-row>
-
-                                                                </v-card>
-                                                            </v-hover>
-                                                        </v-col>
-                                                    </v-flex>
-                                                    <v-flex xs12 md6>
-                                                        <v-row>
-                                                            <v-col cols="12" md="20">
-                                                                <v-text-field
-                                                                        value="John2"
-                                                                        label="Username"
-                                                                        outlined
-                                                                >
-                                                                </v-text-field>
-                                                            </v-col>
-                                                        </v-row>
-                                                        <v-col cols="12" md="20">
-                                                            <v-row>
-                                                                <v-text-field
-                                                                        value="John"
-                                                                        label="Firstname"
-                                                                        outlined
-                                                                ></v-text-field>
-                                                            </v-row>
-                                                        </v-col>
-                                                        <v-row>
-                                                            <v-col cols="12" md="20">
-                                                                <v-text-field
-                                                                        value="John2"
-                                                                        label="Username"
-                                                                        outlined
-                                                                >
-                                                                </v-text-field>
-                                                            </v-col>
-                                                        </v-row>
-                                                        <v-row>
-                                                            <v-col cols="12" md="20" >
-                                                                <v-text-field
-                                                                        value="John2"
-                                                                        label="Username"
-                                                                        outlined
-                                                                >
-                                                                </v-text-field>
-                                                            </v-col>
-                                                        </v-row>
-                                                        <v-row>
-                                                            <v-col cols="12" md="20">
-                                                                <v-text-field
-                                                                        value="Doe"
-                                                                        label="lastname"
-                                                                        outlined
-                                                                >
-                                                                </v-text-field>
-                                                            </v-col>
-                                                        </v-row>
-                                                        <v-row>
-                                                            <v-col cols="12" md="20">
-                                                                <v-text-field
-                                                                        value="Johndoe@gmail.com"
-                                                                        label="E-mail"
-                                                                        outlined
-                                                                        readonly
-                                                                ></v-text-field>
-                                                            </v-col>
-                                                        </v-row>
-                                                        <v-row>
-                                                            <v-col cols="12" md="20">
-                                                                <v-text-field
-                                                                        v-model="password"
-                                                                        value="John Doe"
-                                                                        label="Password"
-                                                                        :type="show1 ? 'text' : 'password'"
-                                                                        append-icon="mdi-pencil"
-                                                                        readonly
-                                                                        outlined
-                                                                >
-                                                                </v-text-field>
-                                                                <v-dialog v-model="dialog" persistent max-width="600px" >
-                                                                    <template v-slot:activator="{ on }">
-                                                                        <v-btn color="primary" dark v-on="on">
-                                                                            <v-icon>mdi-pencil</v-icon>
-                                                                        </v-btn>
-                                                                    </template>
-                                                                    <v-card>
-                                                                        <v-card-title>
-                                                                            <span class="headline">New Password</span>
-                                                                        </v-card-title>
-                                                                        <v-card-text>
-                                                                            <v-container>
-                                                                                <v-row>
-                                                                                    <v-col cols="12">
-                                                                                        <v-text-field label="New Password*" type="password" required></v-text-field>
-                                                                                    </v-col>
-                                                                                    <v-col cols="12">
-                                                                                        <v-text-field label="Confirm Password*" type="password" required></v-text-field>
-                                                                                    </v-col>
-                                                                                </v-row>
-                                                                            </v-container>
-                                                                            <small>*indicates required field</small>
-                                                                        </v-card-text>
-                                                                        <v-card-actions>
-                                                                            <v-spacer></v-spacer>
-                                                                            <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                                                                            <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
-                                                                        </v-card-actions>
-                                                                    </v-card>
-                                                                </v-dialog>
-                                                            </v-col>
-                                                        </v-row>
-                                                    </v-flex>
-                                                </v-layout>
-                                                <v-layout row wrap >
-                                                    <v-row justify="end">
-                                                        <v-flex xs12 md4 >
-                                                            <v-btn class="ma-2" tile color="#FFD600" text.dark>SAVE</v-btn>
-                                                        </v-flex>
-                                                        <v-flex xs12 md4>
-                                                            <v-btn class="ma-2" tile color="red" text.dark>CANCEL</v-btn>
-                                                        </v-flex>
-                                                    </v-row>
-                                                </v-layout>
+                                        <v-dialog
+                                                v-model="dialog"
+                                                max-width="400"
+                                        >
+                                            <v-card>
+                                                <v-card-title class="headline">Edit Image</v-card-title>
+                                                <div class="d-flex justify-center">
+                                                    <input type="file" @change="onFileSelected" >
+                                                </div>
+                                                <v-card-actions>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn
+                                                            color="gray"
+                                                            text
+                                                            @click="dialog = false"
+                                                    >CANCEL
+                                                    </v-btn>
+                                                    <v-btn
+                                                            color="primary"
+                                                            text
+                                                            @click="onUpload"
+                                                    >Upload
+                                                    </v-btn>
+                                                </v-card-actions>
                                             </v-card>
-                                        </v-container>
+                                        </v-dialog>
                                     </div>
-                            </v-container>
-                        </v-col>
-                    </v-row>
-                </v-app>
-            </v-layout>
-        </v-container>
-    </v-app>
+                                </div>
+                            </v-card-text>
+                        </div>
+                </div>
+                <!--details-->
+                <div  class="ma-5">
+                    <div>
+                        <v-text-field
+                                value="John2"
+                                label="Username"
+                                outlined
+                        >
+                        </v-text-field>
+                    </div>
+                    <div>
+                        <v-text-field
+                                value="John"
+                                label="Firstname"
+                                outlined
+                        >
+                        </v-text-field>
+                    </div>
+                    <div>
+                        <v-text-field
+                                value="Doe"
+                                label="Lastname"
+                                outlined
+                        >
+                        </v-text-field>
+                    </div>
+                    <div>
+                        <v-text-field
+                                value="JohnDddd2@gmail.com"
+                                label="E-mail"
+                                readonly
+                                outlined
+                        >
+                        </v-text-field>
+                    </div>
+                    <div>
+                        <v-text-field
+                                v-model="password"
+                                value="12345678"
+                                label="Password"
+                                :type="show1 ? 'text' : 'password'"
+                                readonly
+                                outlined
+
+                        >
+                        </v-text-field>
+                        <div class=" text-center text-md-end">
+                            <p>
+                                <router-link to="/user/edit-password">Edit Password?</router-link>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--button-->
+        <div class="ma-5">
+            <div class="d-flex justify-space-around  flex-wrap">
+                <div class="text-center">
+                    <div class="ma-2" ></div>
+                    <v-btn
+                            rounded
+                            color="primary"
+                            class="black--text"
+                            @click.stop="dialog2 = true"
+                    >SAVE
+                    </v-btn>
+                    <div>
+                        <v-dialog
+                                v-model="dialog2"
+                                max-width="400"
+                        >
+                            <v-card>
+                                <v-card-title class="headline">Are you sure?</v-card-title>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="gray"
+                                            text
+                                            @click="dialog2 = false"
+                                    >NO
+                                    </v-btn>
+                                    <v-btn
+                                            color="primary"
+                                            text
+                                            @click="onUpload"
+                                    >YES
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </div>
+                </div>
+
+                <v-btn
+                        rounded
+                        color="gary"
+                        class="black--text"
+                        @click="$router.push({name : 'Profile'})"
+                >CANCEL
+                </v-btn>
+            </div>
+        </div>
+    </div>
 </template>
 
 
 <script>
     export default {
         name: "UserEditProfile",
-        components: {
-
-        },
-        computed: {
-            theme() {
-                return (this.$vuetify.theme.dark) ? 'dark' : 'light'
-            }
-        },
         data () {
             return {
-                rules2: [
-                    value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!',
-                ],
                 dialog: false,
+                dialog2: false,
+                dialog3: false,
+                selectedFile: null,
                 show1: false,
                 password: 'Password',
-                rules: {
-                    required: value => !!value || 'Required.',
-                    min: v => v.length >= 8 || 'Min 8 characters',
-                    emailMatch: () => ('The email and password you entered don\'t match'),
-                },
             }
         },
+        methods: {
+            onFileSelected(event) {
+                this.selectedFile = event.target.files[0]
+            },
+            onUpload(){
+
+
+            }
+        }
     }
 </script>
 
 <style scoped>
-    .rounded{
-        border-radius: 30px;
-        width: 1500px;
-
-    }
 
 </style>
