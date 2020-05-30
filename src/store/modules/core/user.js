@@ -62,8 +62,20 @@ export default {
                     console.error(error)
                     return null
                 })
-
         },
+        async uploadProfileImage(context, params) {
+            const fd = new FormData();
+            fd.append('image', params.image, params.image.name)
+            fd.append('user', params.user)
+
+            return await axios.post('/api/v1/core/user-profile/', fd)
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    console.error(error)
+                    return null
+                })
+        }
     },
     modules: {}
 }
