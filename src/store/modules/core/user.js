@@ -10,7 +10,6 @@ export default {
     },
     actions: {
         getUserToken: async function (context, params) {
-
             // clear old access_token
             delete axios.defaults.headers.common["Authorization"];
             localStorage.clear()
@@ -51,9 +50,19 @@ export default {
                     return null
                 })
         },
-        logout(context) {
-            delete axios.defaults.headers.common["Authorization"];
-            localStorage.clear()
+        async logout(context) {
+            return await axios.post(`/rest-auth/logout/`)
+                .then((response) => {
+                    // console.log("response", response.data)
+                    delete axios.defaults.headers.common["Authorization"];
+                    localStorage.clear()
+                    return response.data
+                })
+                .catch((error) => {
+                    console.error(error)
+                    return null
+                })
+
         },
     },
     modules: {}
