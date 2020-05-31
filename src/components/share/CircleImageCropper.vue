@@ -1,22 +1,59 @@
 <template>
     <div>
-        <div>
-            <Cropper
-                    ref="cropper"
-                    classname="upload-example-cropper"
-                    :src="image"
-                    :stencilComponent="$options.components.CircleStencil"
-            />
-            <div class="button-wrapper">
-			<span class="button" @click="$refs.file.click()">
-				<input type="file" ref="file" @change="uploadImage($event)" accept="image/*">
-				Upload image
-			</span>
-                <button @click="crop">
-                    Crop
-                </button>
-            </div>
-        </div>
+        <v-dialog v-model="dialog" persistent max-width="800" scrollable >
+            <template v-slot:activator="{ on }">
+                <v-btn icon
+                       color="black"
+                       dark
+                       v-on="on"
+                >
+                    <slot name="button_area">
+                        <v-icon>
+                            mdi-pencil
+                        </v-icon>
+                    </slot>
+                </v-btn>
+            </template>
+            <v-card>
+                <v-card-title class="d-flex justify-space-between align-baseline primary pa-2 px-4">
+                    <p class="pa-0 ma-0"> Edit Image</p>
+                    <v-btn icon class="pa-0 ">
+                        <v-icon @click="dialog = !dialog">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text style="min-height: 20em; max-height: 35em">
+
+                    <div class="d-flex align-center justify-center">
+                        <Cropper v-if="image"
+                                 class="ma-2"
+                                 ref="cropper"
+                                 classname="upload-example-cropper"
+                                 :src="image"
+                                 :stencilComponent="$options.components.CircleStencil"
+                        />
+                        <div v-else style="width: 25em ;height: 25em " class="d-flex align-center justify-center">
+                            <p class="grey--text display-1">
+                                No Image.
+                            <p/>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="file" ref="file" @change="uploadImage($event)" accept="image/*"
+                               style="display: none">
+                    </div>
+                </v-card-text>
+                <v-card-actions class="d-flex justify-space-around">
+                        <v-btn @click="$refs.file.click()" color="green" outlined>
+                            select image
+                        </v-btn>
+                        <v-btn @click="crop" color="primary" class="black--text">
+                            Update
+                        </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script>
@@ -24,9 +61,20 @@
 
     export default {
         name: "CircleImageCropper",
+        props: {
+            imageURL: {
+                type: String,
+                required: false,
+                default: null
+            }
+        },
+        mounted() {
+            this.image = this.imageURL
+        },
         data() {
             return {
-                image: null,
+                dialog: false,
+                image: null
             }
         },
         components: {
@@ -63,6 +111,7 @@
                 let imageBlob = this.dataURLToBlob(this.image)
                 let image = this.blobToFile(imageBlob, 'new_image.png')
                 this.$emit("getOutput", image)
+                this.dialog = false
             },
             dataURLToBlob: function (dataURL) {
                 let BASE64_MARKER = ';base64,';
@@ -89,32 +138,4 @@
     }
 </script>
 <style scoped>
-    .upload-example-cropper {
-        border: solid 1px #EEE;
-        height: 480px;
-        width: 480px;
-    }
-
-    .button-wrapper {
-        display: flex;
-        justify-content: center;
-        margin-top: 17px;
-    }
-
-    .button {
-        color: white;
-        font-size: 16px;
-        padding: 10px 20px;
-        background: #3fb37f;
-        cursor: pointer;
-        transition: background 0.5s;
-    }
-
-    .button:hover {
-        background: #38d890;
-    }
-
-    .button input {
-        display: none;
-    }
 </style>
