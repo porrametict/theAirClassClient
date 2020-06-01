@@ -1,5 +1,7 @@
 import score from "../classroom_modules/score";
 import member from "../classroom_modules/member";
+import assignments from "../classroom_modules/assignments";
+import questions from "../classroom_modules/questions";
 
 export default {
     path: '/classroom',
@@ -24,7 +26,11 @@ export default {
             component: () => import('../../views/classroom/Main'),
             children: [
                 score,
-                member
+                member,
+                questions,
+                assignments,
+
+
             ]
         },
     ]

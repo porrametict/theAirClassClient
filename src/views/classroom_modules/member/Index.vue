@@ -20,12 +20,6 @@
                                 ></v-text-field>
                             </v-col>
 
-                            <!--<v-btn-->
-
-                            <!--class="mb-7"-->
-                            <!--&gt;-->
-                            <!--<v-icon   large>mdi-magnify</v-icon>-->
-                            <!--</v-btn>-->
 
                             <v-spacer></v-spacer>
 
@@ -34,7 +28,11 @@
                                 <v-col cols="12" sm="3">
                                     <v-btn
                                             medium
-                                            small color="#FFD600"
+                                            small color="primary"
+                                            class="black--text"
+                                            filled
+                                            rounded
+                                            dense
 
 
                                     >
@@ -54,6 +52,7 @@
                     </v-col>
                 </v-row>
             </v-container>
+            <div>
 
             <v-card>
                 <v-card-title>
@@ -64,36 +63,103 @@
                         :headers="headers_owner"
                         :items="owner"
                         :search="search"
-                ></v-data-table>
+
+                >
+                    <template v-slot:item.setting="{ item }">
+
+
+                    </template>
+
+                    <template v-slot:item.manage="{ item }">
+                        <v-btn
+                                icon
+                                color="black"
+                                @click="setting(item)"
+                        >
+                            <v-icon>
+                                mdi-cog
+                            </v-icon>
+
+                        </v-btn>
+                        <v-btn
+                                icon
+                                color="black"
+                                @click="delete_owner(item)"
+
+                        >
+                            <v-icon>
+                                mdi-trash-can-outline
+                            </v-icon>
+                        </v-btn>
+                    </template>
+                </v-data-table>
 
 
             </v-card>
+
+                <br>
+
+                <div>
 
             <v-card>
                 <v-card-title>
                     Student
                 </v-card-title>
 
+
                 <v-data-table
                         :headers="headers_student"
                         :items="student"
                         :search="search"
+
+
                 >
+
+
+                    <template v-slot:item.view="{ item }">
+
+
+                    </template>
+
+
+                    <template v-slot:item.manage="{ item }" >
+
+                        <v-btn
+                                icon
+                                color="black"
+
+                                @click="view(item)"
+
+                        >
+                            <v-icon>
+                                mdi-cog
+                            </v-icon>
+
+                        </v-btn>
                     <v-btn
                             icon
-                            color="grey"
-                            class="white--text"
+                            color="black"
+
+                            @click="delete_student(item)"
 
                     >
-                        <v-icon>
-                            mdi-delete
+                        <v-icon >
+                            mdi-trash-can-outline
                         </v-icon>
                     </v-btn>
+
+
+                    </template>
+
+
+
 
                 </v-data-table>
 
 
             </v-card>
+                </div>
+            </div>
 
         </div>
 
@@ -114,11 +180,18 @@
                         sortable: false,
                         value: 'name',
                     },
-                    //     { text: 'Calories', value: 'calories' },
-                    //     { text: 'Fat (g)', value: 'fat' },
-                    //     { text: 'Carbs (g)', value: 'carbs' },
-                    //     { text: 'Protein (g)', value: 'protein' },
-                    //     { text: 'Iron (%)', value: 'iron' },
+                    {
+                        text : "Manage",
+                        align : 'center',
+                        value : "manage"
+                    },
+                    {
+
+                        // align : 'start',
+                        value : "setting"
+                    },
+
+
                 ],
                 headers_student: [
                     {
@@ -127,11 +200,23 @@
                         sortable: false,
                         value: 'name',
                     },
+                    {
+                        text : "Manage",
+                        align : 'center',
+                        value : "manage"
+                    },
+                    {
+
+                        // align : 'start',
+                        value : "view"
+                    },
+
 
                 ],
                 owner: [
                     {
                         name: 'T.Deer',
+
 
                     },
                     {
@@ -159,9 +244,28 @@
                     },
 
                 ],
+
             }
 
         },
+        methods :{
+            delete_student (item) {
+                alert(`delete ${item.name}`)
+            },
+            delete_owner (item) {
+                alert(`delete ${item.name}`)
+            },
+
+            view (item) {
+                alert(`item is ${item.name}`)
+            },
+            setting (item) {
+                alert(`item is ${item.name}`)
+            },
+
+
+
+        }
     }
 </script>
 

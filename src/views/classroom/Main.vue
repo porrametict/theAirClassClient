@@ -40,20 +40,32 @@
                     </v-tab>
                     <v-tab
                             exact
-                            @click="router_push('ScoreIndex')"
+                            @click="router_push('QuestionIndex')"
+
                     >
-                        Score
+                        Question
                     </v-tab>
                     <v-tab
                             exact
 
                     >
-                        another
-                    </v-tab> <v-tab
+                        Watching History
+                    </v-tab>
+
+                    <v-tab
                             exact
+                            @click="router_push('AssignmentsIndex')"
+
 
                     >
-                        another
+                    Assignments
+                    </v-tab>
+                    <v-tab
+                            exact
+                            @click="router_push('ScoreIndex')"
+
+                    >
+                        Score
                     </v-tab>
 
                 </v-tabs>
