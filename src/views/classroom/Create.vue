@@ -17,9 +17,6 @@
                                             prepend-icon="mdi-image-plus "
                                             label="Picture"
                                     ></v-file-input>
-
-
-
                                 </div>
 
                             </v-card-text>
@@ -40,7 +37,6 @@
                         <v-text-field
                                 label="Coursecode"
                                 :counter="10"
-
 
 
                         ></v-text-field>
@@ -72,7 +68,7 @@
                         ></v-textarea>
 
                         <div class="text-center ">
-                            <v-col class="text-center" cols="12" sm="12" >
+                            <v-col class="text-center" cols="12" sm="12">
                                 <div class="my-2">
                                     <v-btn
                                             color="#FFD600"
@@ -105,9 +101,7 @@
 <script>
     export default {
         name: "ClassroomCreate",
-        data: () => ({
-
-        })
+        data: () => ({})
 
     }
 </script>
