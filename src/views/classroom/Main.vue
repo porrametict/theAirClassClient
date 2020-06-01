@@ -18,14 +18,35 @@
                     </v-tab>
                     <v-tab
                             exact
-                            @click="router_push('ScoreIndex')"
+                            @click="router_push('QuestionIndex')"
+
                     >
-                        Score
+                        Question
+                    </v-tab>
+                    <v-tab
+                            exact
+
+                    >
+                        Watching History
+                    </v-tab>
+
+                    <v-tab
+                            exact
+                            @click="router_push('AssignmentsIndex')"
+                    >
+                        App
                     </v-tab>
                     <v-tab
                             exact
                     >
-                        App
+                        Assignments
+                    </v-tab>
+                    <v-tab
+                            exact
+                            @click="router_push('ScoreIndex')"
+
+                    >
+                        Score
                     </v-tab>
 
                 </v-tabs>
@@ -44,9 +65,7 @@
         name: "ClassroomMain",
         components: {ClassroomDetail},
         data() {
-            return {
-
-            }
+            return {}
         }, methods: {
             router_push(name) {
                 if (this.$router.currentRoute.name !== name) {
