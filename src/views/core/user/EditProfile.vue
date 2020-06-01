@@ -3,31 +3,12 @@
         <!-- edit User Profile-->
         <div v-if="user">
             <!--header-->
-            <div>
-                <p>
-                    <v-icon class="mx-2" color="primary">
-                        mdi-account-edit
-                    </v-icon>
-                    <span class="title">Edit Profile</span>
-                </p>
-                <v-divider></v-divider>
-            </div>
+            <ContentHeader icon="mdi-account-edit" text="Edit Profile" :key="0"></ContentHeader>
             <div class="ma-8">
                 <div class="d-flex justify-space-around  flex-wrap">
                     <!-- image-->
                     <v-card class="d-flex flex-column align-center" min-width="400" elevation="0">
-                        <v-img :key="VImgComponentKey"
-                               v-if="user.profile && ( user.profile.image && user.profile.image !== '') "
-                               height="200"
-                               width="200"
-                               class="flex-grow-0 ma-4"
-                               :src="user.profile.image">
-                        </v-img>
-                        <DefaultAvatar v-else
-                                       class="flex-grow-0 ma-4"
-                                       :first_name="user.first_name"
-                                       :last_name="user.last_name"
-                        ></DefaultAvatar>
+                        <image-profile :user="user" class="ma-4"></image-profile>
                         <circle-image-cropper :key="ImageCropperComponentKey" :imageURL="user.profile.image"
                                               @getOutput="updateImage">
                             <template v-slot:button_area>
@@ -102,19 +83,18 @@
         <!-- Change Password-->
         <div>
             <!--header-->
-            <div>
-                <p>
-                    <v-icon class="mx-2" color="primary">
-                        mdi-lock
-                    </v-icon>
-                    <span class="title">Change Password
+
+            <ContentHeader icon="mdi-lock" text="Change Password" :key="1">
+                <template v-slot:text>
+                        <span class="title">Change Password
                         <span class="red--text">
                             (unusable)
                         </span>
                     </span>
-                </p>
-                <v-divider></v-divider>
-            </div>
+                </template>
+            </ContentHeader>
+
+
             <!--body-->
             <div class="ma-8">
                 <div class="d-flex justify-space-around flex-wrap">
@@ -191,10 +171,12 @@
     import {mapState, mapMutations} from 'vuex'
     import DefaultAvatar from "../../../components/core/user/DefaultAvatar";
     import ConfirmDialog from "../../../components/share/ConfirmDialog";
+    import ImageProfile from "../../../components/core/user/ImageProfile";
+    import ContentHeader from "../../../components/share/ContentHeader";
 
     export default {
         name: "UserEditProfile",
-        components: {ConfirmDialog, DefaultAvatar, CircleImageCropper},
+        components: {ContentHeader, ImageProfile, ConfirmDialog, DefaultAvatar, CircleImageCropper},
         data() {
             return {
 
