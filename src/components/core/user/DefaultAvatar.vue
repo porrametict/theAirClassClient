@@ -1,5 +1,10 @@
 <template>
-    <v-img :width="width" :height="height" class="image_relative grey">
+    <v-img
+            :class="circle ? 'circle-rounded' : '' "
+            :width="width"
+            :height="height"
+            class="image_relative grey"
+    >
         <div
                 :class="font_size_class"
                 class="text_center_on_image
@@ -38,6 +43,11 @@
                 type: String,
                 require: false,
                 default: 'display-2'
+            },
+            circle: {
+                type : [String,Boolean],
+                require : false,
+                default : false
             }
 
         },
@@ -70,6 +80,9 @@
 
     .image_relative {
         position: relative;
+    }
+    .circle-rounded {
+        border-radius: 50%;
     }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-img
+        <v-img  :class="circle ? 'circle-rounded' : '' "
                 v-if="user.profile && ( user.profile.image && user.profile.image !== '') "
                 :height="height"
                 :width="width"
@@ -11,6 +11,7 @@
                        :last_name="user.last_name"
                        :height="height"
                        :width="width"
+                       :circle="circle"
         ></DefaultAvatar>
     </div>
 </template>
@@ -36,10 +37,19 @@
                 require: false,
                 default: 200
             },
+            circle: {
+                type : [String,Boolean],
+                require : false,
+                default : false
+            }
         }
     }
 </script>
 
 <style scoped>
+
+    .circle-rounded {
+        border-radius: 50%;
+    }
 
 </style>

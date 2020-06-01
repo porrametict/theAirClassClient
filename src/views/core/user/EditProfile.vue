@@ -8,9 +8,11 @@
                 <div class="d-flex justify-space-around  flex-wrap">
                     <!-- image-->
                     <v-card class="d-flex flex-column align-center" min-width="400" elevation="0">
-                        <image-profile :user="user" class="ma-4"></image-profile>
-                        <circle-image-cropper :key="ImageCropperComponentKey" :imageURL="user.profile.image"
-                                              @getOutput="updateImage">
+                        <image-profile :user="user" class="ma-4" ></image-profile>
+                        <circle-image-cropper
+                                :key="ImageCropperComponentKey"
+                                :imageURL="user.profile ? user.profile.image : null"
+                                @getOutput="updateImage">
                             <template v-slot:button_area>
                                 <v-btn class="primary black--text">
                                     edit
