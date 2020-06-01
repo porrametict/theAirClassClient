@@ -22,6 +22,7 @@
                             การสรุปความ และการแสดงความคิดผ่านทักษะการใช้ภาษาไทยที่เหมาะสม
                     </span>
                 </div>
+                <v-btn @click="$router.push({name : 'EditClassroom'})">Edit</v-btn>
             </div>
         </div>
         <v-divider class="mt-2"></v-divider>

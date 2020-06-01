@@ -6,6 +6,16 @@ export default {
     component: () => import('../../views/classroom/Template'),
     children: [
         {
+            path: "",
+            name: "IndexClassroom",
+            component: () => import('../../views/classroom/Index')
+        },
+        {
+            path: "board",
+            name: "BoardClassroom",
+            component: () => import('../../views/classroom/Board')
+        },
+        {
             path: "create",
             name: "CreateClassroom",
             component: () => import('../../views/classroom/Create')
@@ -15,8 +25,8 @@ export default {
             component: () => import('../../views/classroom/Join')
         },
         {
-            path: "EditClassroom",
-            name: "Edit",
+            path: "edit",
+            name: "EditClassroom",
             component: () => import('../../views/classroom/Edit')
         }, {
             path: "main",
