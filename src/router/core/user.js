@@ -3,7 +3,7 @@ export default {
     component: () => import('../../views/core/user/Template'),
     children: [
         {
-            path: "profile",
+            path: "",
             name: "Profile",
             component: () => import('../../views/core/user/Profile')
         },
