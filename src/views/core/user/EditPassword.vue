@@ -7,12 +7,21 @@
                         :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="show1 ? 'text' : 'password'"
                         name="input-10-1"
-                        label="New Password"
+                        label="Password"
                         counter
                         @click:append="show1 = !show1"
                 ></v-text-field>
                 <v-text-field
                         v-model="password2"
+                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="show1 ? 'text' : 'password'"
+                        name="input-10-1"
+                        label="New Password"
+                        counter
+                        @click:append="show1 = !show1"
+                ></v-text-field>
+                <v-text-field
+                        v-model="password3"
                         :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="show2 ? 'text' : 'password'"
                         name="input-10-1"
@@ -79,6 +88,7 @@
                 show2: false,
                 password: '',
                 password2: '',
+                password3: '',
                 dialog2: false
             }
         }

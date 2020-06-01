@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" dark app class="yellow accent-4">
+    <v-navigation-drawer
+            v-model="drawer"
+            dark
+            app
+            class="yellow accent-4"
+            permanent
+    >
       <v-layout column align-center>
         <v-flex class="mt-10 mb-8">
           <v-avatar>
