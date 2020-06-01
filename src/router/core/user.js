@@ -12,10 +12,5 @@ export default {
             name: "EditProfile",
             component: () => import('../../views/core/user/EditProfile')
         },
-        {
-            path: "edit-password",
-            name: "EditPassword",
-            component: () => import('../../views/core/user/EditPassword')
-        },
     ]
 }
