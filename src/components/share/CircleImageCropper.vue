@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-dialog v-model="dialog" persistent max-width="800" scrollable >
+        <v-dialog v-model="dialog" persistent max-width="800" scrollable>
             <template v-slot:activator="{ on }">
                 <v-btn icon
                        color="black"
@@ -45,12 +45,13 @@
                     </div>
                 </v-card-text>
                 <v-card-actions class="d-flex justify-space-around">
-                        <v-btn @click="$refs.file.click()" color="green" outlined>
-                            select image
-                        </v-btn>
-                        <v-btn @click="crop" color="primary" class="black--text">
-                            Update
-                        </v-btn>
+                    <v-btn @click="$refs.file.click()" color="green" outlined rounded >
+                        <span class="px-2">
+                        select image
+                        </span>
+                    </v-btn>
+                    <ButtonPrimary text="Update" @click="crop">
+                    </ButtonPrimary>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -58,6 +59,7 @@
 </template>
 <script>
     import {CircleStencil, Cropper} from 'vue-advanced-cropper'
+    import ButtonPrimary from "./ButtonPrimary";
 
     export default {
         name: "CircleImageCropper",
@@ -78,6 +80,7 @@
             }
         },
         components: {
+            ButtonPrimary,
             Cropper,
             CircleStencil
         },

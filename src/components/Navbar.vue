@@ -29,6 +29,7 @@
         <div class="pa-2">
           <v-btn
             block
+            rounded
             @click="$store.dispatch('user/logout') & $router.push({ name: 'Login' })"
           >Logout</v-btn>
         </div>

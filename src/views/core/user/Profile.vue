@@ -25,16 +25,11 @@
             </div>
 
             <div>
-                <v-btn
+                <ButtonIcon
+                        icon="mdi-account-edit"
+                        tooltip_text="edit profile"
                         @click="$router.push({name : 'EditProfile'})"
-                        icon
-                        outlined
-                >
-                    <v-icon>
-                        mdi-account-edit
-                    </v-icon>
-                </v-btn>
-
+                ></ButtonIcon>
             </div>
         </div>
 
@@ -53,10 +48,11 @@
     import DefaultAvatar from "../../../components/core/user/DefaultAvatar";
     import ImageProfile from "../../../components/core/user/ImageProfile";
     import ContentHeader from "../../../components/share/ContentHeader";
+    import ButtonIcon from "../../../components/share/ButtonIcon";
 
     export default {
         name: "UserProfile",
-        components: {ContentHeader, ImageProfile, DefaultAvatar},
+        components: {ButtonIcon, ContentHeader, ImageProfile, DefaultAvatar},
         data: () => ({}),
         computed: {
             ...mapState({

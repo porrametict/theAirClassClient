@@ -13,16 +13,12 @@
                 <p class="display-1 font-weight-bold">
                     Usage of Thai Language
                 </p>
-                <v-btn
-                        class="mx-2"
-                        icon
-                        outlined
-                        @click="$router.push({name : 'MainClassroom'})"
+                <ButtonIcon class="mx-2"
+                            icon="mdi-dots-horizontal"
+                            @click="$router.push({name : 'MainClassroom'})"
+                            tooltip_text="manage classroom"
                 >
-                    <v-icon>
-                        mdi-dots-horizontal
-                    </v-icon>
-                </v-btn>
+                </ButtonIcon>
             </div>
         </div>
         <v-divider class="my-2"></v-divider>
@@ -34,8 +30,11 @@
 </template>
 
 <script>
+    import ButtonIcon from "../../components/share/ButtonIcon";
+
     export default {
         name: "ClassroomBoard",
+        components: {ButtonIcon},
         data() {
             return {
                 img_url: "https://png.pngtree.com/png-clipart/20190903/original/pngtree-a-stack-of-books-and-plants-together-png-image_4429927.jpg"

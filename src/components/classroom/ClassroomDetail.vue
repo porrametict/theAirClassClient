@@ -6,15 +6,13 @@
                 <div class="ma-2">
                     <div class="d-flex">
                         <p class="display-1 font-weight-bold ma-0">Usage of Thai Language</p>
-                        <v-btn
+                        <ButtonIcon
                                 class="mx-2"
-                                icon
-                                outlined
+                                icon="mdi-pencil"
+                                tooltip_text="edit classroom"
                                 @click="$router.push({name : 'EditClassroom'})"
                         >
-                            <v-icon>mdi-pencil</v-icon>
-
-                        </v-btn>
+                        </ButtonIcon>
                     </div>
 
 
@@ -55,7 +53,7 @@
         </div>
         <div class="mx-2 ml-auto">
             <v-btn icon @click="show_detail = !show_detail" outlined>
-                <v-icon >
+                <v-icon>
                     mdi-chevron-{{show_detail ? 'up' : 'down'}}
                 </v-icon>
             </v-btn>
@@ -65,23 +63,26 @@
 </template>
 
 <script>
+    import ButtonIcon from "../share/ButtonIcon";
+
     export default {
         name: "ClassroomDetail",
-        props : {
-            is_show_detail  : {
-                type : [String,Boolean],
-                require : false,
-                default : true
+        components: {ButtonIcon},
+        props: {
+            is_show_detail: {
+                type: [String, Boolean],
+                require: false,
+                default: true
             }
         },
         mounted() {
-            this.show_detail  = this.is_show_detail
+            this.show_detail = this.is_show_detail
 
         },
         data() {
             return {
                 img_url: "https://png.pngtree.com/png-clipart/20190903/original/pngtree-a-stack-of-books-and-plants-together-png-image_4429927.jpg",
-                show_detail : false
+                show_detail: false
             }
         }
     }
