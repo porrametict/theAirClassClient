@@ -1,17 +1,18 @@
 <template>
-    <div>
+    <div v-if="classroom">
         <!-- header-->
         <div class="d-flex justify-start">
-            <v-img
-                    :src="img_url"
-                    max-width="50"
+            <ClassroomImageDisplay
+                    :classroom="classroom"
+                    width="60"
+                    height="60"
                     class="mx-2"
             >
+            </ClassroomImageDisplay>
 
-            </v-img>
             <div class="d-flex justify-space-between" style="width: 100%">
                 <p class="display-1 font-weight-bold">
-                    Usage of Thai Language
+                    {{classroom.name}}
                 </p>
                 <ButtonIcon class="mx-2"
                             icon="mdi-dots-horizontal"
@@ -30,14 +31,28 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     import ButtonIcon from "../../components/share/ButtonIcon";
+    import ClassroomImageDisplay from "../../components/classroom/ClassroomImageDisplay";
 
     export default {
         name: "ClassroomBoard",
-        components: {ButtonIcon},
+        components: {ClassroomImageDisplay, ButtonIcon},
         data() {
-            return {
-                img_url: "https://png.pngtree.com/png-clipart/20190903/original/pngtree-a-stack-of-books-and-plants-together-png-image_4429927.jpg"
+            return {}
+        },
+        computed: {
+            ...mapState({
+                classroom: state => state.classroom.classroom
+            })
+        },
+        mounted() {
+            this.loadData()
+        },
+        methods: {
+            async loadData() {
+                let id = this.$route.params.id
+                await this.$store.dispatch('classroom/retrieveClassroom', id)
             }
         }
     }

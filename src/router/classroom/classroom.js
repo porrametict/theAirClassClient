@@ -13,7 +13,7 @@ export default {
             component: () => import('../../views/classroom/Index')
         },
         {
-            path: "board",
+            path: ":id/board",
             name: "BoardClassroom",
             component: () => import('../../views/classroom/Board')
         },
@@ -27,11 +27,11 @@ export default {
             component: () => import('../../views/classroom/Join')
         },
         {
-            path: "edit",
+            path: ":id/edit",
             name: "EditClassroom",
             component: () => import('../../views/classroom/Edit')
         }, {
-            path: "main",
+            path: ":id/main",
             name: "MainClassroom",
             component: () => import('../../views/classroom/Main'),
             children: [

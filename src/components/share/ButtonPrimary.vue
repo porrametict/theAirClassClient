@@ -3,6 +3,7 @@
             class="black--text"
             :color="color"
             rounded
+            :block="block"
             @click="on_click"
     >
         <span class="px-2">
@@ -23,6 +24,11 @@
             text: {
                 type: String,
                 require: true,
+            },
+            block: {
+                type: [Boolean, String],
+                require: false,
+                default: false
             }
 
         },

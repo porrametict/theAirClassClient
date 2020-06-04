@@ -1,7 +1,7 @@
 <template>
     <div>
         <!--        classroom detail -->
-        <ClassroomDetail></ClassroomDetail>
+        <ClassroomDetail :classroom="classroom"></ClassroomDetail>
         <v-divider class="mt-2"></v-divider>
         <!--        content-->
         <div>
@@ -60,13 +60,24 @@
 
 <script>
     import ClassroomDetail from "../../components/classroom/ClassroomDetail";
+    import {mapState} from "vuex";
 
     export default {
         name: "ClassroomMain",
         components: {ClassroomDetail},
-        data() {
-            return {}
-        }, methods: {
+        computed: {
+            ...mapState({
+                classroom: state => state.classroom.classroom
+            })
+        },
+        mounted() {
+            this.loadData()
+        },
+        methods: {
+            async loadData() {
+                let id = this.$route.params.id
+                await this.$store.dispatch('classroom/retrieveClassroom', id)
+            },
             router_push(name) {
                 if (this.$router.currentRoute.name !== name) {
                     this.$router.replace({name: name}).catch((any) => {

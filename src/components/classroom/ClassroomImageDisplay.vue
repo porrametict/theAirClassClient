@@ -1,31 +1,33 @@
 <template>
     <div>
         <v-img :class="circle ? 'circle-rounded' : '' "
-               v-if="user.profile && ( user.profile.image && user.profile.image !== '') "
+               v-if="classroom.image  && classroom.image !== '' "
                :height="height"
                :width="width"
-               :src="user.profile.image"
+               :src="classroom.image"
         >
         </v-img>
-        <DefaultAvatar v-else
-                       :first_name="user.first_name"
-                       :last_name="user.last_name"
-                       :height="height"
-                       :width="width"
-                       :circle="circle"
+        <ClassroomDefaultImage
+                v-else
+                :text="classroom.name"
+                :height="height"
+                :width="width"
+                :circle="circle"
         >
-        </DefaultAvatar>
+        </ClassroomDefaultImage>
+
     </div>
+
 </template>
 
 <script>
-    import DefaultAvatar from "./DefaultAvatar";
+    import ClassroomDefaultImage from "./ClassroomDefaultImage";
 
     export default {
-        name: "ImageProfile",
-        components: {DefaultAvatar},
+        name: "ClassroomImageDisplay",
+        components: {ClassroomDefaultImage},
         props: {
-            user: {
+            classroom: {
                 type: Object,
                 require: true
             },
@@ -44,7 +46,7 @@
                 require: false,
                 default: false
             }
-        }
+        },
     }
 </script>
 
