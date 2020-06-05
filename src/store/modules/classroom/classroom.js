@@ -62,5 +62,14 @@ export default {
                     return null
                 })
         },
+        async deleteClassroom(context, id) {
+            return await axios.delete(`/api/v1/classroom/${id}/`)
+                .then((response) => {
+                    return true  // 204 No Content
+                }).catch((error) => {
+                    console.error(error)
+                    return null
+                })
+        }
     }
 }
