@@ -6,17 +6,20 @@
                 <!--image select-->
                 <v-card class="text-center" max-width="400" elevation="0">
                     <v-card-text>
-                        <ClassroomDefaultImage :text="form.name"
-                                               :key="ClassroomDefaultImageKey"
-                        ></ClassroomDefaultImage>
-                        <circle-image-cropper
-                                class="my-2"
-                                :imageURL="form.image ? form.image : null"
-                                @getOutput="updateImage">
-                            <template v-slot:button_area>
-                                <ButtonPrimary text="select Image"></ButtonPrimary>
-                            </template>
-                        </circle-image-cropper>
+                        <div>
+                            <v-img class="ma-0 pa-0"
+                                   height="260"
+                                   src="@/assets/create_classroom.jpg"
+                                   alt=""
+                            >
+                            </v-img>
+                            <a class="overline  grey--text ma-0 pa-0 text--disabled"
+                               style="text-decoration: none"
+                               href="http://www.freepik.com">
+                                Designed by stories / Freepik
+                            </a>
+                        </div>
+
                     </v-card-text>
 
                 </v-card>
@@ -81,8 +84,32 @@
                                 label="Detail"
                                 :counter="300"
                         ></v-textarea>
-                    </div>
+                        <div class="d-flex flex-column justify-center flex-md-row justify-md-space-around align-md-baseline">
+                            <circle-image-cropper
+                                    class="ma-0 pa-0"
+                                    @getOutput="updateImage">
+                                <template v-slot:button_area>
+                                    <ButtonPrimary :text=" !form.image ? 'choose Image' : 'change Image'"
+                                                   :color=" !form.image ? 'grey lighten-1' : 'light-blue lighten-1' "></ButtonPrimary>
+                                </template>
 
+                            </circle-image-cropper>
+                            <p class="d-none d-md-block">
+                                <span v-if="!form.image">
+                                Upload your image classroom
+                                    <v-icon color="green">
+                                        mdi-emoticon-happy
+                                    </v-icon>
+                                </span>
+                                <span v-else>
+                                That's Cool
+                                    <v-icon color="green">
+                                        mdi-emoticon-lol
+                                    </v-icon>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
                 </v-card>
             </div>
             <div class="d-flex justify-space-around">
@@ -101,10 +128,12 @@
     import ClassroomDefaultImage from "../../components/classroom/ClassroomDefaultImage";
     import ButtonCancel from "../../components/share/ButtonCancel";
     import ButtonSubmit from "../../components/share/ButtonSubmit";
+    import ClassroomImageDisplay from "../../components/classroom/ClassroomImageDisplay";
 
     export default {
         name: "ClassroomCreate",
         components: {
+            ClassroomImageDisplay,
             ButtonSubmit,
             ButtonCancel,
             ClassroomDefaultImage,

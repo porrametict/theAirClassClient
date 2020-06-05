@@ -13,15 +13,6 @@
                     <!--name-->
                     <div class="d-flex">
                         <p class="display-1 font-weight-bold ma-0">{{classroom.name}}</p>
-                        <ButtonIcon
-                                class="mx-2"
-                                icon="mdi-pencil"
-                                tooltip_text="edit classroom"
-                                @click="$router.push({name : 'EditClassroom' , params : {
-                                    id : classroom.id
-                                }})"
-                        >
-                        </ButtonIcon>
                     </div>
 
                     <div v-if="show_detail">
@@ -44,13 +35,13 @@
                             {{classroom.course_credit}}({{classroom.lecture_unit}}-{{classroom.lab_unit}}-{{classroom.
                             lecture_unit}})
                         </span>
-                        <span class="mx-2">
+                        <span class="mx-2 red--text">
                             <span class="font-weight-bold">
                                 Amount  :
                             </span>
                              NONE
                         </span>
-                        <span class="mx-2">
+                        <span class="mx-2 red--text">
                             <span class="font-weight-bold">
                                 Classroom  Code :
                             </span>
@@ -65,7 +56,32 @@
                 </div>
             </div>
         </div>
-        <div class="mx-2 ml-auto">
+        <div class="mx-2 ml-auto d-flex">
+            <ConfirmDialog
+                    message="Delete this class ? "
+                    :switch_dialog_btn="{color : 'red',
+                    text:'delete',
+                    is_icon : true ,
+                    is_rounded:true,
+                    is_outlined : true }"
+                    @onGetConfirmResult="deleteClassroom"
+            >
+                <template v-slot:btn>
+                    <v-icon>
+                        mdi-trash-can
+                    </v-icon>
+                </template>
+
+            </ConfirmDialog>
+            <ButtonIcon
+                    class="mx-2"
+                    icon="mdi-pencil"
+                    tooltip_text="edit classroom"
+                    @click="$router.push({name : 'EditClassroom' , params : {
+                                    id : classroom.id
+                                }})"
+            >
+            </ButtonIcon>
             <v-btn icon @click="show_detail = !show_detail" outlined>
                 <v-icon>
                     mdi-chevron-{{show_detail ? 'up' : 'down'}}
@@ -78,10 +94,11 @@
 <script>
     import ButtonIcon from "../share/ButtonIcon";
     import ClassroomImageDisplay from "./ClassroomImageDisplay";
+    import ConfirmDialog from "../share/ConfirmDialog";
 
     export default {
         name: "ClassroomDetail",
-        components: {ClassroomImageDisplay, ButtonIcon},
+        components: {ConfirmDialog, ClassroomImageDisplay, ButtonIcon},
         props: {
             is_show_detail: {
                 type: [String, Boolean],
@@ -102,6 +119,14 @@
             this.show_detail = this.is_show_detail
         },
         methods: {
+            async deleteClassroom(e) {
+                if (e) {
+                    let data = await this.$store.dispatch('classroom/deleteClassroom', this.classroom.id)
+                    if (data) {
+                        this.router_push('IndexClassroom')
+                    }
+                }
+            },
             router_push(name) {
                 if (this.$router.currentRoute.name !== name) {
                     this.$router.replace({name: name}).catch((any) => {

@@ -4,6 +4,7 @@
                :icon="switch_dialog_btn.is_icon"
                :color="switch_dialog_btn.color"
                :rounded="switch_dialog_btn.is_rounded"
+               :outlined="switch_dialog_btn.is_outlined"
         >
             <slot name="btn">
                 {{ switch_dialog_btn.text}}
@@ -69,6 +70,7 @@
                     text: 'Confirm ? ',
                     is_icon: false,
                     is_rounded: false,
+                    is_outlined: false,
                 })
             }
         },
