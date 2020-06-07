@@ -6,19 +6,26 @@
                 <!--image select-->
                 <v-card class="text-center" max-width="400" elevation="0">
                     <v-card-text>
-                        <div>
-                            <v-img class="ma-0 pa-0"
-                                   height="260"
-                                   src="@/assets/create_classroom.jpg"
-                                   alt=""
-                            >
-                            </v-img>
-                            <a class="overline  grey--text ma-0 pa-0 text--disabled"
-                               style="text-decoration: none"
-                               href="http://www.freepik.com">
-                                Designed by stories / Freepik
-                            </a>
-                        </div>
+                        <FreeLicenseImage
+                                asset_src="classroom.png"
+                                height="260"
+                                a_text="Designed by stories / Freepik"
+                                href="http://www.freepik.com"
+                        >
+                        </FreeLicenseImage>
+<!--                        <div>-->
+<!--                            <v-img class="ma-0 pa-0"-->
+<!--                                   height="260"-->
+<!--                                   src="@/assets/create_classroom.jpg"-->
+<!--                                   alt=""-->
+<!--                            >-->
+<!--                            </v-img>-->
+<!--                            <a class="overline  grey&#45;&#45;text ma-0 pa-0 text&#45;&#45;disabled"-->
+<!--                               style="text-decoration: none"-->
+<!--                               href="http://www.freepik.com">-->
+<!--                                Designed by stories / Freepik-->
+<!--                            </a>-->
+<!--                        </div>-->
 
                     </v-card-text>
 
@@ -129,10 +136,12 @@
     import ButtonCancel from "../../components/share/ButtonCancel";
     import ButtonSubmit from "../../components/share/ButtonSubmit";
     import ClassroomImageDisplay from "../../components/classroom/ClassroomImageDisplay";
+    import FreeLicenseImage from "../../components/share/FreeLicenseImage";
 
     export default {
         name: "ClassroomCreate",
         components: {
+            FreeLicenseImage,
             ClassroomImageDisplay,
             ButtonSubmit,
             ButtonCancel,

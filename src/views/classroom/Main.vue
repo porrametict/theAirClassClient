@@ -5,55 +5,13 @@
         <v-divider class="mt-2"></v-divider>
         <!--        content-->
         <div>
-            <!--            head-->
-            <div>
-                <v-tabs
-                        fixed-tabs
-                >
-                    <v-tab
-                            exact
-                            @click="router_push('MemberIndex')"
-                    >
-                        Member
-                    </v-tab>
-                    <v-tab
-                            exact
-                            @click="router_push('QuestionIndex')"
+            <v-tabs v-model="activeTab" grow>
+                <v-tab v-for="(tab,index) of tabs" :key="index" :to="{name : tab.route}" exact >
+                    {{ tab.name }}
+                </v-tab>
+            </v-tabs>
+            <router-view></router-view>
 
-                    >
-                        Question
-                    </v-tab>
-                    <v-tab
-                            exact
-
-                    >
-                        Watching History
-                    </v-tab>
-
-                    <v-tab
-                            exact
-                            @click="router_push('AssignmentsIndex')"
-                    >
-                        App
-                    </v-tab>
-                    <v-tab
-                            exact
-                    >
-                        Assignments
-                    </v-tab>
-                    <v-tab
-                            exact
-                            @click="router_push('ScoreIndex')"
-
-                    >
-                        Score
-                    </v-tab>
-
-                </v-tabs>
-            </div>
-            <div>
-                <router-view></router-view>
-            </div>
         </div>
     </div>
 </template>
@@ -69,6 +27,15 @@
             ...mapState({
                 classroom: state => state.classroom.classroom
             })
+        },
+        data () {
+            return {
+                activeTab : { name: "Task", route: `MemberIndex` },
+                tabs: [
+                    { name: "Member", route: `MemberIndex` },
+                    { name: "App", route: `ClassroomModuleIndex` }
+                ]
+            }
         },
         mounted() {
             this.loadData()

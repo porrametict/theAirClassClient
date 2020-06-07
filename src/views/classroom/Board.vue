@@ -14,12 +14,28 @@
                 <p class="display-1 font-weight-bold">
                     {{classroom.name}}
                 </p>
-                <ButtonIcon class="mx-2"
-                            icon="mdi-dots-horizontal"
-                            @click="$router.push({name : 'MainClassroom'})"
-                            tooltip_text="manage classroom"
-                >
-                </ButtonIcon>
+                <v-menu offset-y
+                        nudge-bottom="5">
+                    <template v-slot:activator="{ on }">
+                        <v-btn icon
+                               outlined
+                               color="grey"
+                               dark
+                               v-on="on"
+                        >
+                            <v-icon>
+                                mdi-dots-horizontal
+                            </v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item
+                                @click="$router.push({name : 'MainClassroom'})"
+                        >
+                            <v-list-item-title>manage Classroom</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
             </div>
         </div>
         <v-divider class="my-2"></v-divider>

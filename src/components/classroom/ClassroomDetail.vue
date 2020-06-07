@@ -22,6 +22,13 @@
                             </span>
                             {{classroom.course_code}}
                         </span>
+                        <span class="mx-2 ">
+                            <span class="font-weight-bold">
+                                Classroom  Code :
+                            </span>
+                            {{classroom.classroom_code}}
+                        </span>
+                        <br>
                         <span class="mx-2">
                             <span class="font-weight-bold">
                                 Section :
@@ -41,12 +48,7 @@
                             </span>
                              NONE
                         </span>
-                        <span class="mx-2 red--text">
-                            <span class="font-weight-bold">
-                                Classroom  Code :
-                            </span>
-                            NONE
-                        </span>
+
                         <br>
                         <span class="mx-2">
                         <span class="font-weight-bold">Detail :</span>
