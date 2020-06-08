@@ -12,6 +12,7 @@
             </v-tabs>
             <router-view></router-view>
 
+
         </div>
     </div>
 </template>
@@ -30,7 +31,7 @@
         },
         data () {
             return {
-                activeTab : { name: "Task", route: `MemberIndex` },
+                activeTab : null,
                 tabs: [
                     { name: "Member", route: `MemberIndex` },
                     { name: "App", route: `ClassroomModuleIndex` }
@@ -38,6 +39,7 @@
             }
         },
         mounted() {
+            this.router_push('MemberIndex')
             this.loadData()
         },
         methods: {

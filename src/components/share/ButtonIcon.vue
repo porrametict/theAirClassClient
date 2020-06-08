@@ -6,6 +6,7 @@
                         v-on="on"
                         @click="on_click"
                         icon
+                        :color="color"
                         :outlined="outlined"
                 >
                     <v-icon>

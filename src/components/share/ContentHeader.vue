@@ -5,7 +5,7 @@
                 {{icon}}
             </v-icon>
             <span class="title">
-                <slot name="text">
+                <slot>
                 {{text}}
                 </slot>
             </span>
