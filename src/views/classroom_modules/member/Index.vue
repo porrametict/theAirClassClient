@@ -33,17 +33,18 @@
 
                         <template v-slot:item.manage="{ item }">
                             <ConfirmDialog
-                                    :switch_dialog_btn="{
-                                            color: 'red ',
-                                            text: 'Confirm ? ',
-                                            is_icon: true,
-                                            is_rounded: false,
-                                            is_outlined: false,
-                                        }"
-                                    @onGetConfirmResult="delete_member($event,item)"
+                                    message="remove this user form classroom ?"
+                                    @change="delete_member($event,item)"
                             >
-                                <template v-slot:btn>
-                                    <v-icon>mdi-trash-can-outline</v-icon>
+                                <template v-slot:activator="{on}">
+                                    <v-btn
+                                            icon
+                                            outlined
+                                            color="red"
+                                            v-on="on"
+                                    >
+                                        <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
                                 </template>
 
                             </ConfirmDialog>

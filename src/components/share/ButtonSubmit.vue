@@ -5,7 +5,9 @@
             class="black--text"
             @click="on_click"
     >
-        {{text}}
+        <slot>
+            {{text}}
+        </slot>
     </v-btn>
 </template>
 

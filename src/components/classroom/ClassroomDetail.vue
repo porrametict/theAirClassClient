@@ -60,18 +60,18 @@
         </div>
         <div class="mx-2 ml-auto d-flex">
             <ConfirmDialog
-                    message="Delete this class ? "
-                    :switch_dialog_btn="{color : 'red',
-                    text:'delete',
-                    is_icon : true ,
-                    is_rounded:true,
-                    is_outlined : true }"
-                    @onGetConfirmResult="deleteClassroom"
+                    message="Delete this classroom ? "
+                    @change="deleteClassroom"
             >
-                <template v-slot:btn>
-                    <v-icon>
-                        mdi-trash-can
-                    </v-icon>
+                <template v-slot:activator="{on}">
+                    <v-btn
+                            icon
+                            outlined
+                            color="red"
+                            v-on="on"
+                    >
+                        <v-icon>mdi-delete</v-icon>
+                    </v-btn>
                 </template>
 
             </ConfirmDialog>

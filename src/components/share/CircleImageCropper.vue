@@ -1,16 +1,8 @@
 <template>
     <div class="d-flex justify-center">
-        <v-btn icon
-               @click="dialog = !dialog"
-               color="black"
-               dark
-        >
-            <slot name="button_area">
-                <v-icon>
-                    mdi-pencil
-                </v-icon>
-            </slot>
-        </v-btn>
+        <slot name="activator" :on="on">
+            <v-btn v-on="on">select</v-btn>
+        </slot>
         <v-dialog v-if="dialog" v-model="dialog" persistent max-width="1000" scrollable>
             <v-card>
                 <v-card-title class="d-flex justify-space-between align-baseline primary pa-2 px-4">
@@ -72,6 +64,9 @@
         },
         data() {
             return {
+                on: {
+                    click: this.switch_dialog,
+                },
                 dialog: false,
                 image: null
             }
@@ -82,6 +77,9 @@
             CircleStencil
         },
         methods: {
+            switch_dialog() {
+                this.dialog = !this.dialog
+            },
             uploadImage(event) {
                 // Reference to the DOM input element
                 var input = event.target;

@@ -19,43 +19,35 @@
                 join new classroom
             </v-btn>
         </div>
-
-        <v-dialog v-model="dialog" max-width="400">
-            <v-card>
-                <v-card-title class="primary">
-                    <p class="ma-0 pa-0">Join Classroom</p>
-                    <v-spacer></v-spacer>
-                    <v-btn icon @click="dialog = !dialog">
-                        <v-icon>
-                            mdi-close
-                        </v-icon>
-                    </v-btn>
-                </v-card-title>
-                <v-card-text v-if="classroom" class="ma-0 pa-0">
-                    <div class="text-center ma-5">
-                        <p class="ma-0 pa-0 title grey--text">classroom</p>
-                        <p class="display-1 black--text">
-                            {{classroom.name}}
-                        </p>
-                    </div>
-                    <v-divider></v-divider>
-                </v-card-text>
-                <v-card-actions class="">
-                    <ButtonPrimary text="Join" class="mx-auto" @click="joinClassroom"></ButtonPrimary>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
+        <DialogPrimary
+                title="Join Classroom"
+                @primary_btn_click="joinClassroom"
+        >
+            <div class="text-center ma-5"
+                 v-if="classroom"
+            >
+                <p class="ma-0 pa-0 title grey--text">classroom</p>
+                <p class="display-1 black--text">
+                    {{classroom.name}}
+                </p>
+            </div>
+            <v-divider></v-divider>
+            <template v-slot:right_btn="{on}">
+                <ButtonPrimary v-on="on">Join</ButtonPrimary>
+            </template>
+        </DialogPrimary>
     </div>
 </template>
 
 <script>
     import ButtonPrimary from "../../components/share/ButtonPrimary";
     import {mapState} from 'vuex'
+    import DialogPrimary from "../../components/share/DialogPrimary";
+    import {EventBus} from "../../event-bus";
 
     export default {
         name: "ClassroomJoin",
-        components: {ButtonPrimary},
+        components: {DialogPrimary, ButtonPrimary},
         data: () => ({
             dialog: false,
             form_params: {
@@ -80,7 +72,7 @@
                     this.classrooms = data.results
                     if (this.classrooms.length) {
                         this.classroom = this.classrooms[0]
-                        this.dialog = true
+                        EventBus.$emit('open-dialog-primary');
                     } else {
                         alert("Not Found")
                     }
@@ -99,7 +91,7 @@
                             id: data.classroom
                         }
                     })
-                }else {
+                } else {
                     alert("Some Error")
                 }
             }

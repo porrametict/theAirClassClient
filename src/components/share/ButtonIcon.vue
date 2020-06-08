@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-tooltip top >
+        <v-tooltip top>
             <template v-slot:activator="{ on }">
                 <v-btn
                         v-on="on"
@@ -9,11 +9,13 @@
                         :color="color"
                         :outlined="outlined"
                 >
-                    <v-icon>
-                        {{icon}}
-                    </v-icon>
-                </v-btn>
+                    <slot>
+                        <v-icon>
+                            {{icon}}
+                        </v-icon>
+                    </slot>
 
+                </v-btn>
             </template>
             <span>{{tooltip_text}}</span>
         </v-tooltip>

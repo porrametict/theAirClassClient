@@ -7,7 +7,10 @@
             @click="on_click"
     >
         <span class="px-2">
-        {{text}}
+            <slot>
+                {{text}}
+            </slot>
+
         </span>
     </v-btn>
 </template>

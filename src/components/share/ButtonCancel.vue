@@ -5,7 +5,9 @@
             rounded
             @click="on_click"
     >
-        {{text}}
+        <slot>
+            {{text}}
+        </slot>
     </v-btn>
 </template>
 
@@ -25,7 +27,7 @@
             }
 
         },
-        methods : {
+        methods: {
             on_click() {
                 this.$emit('click')
             }

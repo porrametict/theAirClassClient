@@ -126,20 +126,12 @@
                                 counter
                                 @click:append="show_password_confirmed = !show_password_confirmed"
                         ></v-text-field>
-                    </v-card>
-                </div>
-            </div>
+                        <div class="text-center">
+                            <ConfirmDialog @change="on_confirm('change_password',$event)" text_btn="change">
 
-            <!--button-->
-            <div class="ma-5">
-                <div class="d-flex justify-space-around flex-wrap">
-                    <ButtonCancel @click="$router.push({name : 'Profile'})"></ButtonCancel>
-                    <ConfirmDialog @onGetConfirmResult="on_confirm('change_password',$event)"
-                                   :switch_dialog_btn="{color: 'primary',text: 'Confirm ? ',is_icon: false,is_rounded: true}">
-                        <template v-slot:btn>
-                            <span class="black--text">Save</span>
-                        </template>
-                    </ConfirmDialog>
+                            </ConfirmDialog>
+                        </div>
+                    </v-card>
                 </div>
             </div>
 

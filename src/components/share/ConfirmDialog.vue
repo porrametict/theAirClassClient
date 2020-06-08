@@ -1,35 +1,36 @@
 <template>
     <div>
-        <v-btn @click="dialog = !dialog"
-               :icon="switch_dialog_btn.is_icon"
-               :color="switch_dialog_btn.color"
-               :rounded="switch_dialog_btn.is_rounded"
-               :outlined="switch_dialog_btn.is_outlined"
-        >
-            <slot name="btn">
-                {{ switch_dialog_btn.text}}
-            </slot>
-        </v-btn>
-
+        <slot name="activator" :on="on">
+            <ButtonPrimary v-on="on">{{text_btn}}</ButtonPrimary>
+        </slot>
         <v-dialog
                 v-model="dialog"
-                max-width="400"
+                max-width="500"
         >
             <v-card>
-                <v-card-title class="headline text-center">{{message}}</v-card-title>
+                <v-card-title class="headline text-center d-flex flex-column">
+                    <div class="text-center mb-2">
+                        <v-icon  class="display-4" color="primary" >
+                            mdi-help
+                        </v-icon>
+                    </div>
+                    <div>
+                        {{message}}
+                    </div>
+                </v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                            :color="no_btn.color"
+                            color="grey"
                             text
                             @click="confirm_cancel"
-                    >{{no_btn.text}}
+                    >{{no_text}}
                     </v-btn>
                     <v-btn
-                            :color="yes_btn.color"
+                            color="primary"
                             text
                             @click="confirm_success"
-                    >{{yes_btn.text}}
+                    >{{yes_text}}
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -38,54 +39,52 @@
 </template>
 
 <script>
+    import ButtonPrimary from "./ButtonPrimary";
+
     export default {
         name: "ConfirmDialog",
+        components: {ButtonPrimary},
         props: {
             message: {
                 type: String,
                 require: false,
                 default: "Are you sure?"
             },
-            yes_btn: {
-                type: Object,
+            yes_text: {
+                type: String,
                 require: false,
-                default: () => ({
-                    color: "primary",
-                    text: "Yes"
-                })
+                default: 'yes'
             },
-            no_btn: {
-                type: Object,
+            no_text: {
+                type: String,
                 require: false,
-                default: () => ({
-                    color: "grey",
-                    text: "No"
-                })
+                default: 'no'
             },
-            switch_dialog_btn: {
-                type: Object,
+            text_btn: {
+                type: String,
                 require: false,
-                default: () => ({
-                    color: 'primary',
-                    text: 'Confirm ? ',
-                    is_icon: false,
-                    is_rounded: false,
-                    is_outlined: false,
-                })
+                default: "Confirm"
             }
         },
         data() {
             return {
+                on: {
+                    click: this.switch_dialog,
+                },
                 dialog: false
             }
         },
         methods: {
+            switch_dialog() {
+                this.dialog = !this.dialog
+
+            },
             confirm_success() {
-                this.$emit("onGetConfirmResult", true)
+                this.$emit("change", true)
                 this.dialog = !this.dialog
             },
             confirm_cancel() {
-                this.$emit("onGetConfirmResult", false)
+                this.$emit("change", false)
                 this.dialog = !this.dialog
             }
         }
