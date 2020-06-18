@@ -1,7 +1,9 @@
 <template>
     <div class="d-flex justify-center">
         <slot name="activator" :on="on">
-            <v-btn v-on="on">select</v-btn>
+            <ButtonPrimary v-on="on">
+                Select
+            </ButtonPrimary>
         </slot>
         <v-dialog v-if="dialog" v-model="dialog" persistent max-width="1000" scrollable>
             <v-card>

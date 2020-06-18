@@ -31,6 +31,10 @@
                             {{item.user.first_name}} {{item.user.last_name}}
                         </template>
 
+                        <template v-slot:item.role="{item}">
+                            {{getRoleName(item.role)}}
+                        </template>
+
                         <template v-slot:item.manage="{ item }">
                             <ConfirmDialog
                                     message="remove this user form classroom ?"
@@ -78,6 +82,12 @@
                         value: 'user',
                     },
                     {
+                        text: 'Role ',
+                        align: 'center',
+                        sortable: false,
+                        value: 'role',
+                    },
+                    {
                         text: "Manage",
                         align: 'center',
                         value: "manage"
@@ -91,6 +101,15 @@
             this.loadData()
         },
         methods: {
+            getRoleName(roleId) {
+                if (roleId === 1) {
+                    return 'Owner'
+                } else if (roleId === 2) {
+                    return 'Teacher'
+                } else if (roleId === 3) {
+                    return 'Student'
+                }
+            },
             async loadData() {
                 let data = await this.$store.dispatch('classroom_modules/member/getListMember', this.form_params)
                 this.members = data.results
