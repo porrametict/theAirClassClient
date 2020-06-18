@@ -74,13 +74,11 @@
             <!--header-->
 
             <ContentHeader icon="mdi-lock" text="Change Password" :key="1">
-                <template v-slot:text>
                         <span class="title">Change Password
                         <span class="red--text">
                             (unusable)
                         </span>
                     </span>
-                </template>
             </ContentHeader>
 
 
