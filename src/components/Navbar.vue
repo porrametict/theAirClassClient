@@ -49,8 +49,8 @@ export default {
     drawer: true,
     links: [
       { icon: "mdi-home", text: "Home", route: "/home" },
-      { icon: "mdi-home", text: "YourClassroom", route: "/classroom/Main" },
-      { icon: "mdi-account", text: "Profile", route: "/user/profile" }
+      { icon: "mdi-school", text: "Classroom", route: "/classroom" },
+      { icon: "mdi-account", text: "Profile", route: "/user" }
     ]
   })
 };

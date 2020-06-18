@@ -1,183 +1,238 @@
 <template>
     <div>
-        <div class="ma-8">
-            <div class="d-flex justify-space-around  flex-wrap" >
-                <!-- image-->
-                <div>
-                    <div class="ma-2" >
-                            <v-card-text class="d-flex flex-column fill-height">
-                                <div class="text-center flex-grow-1">
-                                    <img src="mdi-image" height="200" width="200">
-                                </div>
-                                <div class="text-center">
-                                    <div class="ma-2" ></div>
-                                    <v-btn
-                                            rounded
-                                            color="primary"
-                                            class="black--text"
-                                            @click.stop="dialog = true"
-                                    >Edit
-                                    </v-btn>
-                                    <div>
-                                        <v-dialog
-                                                v-model="dialog"
-                                                max-width="400"
-                                        >
-                                            <v-card>
-                                                <v-card-title class="headline">Edit Image</v-card-title>
-                                                <div class="d-flex justify-center">
-                                                    <input type="file" @change="onFileSelected" >
-                                                </div>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn
-                                                            color="gray"
-                                                            text
-                                                            @click="dialog = false"
-                                                    >CANCEL
-                                                    </v-btn>
-                                                    <v-btn
-                                                            color="primary"
-                                                            text
-                                                            @click="onUpload"
-                                                    >Upload
-                                                    </v-btn>
-                                                </v-card-actions>
-                                            </v-card>
-                                        </v-dialog>
-                                    </div>
-                                </div>
-                            </v-card-text>
+        <!-- edit User Profile-->
+        <div v-if="user">
+            <!--header-->
+            <ContentHeader icon="mdi-account-edit" text="Edit Profile" :key="0"></ContentHeader>
+            <div class="ma-8">
+                <div class="d-flex justify-space-around  flex-wrap">
+                    <!-- image-->
+                    <v-card class="d-flex flex-column align-center" min-width="400" elevation="0">
+                        <image-profile :user="user" class="ma-4" ></image-profile>
+                        <circle-image-cropper
+                                :key="ImageCropperComponentKey"
+                                :imageURL="user.profile ? user.profile.image : null"
+                                @getOutput="updateImage">
+                            <template v-slot:button_area>
+                                <v-btn class="primary black--text">
+                                    edit
+                                </v-btn>
+                            </template>
+                        </circle-image-cropper>
+                    </v-card>
+                    <!--details-->
+                    <v-card class="ma-5" min-width="200" elevation="0">
+                        <div>
+                            <v-text-field
+                                    label="Username"
+                                    outlined
+                                    v-model="user.username"
+                                    disabled
+                            >
+                            </v-text-field>
                         </div>
-                </div>
-                <!--details-->
-                <div  class="ma-5">
-                    <div>
-                        <v-text-field
-                                value="John2"
-                                label="Username"
-                                outlined
-                        >
-                        </v-text-field>
-                    </div>
-                    <div>
-                        <v-text-field
-                                value="John"
-                                label="Firstname"
-                                outlined
-                        >
-                        </v-text-field>
-                    </div>
-                    <div>
-                        <v-text-field
-                                value="Doe"
-                                label="Lastname"
-                                outlined
-                        >
-                        </v-text-field>
-                    </div>
-                    <div>
-                        <v-text-field
-                                value="JohnDddd2@gmail.com"
-                                label="E-mail"
-                                readonly
-                                outlined
-                        >
-                        </v-text-field>
-                    </div>
-                    <div>
-                        <v-text-field
-                                v-model="password"
-                                value="12345678"
-                                label="Password"
-                                :type="show1 ? 'text' : 'password'"
-                                readonly
-                                outlined
+                        <div>
+                            <v-text-field
+                                    label="Firstname"
+                                    outlined
+                                    v-model="user.first_name"
+                            >
+                            </v-text-field>
+                        </div>
+                        <div>
+                            <v-text-field
+                                    label="Lastname"
+                                    outlined
+                                    v-model="user.last_name"
+                            >
+                            </v-text-field>
+                        </div>
+                        <div>
+                            <v-text-field
+                                    label="E-mail"
+                                    readonly
+                                    outlined
+                                    v-model="user.email"
+                            >
+                            </v-text-field>
+                        </div>
 
-                        >
-                        </v-text-field>
-                        <div class=" text-center text-md-end">
-                            <p>
-                                <router-link to="/user/edit-password">Edit Password?</router-link>
-                            </p>
-                        </div>
-                    </div>
+                    </v-card>
                 </div>
             </div>
-        </div>
-        <!--button-->
-        <div class="ma-5">
-            <div class="d-flex justify-space-around  flex-wrap">
-                <div class="text-center">
-                    <div class="ma-2" ></div>
+            <!--button-->
+            <div class="ma-5">
+                <div class="d-flex justify-space-around flex-wrap">
                     <v-btn
                             rounded
-                            color="primary"
+                            color="gary"
                             class="black--text"
-                            @click.stop="dialog2 = true"
-                    >SAVE
+                            @click="$router.push({name : 'Profile'})"
+                    >CANCEL
                     </v-btn>
-                    <div>
-                        <v-dialog
-                                v-model="dialog2"
-                                max-width="400"
-                        >
-                            <v-card>
-                                <v-card-title class="headline">Are you sure?</v-card-title>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                            color="gray"
-                                            text
-                                            @click="dialog2 = false"
-                                    >NO
-                                    </v-btn>
-                                    <v-btn
-                                            color="primary"
-                                            text
-                                            @click="onUpload"
-                                    >YES
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </div>
+                    <ConfirmDialog @onGetConfirmResult="on_confirm('user_profile',$event)"
+                                   :switch_dialog_btn="{color: 'primary',text: 'Confirm ? ',is_icon: false,is_rounded: true}">
+                        <template v-slot:btn>
+                            <span class="black--text">Save</span>
+                        </template>
+                    </ConfirmDialog>
                 </div>
-
-                <v-btn
-                        rounded
-                        color="gary"
-                        class="black--text"
-                        @click="$router.push({name : 'Profile'})"
-                >CANCEL
-                </v-btn>
             </div>
         </div>
+
+        <v-divider class="my-2"></v-divider>
+
+        <!-- Change Password-->
+        <div>
+            <!--header-->
+
+            <ContentHeader icon="mdi-lock" text="Change Password" :key="1">
+                <template v-slot:text>
+                        <span class="title">Change Password
+                        <span class="red--text">
+                            (unusable)
+                        </span>
+                    </span>
+                </template>
+            </ContentHeader>
+
+
+            <!--body-->
+            <div class="ma-8">
+                <div class="d-flex justify-space-around flex-wrap">
+                    <v-card class="" outlined min-width="400">
+                        <v-card-title class="d-flex justify-space-around">
+                            <v-icon>
+                                mdi-information
+                            </v-icon>
+                            Guidelines for Strong Password
+                        </v-card-title>
+                        <v-card-text>
+                            <ul>
+                                <li>password must be between 8 - 32 characters.</li>
+                                <li>password must be English alphabet only.</li>
+                                <li>the use of both upper-case and lower-case letters .</li>
+                                <li>inclusion of one or more numerical digits .</li>
+                                <li>inclusion of special characters, such as @, #, $</li>
+                            </ul>
+                        </v-card-text>
+                    </v-card>
+                    <!--form-->
+                    <v-card class="ma-5" elevation="0" min-width="200">
+                        <v-text-field
+                                outlined
+                                v-model="change_password_form.password"
+                                :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
+                                :type="show_password ? 'text' : 'password'"
+                                name="input-10-1"
+                                label="New Password"
+                                counter
+                                @click:append="show_password = !show_password"
+                        ></v-text-field>
+                        <v-text-field
+                                outlined
+                                v-model="change_password_form.password2"
+                                :append-icon="show_password_confirmed ? 'mdi-eye' : 'mdi-eye-off'"
+                                :type="show_password_confirmed ? 'text' : 'password'"
+                                name="input-10-1"
+                                label="Confirm Password"
+                                counter
+                                @click:append="show_password_confirmed = !show_password_confirmed"
+                        ></v-text-field>
+                    </v-card>
+                </div>
+            </div>
+
+            <!--button-->
+            <div class="ma-5">
+                <div class="d-flex justify-space-around flex-wrap">
+                    <v-btn
+                            rounded
+                            color="gary"
+                            class="black--text"
+                            @click="$router.push({name : 'Profile'})"
+                    >CANCEL
+                    </v-btn>
+                    <ConfirmDialog @onGetConfirmResult="on_confirm('change_password',$event)"
+                                   :switch_dialog_btn="{color: 'primary',text: 'Confirm ? ',is_icon: false,is_rounded: true}">
+                        <template v-slot:btn>
+                            <span class="black--text">Save</span>
+                        </template>
+                    </ConfirmDialog>
+                </div>
+            </div>
+
+        </div>
     </div>
+
 </template>
 
 
 <script>
+    import CircleImageCropper from "../../../components/share/CircleImageCropper";
+    import {mapState, mapMutations} from 'vuex'
+    import DefaultAvatar from "../../../components/core/user/DefaultAvatar";
+    import ConfirmDialog from "../../../components/share/ConfirmDialog";
+    import ImageProfile from "../../../components/core/user/ImageProfile";
+    import ContentHeader from "../../../components/share/ContentHeader";
+
     export default {
         name: "UserEditProfile",
-        data () {
+        components: {ContentHeader, ImageProfile, ConfirmDialog, DefaultAvatar, CircleImageCropper},
+        data() {
             return {
-                dialog: false,
-                dialog2: false,
-                dialog3: false,
-                selectedFile: null,
-                show1: false,
-                password: 'Password',
+
+                VImgComponentKey: 0,
+                ImageCropperComponentKey: 1,
+
+
+                change_password_form: {
+                    password: "",
+                    password2: ""
+                },
+                show_password: false,
+                show_password_confirmed: false,
             }
         },
+        computed: {
+            ...mapState({
+                user: state => state.user.user
+            }),
+        },
         methods: {
-            onFileSelected(event) {
-                this.selectedFile = event.target.files[0]
+            forceRenderImgDisplay() {
+                this.VImgComponentKey += 1
+                this.ImageCropperComponentKey += 1
             },
-            onUpload(){
-
+            async updateImage(image) {
+                let response;
+                let params = {
+                    image: image,
+                    user: this.user.pk
+                }
+                if (this.user.profile) { // has profile in DB
+                    params.id = this.user.profile.id
+                    response = await this.$store.dispatch("user/updateProfileImage", params)
+                } else {
+                    response = await this.$store.dispatch("user/uploadProfileImage", params)
+                }
+                this.$store.commit('user/setUserProfile', response)
+                this.forceRenderImgDisplay()
+            },
+            async on_confirm(_from, e) {
+                if (_from === 'user_profile' && e) {
+                    await this.updateProfile()
+                } else if (_from === 'change_password' && e) {
+                    await this.updatePassword()
+                }
+            },
+            async updateProfile() {
+                let response = await this.$store.dispatch('user/updateUser', this.user)
+            },
+            async updatePassword() {
 
             }
+
         }
     }
 </script>

@@ -3,7 +3,7 @@ export default {
     component: () => import('../../views/core/user/Template'),
     children: [
         {
-            path: "profile",
+            path: "",
             name: "Profile",
             component: () => import('../../views/core/user/Profile')
         },
@@ -11,11 +11,6 @@ export default {
             path: "edit-profile",
             name: "EditProfile",
             component: () => import('../../views/core/user/EditProfile')
-        },
-        {
-            path: "edit-password",
-            name: "EditPassword",
-            component: () => import('../../views/core/user/EditPassword')
         },
     ]
 }

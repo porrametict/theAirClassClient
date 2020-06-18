@@ -1,31 +1,52 @@
 import score from "../classroom_modules/score";
 import member from "../classroom_modules/member";
+import assignments from "../classroom_modules/assignments";
+import questions from "../classroom_modules/questions";
+import screensharing from "../classroom_modules/screensharing";
 
 export default {
     path: '/classroom',
     component: () => import('../../views/classroom/Template'),
     children: [
         {
+            path: "",
+            name: "IndexClassroom",
+            component: () => import('../../views/classroom/Index')
+        },
+        {
+            path: "board",
+            name: "BoardClassroom",
+            component: () => import('../../views/classroom/Board')
+        },
+        {
             path: "create",
             name: "CreateClassroom",
             component: () => import('../../views/classroom/Create')
-        }, {
+        },
+        {
             path: "join",
             name: "JoinClassroom",
             component: () => import('../../views/classroom/Join')
         },
         {
-            path: "EditClassroom",
-            name: "Edit",
+            path: "edit",
+            name: "EditClassroom",
             component: () => import('../../views/classroom/Edit')
-        }, {
+        },
+        {
             path: "main",
             name: "MainClassroom",
             component: () => import('../../views/classroom/Main'),
             children: [
                 score,
-                member
+                member,
+                questions,
+                assignments,
+
+
+
             ]
         },
+        screensharing
     ]
 }
