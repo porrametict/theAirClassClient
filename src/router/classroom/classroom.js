@@ -1,5 +1,5 @@
 import classroom_module_index from "../classroom_modules/classroom_module_index";
-
+import module_index from '../classroom_modules/index'
 export default {
     path: '/classroom',
     component: () => import('../../views/classroom/Template'),
@@ -35,5 +35,6 @@ export default {
                 classroom_module_index
             ]
         },
+        module_index
     ]
 }

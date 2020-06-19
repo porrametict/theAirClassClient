@@ -10,6 +10,5 @@ export default {
             component: () => import('../../views/classroom_modules/Index')
         },
         member,
-
     ]
 }
