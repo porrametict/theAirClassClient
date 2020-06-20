@@ -2,6 +2,7 @@ import score from "../classroom_modules/score";
 import member from "../classroom_modules/member";
 import assignments from "../classroom_modules/assignments";
 import questions from "../classroom_modules/questions";
+import steam from "../steam/steam";
 
 export default {
     path: '/classroom',
@@ -15,7 +16,7 @@ export default {
         {
             path: "board",
             name: "BoardClassroom",
-            component: () => import('../../views/classroom/Board')
+            component: () => import('../../views/classroom/Board'),
         },
         {
             path: "create",
@@ -42,6 +43,11 @@ export default {
 
 
             ]
+        },
+        {
+            path: "steam",
+            name: "SteamsClassroom",
+            component: () => import('../../views/steams/Index')
         },
     ]
 }

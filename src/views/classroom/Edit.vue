@@ -86,16 +86,15 @@
                                 <v-col class="text-center" cols="12" sm="12" >
                                     <div class="my-2">
                                         <v-btn
-                                                color="#FFD600"
-                                                type="button"
+                                                color="primary"
+                                                class="black--text"
                                                 @click=" "
                                         >save
 
 
                                         </v-btn>
                                         <v-btn
-                                                class="mx-9"
-                                                color="#FFFFFF"
+                                                class="text--black mx-9"
                                                 type="button"
                                                 @click=" "
                                         >cancel

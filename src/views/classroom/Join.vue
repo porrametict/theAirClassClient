@@ -9,7 +9,12 @@
                     dense
             >
             </v-text-field>
-            <v-btn rounded color="primary" class="black--text" large>
+            <v-btn
+                    rounded color="primary"
+                    class="black--text"
+                    large
+                    @click="$router.push({name : 'BoardClassroom'})"
+            >
                 join new classroom
             </v-btn>
         </div>

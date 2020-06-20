@@ -28,7 +28,18 @@
         <v-divider class="my-2"></v-divider>
         <!--body-->
         <div>
+            <v-col cols="12"  class="d-flex justify-end ">
+
+                <v-btn
+                        color="primary"
+                        class="black--text"
+                        @click="$router.push({name : 'SteamsClassroom'})"
+                >
+                    Steam
+                </v-btn>
+            </v-col>
             <p class="display-4 text-center grey--text">Coming Soon.</p>
+
         </div>
     </div>
 </template>

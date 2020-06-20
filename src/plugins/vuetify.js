@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
-import colors from 'vuetify/lib/util/colors'
+import colors from 'vuetify/lib/util/colors';
+
 
 Vue.use(Vuetify);
 
@@ -16,6 +17,7 @@ const dark_theme = {
     primary: '#FFD600',
     background: colors.yellow,
 }
+
 
 
 

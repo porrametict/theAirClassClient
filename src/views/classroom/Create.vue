@@ -71,7 +71,7 @@
                             <v-col class="text-center" cols="12" sm="12">
                                 <div class="my-2">
                                     <v-btn
-                                            color="#FFD600"
+                                            color="primary"
                                             type="button"
                                             @click=" "
                                     >save
@@ -79,8 +79,8 @@
 
                                     </v-btn>
                                     <v-btn
-                                            class="mx-9"
-                                            color="#FFFFFF"
+                                            color="grey"
+                                            class="black--text"
                                             type="button"
                                             @click=" "
                                     >cancel
