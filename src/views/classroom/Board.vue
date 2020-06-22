@@ -1,55 +1,74 @@
 <template>
-    <div>
+    <div v-if="classroom">
         <!-- header-->
         <div class="d-flex justify-start">
-            <v-img
-                    :src="img_url"
-                    max-width="50"
+            <ClassroomImageDisplay
+                    :classroom="classroom"
+                    width="60"
+                    height="60"
                     class="mx-2"
             >
+            </ClassroomImageDisplay>
 
-            </v-img>
             <div class="d-flex justify-space-between" style="width: 100%">
                 <p class="display-1 font-weight-bold">
-                    Usage of Thai Language
+                    {{classroom.name}}
                 </p>
-                <v-btn
-                        class="mx-2"
-                        icon
-                        outlined
-                        @click="$router.push({name : 'MainClassroom'})"
-                >
-                    <v-icon>
-                        mdi-dots-horizontal
-                    </v-icon>
-                </v-btn>
+                <v-menu offset-y
+                        nudge-bottom="5">
+                    <template v-slot:activator="{ on }">
+                        <v-btn icon
+                               outlined
+                               color="grey"
+                               dark
+                               v-on="on"
+                        >
+                            <v-icon>
+                                mdi-dots-horizontal
+                            </v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item
+                                @click="$router.push({name : 'MainClassroom'})"
+                        >
+                            <v-list-item-title>manage Classroom</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
             </div>
         </div>
         <v-divider class="my-2"></v-divider>
         <!--body-->
         <div>
-            <v-col cols="12"  class="d-flex justify-end ">
-
-                <v-btn
-                        color="primary"
-                        class="black--text"
-                        @click="$router.push({name : 'SteamsClassroom'})"
-                >
-                    Steam
-                </v-btn>
-            </v-col>
             <p class="display-4 text-center grey--text">Coming Soon.</p>
-
         </div>
     </div>
 </template>
 
 <script>
+    import {mapState} from 'vuex'
+    import ButtonIcon from "../../components/share/ButtonIcon";
+    import ClassroomImageDisplay from "../../components/classroom/ClassroomImageDisplay";
+
     export default {
         name: "ClassroomBoard",
+        components: {ClassroomImageDisplay, ButtonIcon},
         data() {
-            return {
-                img_url: "https://png.pngtree.com/png-clipart/20190903/original/pngtree-a-stack-of-books-and-plants-together-png-image_4429927.jpg"
+            return {}
+        },
+        computed: {
+            ...mapState({
+                classroom: state => state.classroom.classroom
+            })
+        },
+        mounted() {
+            this.loadData()
+        },
+        methods: {
+            async loadData() {
+                let id = this.$route.params.id
+                await this.$store.dispatch('classroom/retrieveClassroom', id)
             }
         }
     }

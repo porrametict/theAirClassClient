@@ -1,10 +1,11 @@
 <template>
     <div>
-        <v-img  :class="circle ? 'circle-rounded' : '' "
-                v-if="user.profile && ( user.profile.image && user.profile.image !== '') "
-                :height="height"
-                :width="width"
-                :src="user.profile.image">
+        <v-img :class="circle ? 'circle-rounded' : '' "
+               v-if="user.profile && ( user.profile.image && user.profile.image !== '') "
+               :height="height"
+               :width="width"
+               :src="user.profile.image"
+        >
         </v-img>
         <DefaultAvatar v-else
                        :first_name="user.first_name"
@@ -12,7 +13,8 @@
                        :height="height"
                        :width="width"
                        :circle="circle"
-        ></DefaultAvatar>
+        >
+        </DefaultAvatar>
     </div>
 </template>
 
@@ -38,9 +40,9 @@
                 default: 200
             },
             circle: {
-                type : [String,Boolean],
-                require : false,
-                default : false
+                type: [String, Boolean],
+                require: false,
+                default: false
             }
         }
     }

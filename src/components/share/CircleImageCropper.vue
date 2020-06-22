@@ -1,30 +1,21 @@
 <template>
-    <div>
-        <v-dialog v-model="dialog" persistent max-width="800" scrollable >
-            <template v-slot:activator="{ on }">
-                <v-btn icon
-                       color="black"
-                       dark
-                       v-on="on"
-                >
-                    <slot name="button_area">
-                        <v-icon>
-                            mdi-pencil
-                        </v-icon>
-                    </slot>
-                </v-btn>
-            </template>
+    <div class="d-flex justify-center">
+        <slot name="activator" :on="on">
+            <ButtonPrimary v-on="on">
+                Select
+            </ButtonPrimary>
+        </slot>
+        <v-dialog v-if="dialog" v-model="dialog" persistent max-width="1000" scrollable>
             <v-card>
                 <v-card-title class="d-flex justify-space-between align-baseline primary pa-2 px-4">
-                    <p class="pa-0 ma-0"> Edit Image</p>
+                    <p class="pa-0 ma-0"> Select Image</p>
                     <v-btn icon class="pa-0 ">
                         <v-icon @click="dialog = !dialog">
                             mdi-close
                         </v-icon>
                     </v-btn>
                 </v-card-title>
-                <v-card-text style="min-height: 20em; max-height: 35em">
-
+                <v-card-text class="">
                     <div class="d-flex align-center justify-center">
                         <Cropper v-if="image"
                                  class="ma-2"
@@ -44,13 +35,14 @@
                                style="display: none">
                     </div>
                 </v-card-text>
-                <v-card-actions class="d-flex justify-space-around">
-                        <v-btn @click="$refs.file.click()" color="green" outlined>
-                            select image
-                        </v-btn>
-                        <v-btn @click="crop" color="primary" class="black--text">
-                            Update
-                        </v-btn>
+                <v-card-actions class="d-flex justify-space-around mb-2">
+                    <v-btn @click="$refs.file.click()" color="green" outlined rounded >
+                        <span class="px-2">
+                        choose image
+                        </span>
+                    </v-btn>
+                    <ButtonPrimary text="select" @click="crop">
+                    </ButtonPrimary>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -58,6 +50,7 @@
 </template>
 <script>
     import {CircleStencil, Cropper} from 'vue-advanced-cropper'
+    import ButtonPrimary from "./ButtonPrimary";
 
     export default {
         name: "CircleImageCropper",
@@ -73,15 +66,22 @@
         },
         data() {
             return {
+                on: {
+                    click: this.switch_dialog,
+                },
                 dialog: false,
                 image: null
             }
         },
         components: {
+            ButtonPrimary,
             Cropper,
             CircleStencil
         },
         methods: {
+            switch_dialog() {
+                this.dialog = !this.dialog
+            },
             uploadImage(event) {
                 // Reference to the DOM input element
                 var input = event.target;

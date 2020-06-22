@@ -1,15 +1,15 @@
 <template>
-    <div>
-        <p>
+    <div class="">
+        <div class="d-flex my-2">
             <v-icon class="mx-2" color="primary">
                 {{icon}}
             </v-icon>
             <span class="title">
-                <slot name="text">
+                <slot>
                 {{text}}
                 </slot>
             </span>
-        </p>
+        </div>
         <v-divider></v-divider>
     </div>
 </template>

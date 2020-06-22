@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "ClassroomTemplate"
+        name: "ClassroomTemplate",
     }
 </script>
 

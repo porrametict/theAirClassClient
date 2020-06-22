@@ -8,15 +8,13 @@
                 <div class="d-flex justify-space-around  flex-wrap">
                     <!-- image-->
                     <v-card class="d-flex flex-column align-center" min-width="400" elevation="0">
-                        <image-profile :user="user" class="ma-4" ></image-profile>
+                        <image-profile :user="user" class="ma-4"></image-profile>
                         <circle-image-cropper
                                 :key="ImageCropperComponentKey"
                                 :imageURL="user.profile ? user.profile.image : null"
                                 @getOutput="updateImage">
                             <template v-slot:button_area>
-                                <v-btn class="primary black--text">
-                                    edit
-                                </v-btn>
+                                <ButtonPrimary text="edit"></ButtonPrimary>
                             </template>
                         </circle-image-cropper>
                     </v-card>
@@ -63,19 +61,8 @@
             <!--button-->
             <div class="ma-5">
                 <div class="d-flex justify-space-around flex-wrap">
-                    <v-btn
-                            rounded
-                            color="gary"
-                            class="black--text"
-                            @click="$router.push({name : 'Profile'})"
-                    >CANCEL
-                    </v-btn>
-                    <ConfirmDialog @onGetConfirmResult="on_confirm('user_profile',$event)"
-                                   :switch_dialog_btn="{color: 'primary',text: 'Confirm ? ',is_icon: false,is_rounded: true}">
-                        <template v-slot:btn>
-                            <span class="black--text">Save</span>
-                        </template>
-                    </ConfirmDialog>
+                    <ButtonCancel @click="$router.push({name : 'Profile'})"></ButtonCancel>
+                    <ButtonSubmit @click="updateProfile"></ButtonSubmit>
                 </div>
             </div>
         </div>
@@ -87,13 +74,11 @@
             <!--header-->
 
             <ContentHeader icon="mdi-lock" text="Change Password" :key="1">
-                <template v-slot:text>
                         <span class="title">Change Password
                         <span class="red--text">
                             (unusable)
                         </span>
                     </span>
-                </template>
             </ContentHeader>
 
 
@@ -139,26 +124,12 @@
                                 counter
                                 @click:append="show_password_confirmed = !show_password_confirmed"
                         ></v-text-field>
-                    </v-card>
-                </div>
-            </div>
+                        <div class="text-center">
+                            <ConfirmDialog @change="on_confirm('change_password',$event)" text_btn="change">
 
-            <!--button-->
-            <div class="ma-5">
-                <div class="d-flex justify-space-around flex-wrap">
-                    <v-btn
-                            rounded
-                            color="gary"
-                            class="black--text"
-                            @click="$router.push({name : 'Profile'})"
-                    >CANCEL
-                    </v-btn>
-                    <ConfirmDialog @onGetConfirmResult="on_confirm('change_password',$event)"
-                                   :switch_dialog_btn="{color: 'primary',text: 'Confirm ? ',is_icon: false,is_rounded: true}">
-                        <template v-slot:btn>
-                            <span class="black--text">Save</span>
-                        </template>
-                    </ConfirmDialog>
+                            </ConfirmDialog>
+                        </div>
+                    </v-card>
                 </div>
             </div>
 
@@ -170,15 +141,23 @@
 
 <script>
     import CircleImageCropper from "../../../components/share/CircleImageCropper";
-    import {mapState, mapMutations} from 'vuex'
+    import {mapState} from 'vuex'
     import DefaultAvatar from "../../../components/core/user/DefaultAvatar";
     import ConfirmDialog from "../../../components/share/ConfirmDialog";
     import ImageProfile from "../../../components/core/user/ImageProfile";
     import ContentHeader from "../../../components/share/ContentHeader";
+    import ButtonCancel from "../../../components/share/ButtonCancel";
+    import ButtonSubmit from "../../../components/share/ButtonSubmit";
+    import ButtonPrimary from "../../../components/share/ButtonPrimary";
 
     export default {
         name: "UserEditProfile",
-        components: {ContentHeader, ImageProfile, ConfirmDialog, DefaultAvatar, CircleImageCropper},
+        components: {
+            ButtonPrimary,
+            ButtonSubmit,
+            ButtonCancel,
+            ContentHeader, ImageProfile, ConfirmDialog, DefaultAvatar, CircleImageCropper
+        },
         data() {
             return {
 
