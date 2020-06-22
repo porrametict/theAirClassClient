@@ -15,6 +15,7 @@ moment.locale('th')
 
 
 const baseURL = process.env.VUE_APP_BASE_BACKEND_URL
+window.baseWsURL = "ws://127.0.0.1:8000/ws"
 window.axios = new Axios.create({
     baseURL: baseURL,
     timeout: 60000

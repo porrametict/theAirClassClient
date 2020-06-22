@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" dark app class="yellow accent-4">
+    <v-navigation-drawer
+            v-model="drawer"
+            dark
+            app
+            class="yellow accent-4"
+            permanent
+    >
       <v-layout column align-center>
         <v-flex class="mt-10 mb-8">
           <v-avatar>
@@ -43,7 +49,8 @@ export default {
     drawer: true,
     links: [
       { icon: "mdi-home", text: "Home", route: "/home" },
-      { icon: "mdi-account", text: "Profile", route: "/user/profile" }
+      { icon: "mdi-school", text: "Classroom", route: "/classroom" },
+      { icon: "mdi-account", text: "Profile", route: "/user" }
     ]
   })
 };

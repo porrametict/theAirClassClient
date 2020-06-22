@@ -1,10 +1,19 @@
-import score from "../classroom_modules/score";
-import member from "../classroom_modules/member";
-
+import classroom_module_index from "../classroom_modules/classroom_module_index";
+import module_index from '../classroom_modules/index'
 export default {
     path: '/classroom',
     component: () => import('../../views/classroom/Template'),
     children: [
+        {
+            path: "",
+            name: "IndexClassroom",
+            component: () => import('../../views/classroom/Index')
+        },
+        {
+            path: ":id/board",
+            name: "BoardClassroom",
+            component: () => import('../../views/classroom/Board')
+        },
         {
             path: "create",
             name: "CreateClassroom",
@@ -15,17 +24,17 @@ export default {
             component: () => import('../../views/classroom/Join')
         },
         {
-            path: "EditClassroom",
-            name: "Edit",
+            path: ":id/edit",
+            name: "EditClassroom",
             component: () => import('../../views/classroom/Edit')
         }, {
-            path: "main",
+            path: ":id/main",
             name: "MainClassroom",
             component: () => import('../../views/classroom/Main'),
             children: [
-                score,
-                member
+                classroom_module_index
             ]
         },
+        module_index
     ]
 }

@@ -1,12 +1,10 @@
 <template>
-    <div>
-        Score Index
-    </div>
+    <router-view></router-view>
 </template>
 
 <script>
     export default {
-        name: "ScoreIndex"
+        name: "ScreenSharingTemplate"
     }
 </script>
 

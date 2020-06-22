@@ -1,167 +1,129 @@
 <template>
     <div>
-        <div>
-            <v-container fluid class="pa-0">
-                <v-row>
-                    <v-col cols="12" class="ma-0">
-                        <v-toolbar flat>
-
-                            <v-col cols="12" sm="4">
-
-                                <v-text-field
-                                        v-model="search"
-                                        append-icon="mdi-magnify"
-                                        label="Search for member"
-                                        outline
-                                        filled
-                                        rounded
-                                        dense
-                                        hide-details
-                                ></v-text-field>
-                            </v-col>
-
-                            <!--<v-btn-->
-
-                            <!--class="mb-7"-->
-                            <!--&gt;-->
-                            <!--<v-icon   large>mdi-magnify</v-icon>-->
-                            <!--</v-btn>-->
-
-                            <v-spacer></v-spacer>
-
-
-                            <div class="mb-6">
-                                <v-col cols="12" sm="3">
-                                    <v-btn
-                                            medium
-                                            small color="#FFD600"
-
-
-                                    >
-                                        <v-icon>mdi-plus-circle</v-icon>
-
-                                        Add Member
-
-                                    </v-btn>
-                                </v-col>
-
-                            </div>
-
-
-                        </v-toolbar>
-
-
-                    </v-col>
-                </v-row>
-            </v-container>
-
-            <v-card>
-                <v-card-title>
-                    Owner
-                </v-card-title>
-
-                <v-data-table
-                        :headers="headers_owner"
-                        :items="owner"
-                        :search="search"
-                ></v-data-table>
-
-
-            </v-card>
-
-            <v-card>
-                <v-card-title>
-                    Student
-                </v-card-title>
-
-                <v-data-table
-                        :headers="headers_student"
-                        :items="student"
-                        :search="search"
-                >
-                    <v-btn
-                            icon
-                            color="grey"
-                            class="white--text"
-
-                    >
-                        <v-icon>
-                            mdi-delete
-                        </v-icon>
-                    </v-btn>
-
-                </v-data-table>
-
-
-            </v-card>
-
+        <!--header-->
+        <div class="mt-2">
+            <v-row align="center" justify="end">
+                <v-col cols="12" md="4">
+                    <v-text-field
+                            filled
+                            rounded
+                            hide-details
+                            dense
+                            append-icon="mdi-magnify"
+                            placeholder="search"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
         </div>
+        <div>
+            <!-- Member-->
+            <div v-if="members">
+                <v-card>
+                    <v-card-title>
+                        Member
+                    </v-card-title>
 
+                    <v-data-table
+                            :headers="headers_member"
+                            :items="members"
+                    >
+                        <template v-slot:item.user="{item}">
+                            {{item.user.first_name}} {{item.user.last_name}}
+                        </template>
 
+                        <template v-slot:item.role="{item}">
+                            {{getRoleName(item.role)}}
+                        </template>
+
+                        <template v-slot:item.manage="{ item }">
+                            <ConfirmDialog
+                                    message="remove this user form classroom ?"
+                                    @change="delete_member($event,item)"
+                            >
+                                <template v-slot:activator="{on}">
+                                    <v-btn
+                                            icon
+                                            outlined
+                                            color="red"
+                                            v-on="on"
+                                    >
+                                        <v-icon>mdi-delete</v-icon>
+                                    </v-btn>
+                                </template>
+
+                            </ConfirmDialog>
+                        </template>
+                    </v-data-table>
+                </v-card>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+    import ContentHeader from "../../../components/share/ContentHeader";
+    import ButtonIcon from "../../../components/share/ButtonIcon";
+    import ConfirmDialog from "../../../components/share/ConfirmDialog";
+
     export default {
         name: "MemberIndex",
+        components: {ConfirmDialog, ButtonIcon, ContentHeader},
         data() {
             return {
-                search: '',
-                headers_owner: [
+                members: null,
+                form_params: {
+                    search: null,
+                },
+                headers_member: [
                     {
-                        text: 'Teacher ',
+                        text: 'Name ',
                         align: 'start',
                         sortable: false,
-                        value: 'name',
+                        value: 'user',
                     },
-                    //     { text: 'Calories', value: 'calories' },
-                    //     { text: 'Fat (g)', value: 'fat' },
-                    //     { text: 'Carbs (g)', value: 'carbs' },
-                    //     { text: 'Protein (g)', value: 'protein' },
-                    //     { text: 'Iron (%)', value: 'iron' },
-                ],
-                headers_student: [
                     {
-                        text: 'Member',
-                        align: 'start',
+                        text: 'Role ',
+                        align: 'center',
                         sortable: false,
-                        value: 'name',
-                    },
-
-                ],
-                owner: [
-                    {
-                        name: 'T.Deer',
-
+                        value: 'role',
                     },
                     {
-                        name: 'T.Smart',
-
-                    },
-                    {
-                        name: 'T.Gen',
-
-                    },
-
-                ],
-                student: [
-                    {
-                        name: 'Adam ',
-
-                    },
-                    {
-                        name: 'Ava',
-
-                    },
-                    {
-                        name: 'Olivia',
-
+                        text: "Manage",
+                        align: 'center',
+                        value: "manage"
                     },
 
                 ],
             }
 
         },
+        mounted() {
+            this.loadData()
+        },
+        methods: {
+            getRoleName(roleId) {
+                if (roleId === 1) {
+                    return 'Owner'
+                } else if (roleId === 2) {
+                    return 'Teacher'
+                } else if (roleId === 3) {
+                    return 'Student'
+                }
+            },
+            async loadData() {
+                let data = await this.$store.dispatch('classroom_modules/member/getListMember', this.form_params)
+                this.members = data.results
+            },
+            async delete_member(e, item) {
+                if (e) {
+                    let data = await this.$store.dispatch('classroom_modules/member/deleteMember', item.id)
+                    if (data != null) {
+                        await this.loadData()
+                    }
+                }
+
+            },
+        }
     }
 </script>
 
