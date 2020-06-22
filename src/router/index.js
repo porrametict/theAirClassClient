@@ -21,6 +21,11 @@ const routes = [
         name: 'SC101',
         component: () => import('../views/ShareComponentUsage')
     },
+    {
+        path: '/ts101',
+        name: 'TS101',
+        component: () => import('../views/testSpace')
+    },
     core,
 ]
 
