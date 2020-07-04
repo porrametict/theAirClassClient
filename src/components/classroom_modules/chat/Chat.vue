@@ -1,28 +1,11 @@
 <template>
     <div class="fill-height d-flex flex-column">
         <!--content-->
-        <v-card-text class="d-flex flex-column overflow-y-auto" style="max-height: 70vh">
+        <v-card-text class="d-flex flex-column">
 
             <div v-for="(m,index) in messages" :key="index" class="d-flex flex-column ">
-
-
-
-
-                <!--student-->
-                <div >
-                    <div class="d-flex mr-auto">
-                        <v-icon large>mdi-account</v-icon>
-                        <v-card outlined class="my-1 mx-2">
-                            <v-card-text class="white">
-                                <p class="display-1 ma-0 pa-0">{{m}}</p>
-                            </v-card-text>
-                        </v-card>
-                    </div>
-
-                </div>
-
+                <MessageRender :data="m"></MessageRender>
             </div>
-
         </v-card-text>
 
         <!--footer-->
@@ -39,9 +22,12 @@
 </template>
 
 <script>
+    import moment from "moment"
     import {mapState} from "vuex";
+    import MessageRender from "./MessageRender";
     export default {
         name: "Chat",
+        components: {MessageRender},
         props: {
             roomId: {
                 type: [String, Number],
@@ -56,6 +42,9 @@
             roomInfo: null
         }),
         async created() {
+            if (!this.user) {
+                await this.$store.dispatch('user/getUser')
+            }
             this.newWebSocket()
         },
         computed: {
@@ -89,14 +78,17 @@
             send_message() {
                 if (this.text_message.trim().length > 0) {
                     let data = {
-                        'content': this.text_message
+                        'content': {
+                            "message" : this.text_message,
+                            "timestamp" : moment().format('LT')
+                        },
+                        'user' : this.user
                     }
                     this.socket_send(data);
                     this.text_message = null
                 }
             },
             on_new_message(e) {
-                console.log('data',e)
                 let message = e.data
                 this.messages.push(message)
             },
