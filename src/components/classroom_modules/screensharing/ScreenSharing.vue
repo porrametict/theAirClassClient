@@ -22,7 +22,7 @@
 
 <script>
     export default {
-        name: "ScreenSharingIndex",
+        name: "ScreenSharing",
         mounted() {
             async function getDisplayMediaError(error) {
                 if (location.protocol === 'http:') {

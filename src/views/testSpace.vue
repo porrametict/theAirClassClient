@@ -1,12 +1,12 @@
 <template>
-    <Chat room-id="202326"></Chat>
+    <div>
+        <p> test space</p>
+    </div>
 </template>
 
 <script>
-    import Chat from "../components/classroom_modules/chat/Chat";
     export default {
         name: "testSpace",
-        components: {Chat}
     }
 </script>
 

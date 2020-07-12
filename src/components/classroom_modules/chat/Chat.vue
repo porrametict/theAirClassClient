@@ -33,13 +33,16 @@
                 type: [String, Number],
                 require: true
             },
+            classroomId: {
+                type: [String, Number],
+                require: true
+            },
         },
         data: () => ({
             chat: null,
             text_message: null,
             messages: []
             ,
-            roomInfo: null
         }),
         async created() {
             if (!this.user) {
@@ -64,11 +67,11 @@
                     console.error('Chat socket closed unexpectedly', e);
                 }
                 let commands = {
-                    'chat_message': self.on_new_message,
+                    'on_new_message': self.on_new_message,
                 }
                 this.chat_socket.onmessage = function (e) {
                     let data = JSON.parse(e.data);
-                    let command = data['type']
+                    let command = data['command']
                     commands[command](data)
                 }
             },
@@ -78,7 +81,11 @@
             send_message() {
                 if (this.text_message.trim().length > 0) {
                     let data = {
+                        "command" : "new_message",
+                        'room' : this.roomId,
+                        'classroom' : this.classroomId,
                         'content': {
+                            "type" : "text",
                             "message" : this.text_message,
                             "timestamp" : moment().format('LT')
                         },
@@ -89,8 +96,7 @@
                 }
             },
             on_new_message(e) {
-                let message = e.data
-                this.messages.push(message)
+                this.messages.push(e)
             },
         }
     }

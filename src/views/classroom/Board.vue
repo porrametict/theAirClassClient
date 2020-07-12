@@ -41,6 +41,8 @@
         <v-divider class="my-2"></v-divider>
         <!--body-->
         <div>
+            <v-btn @click="$router.push({name:'RoomClassroom' ,params : {id: $route.params.id}})">Go To Room Page
+            </v-btn>
             <p class="display-4 text-center grey--text">Coming Soon.</p>
         </div>
     </div>
