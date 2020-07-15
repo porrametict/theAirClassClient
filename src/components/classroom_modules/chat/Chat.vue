@@ -10,7 +10,8 @@
         <v-card-text class="app-messages">
             <div class="messages-container">
                 <div class="messages" v-chat-scroll>
-                    <div v-for="(m,index) in messages" :key="index" class="d-flex flex-column" style="position: relative">
+                    <div v-for="(m,index) in messages" :key="index" class="d-flex flex-column"
+                         style="position: relative">
                         <MessageRender :data="m"></MessageRender>
                     </div>
                 </div>
@@ -59,7 +60,7 @@
             messages: []
             ,
         }),
-        async created() {
+        async mounted() {
             if (!this.user) {
                 await this.$store.dispatch('user/getUser')
             }
@@ -74,15 +75,17 @@
             newWebSocket() {
                 let self = this
                 this.chat_socket = new WebSocket(
-                    `${window.baseWsURL}/chat/${this.roomId}/`
+                    `${window.baseWsURL}/chat/${self.roomId}/`
                 )
                 this.chat_socket.onopen = function () {
+                    self.fetch_message()
                 }
                 this.chat_socket.onclose = function (e) {
                     console.error('Chat socket closed unexpectedly', e);
                 }
                 let commands = {
                     'on_new_message': self.on_new_message,
+                    'on_fetch_message': self.on_fetch_message,
                 }
                 this.chat_socket.onmessage = function (e) {
                     let data = JSON.parse(e.data);
@@ -93,25 +96,37 @@
             socket_send(data) {
                 this.chat_socket.send(JSON.stringify(data));
             },
+            fetch_message() {
+                let data = {
+                    "command": "fetch_message",
+                    "data": {
+                        'room': this.roomId,
+                    },
+                }
+                this.socket_send(data);
+            },
+            on_fetch_message(e) {
+                this.messages = e.data
+            },
             send_message() {
                 if (this.text_message.trim().length > 0) {
                     let data = {
                         "command": "new_message",
-                        'room': this.roomId,
-                        'classroom': this.classroomId,
-                        'content': {
-                            "type": "text",
+                        "data": {
+                            'classroom': this.classroomId,
+                            'room': this.roomId,
+                            'user': this.user,
+                            'content_type': "text",
+                            'image_url': null,
                             "message": this.text_message,
-                            "timestamp": moment().format('LT')
                         },
-                        'user': this.user
                     }
                     this.socket_send(data);
                     this.text_message = null
                 }
             },
             on_new_message(e) {
-                this.messages.push(e)
+                this.messages.push(e.data)
             },
         }
     }
@@ -122,8 +137,9 @@
         background: #FFFFFF;
         position: relative;
         height: 100%;
-        padding: 2px ;
+        padding: 2px;
     }
+
     .messages-container {
         display: flex;
         flex-direction: column;
@@ -164,7 +180,6 @@
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
     }
-
 
 
 </style>
