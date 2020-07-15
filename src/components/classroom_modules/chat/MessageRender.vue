@@ -1,25 +1,27 @@
 <template>
+
+    <!-- if Me-->
     <div v-if="user.pk === data.user.pk" class="d-flex ml-auto">
         <v-card class="my-1 mx-2" outlined>
-            <v-card-text class="orange lighten-2 ">
-                <p class="display-1 ma-0 pa-0">{{data.content.message}}</p>
-                <p class="title ma-0 pa-0 text-end">{{data.content.timestamp}}</p>
+            <v-card-text class="primary">
+                <p class="ma-0 pa-0">{{data.content.message}}</p>
+                <p class="caption ma-0 pa-0 text-end">{{data.content.timestamp}}</p>
             </v-card-text>
         </v-card>
     </div>
-
+    <!-- if Other-->
     <div class="d-flex mr-auto " v-else>
         <div class="d-flex flex-row align-center">
             <ImageProfile :user="data.user"
                           :circle="true"
-                          width="50"
-                          height="50"
+                          width="40"
+                          height="40"
                           font_size_class="title"
             ></ImageProfile>
             <v-card outlined class="my-1 mx-2">
                 <v-card-text class="grey lighten-2">
-                    <p class="display-1 ma-0 pa-0">{{data.content.message}}</p>
-                    <p class="title ma-0 pa-0  ">{{data.content.timestamp}}</p>
+                    <p class=" ma-0 pa-0">{{data.content.message}}</p>
+                    <p class="caption ma-0 pa-0  ">{{data.content.timestamp}}</p>
                 </v-card-text>
             </v-card>
         </div>

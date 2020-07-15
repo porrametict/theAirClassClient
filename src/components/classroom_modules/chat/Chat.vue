@@ -1,23 +1,37 @@
 <template>
-    <div class="fill-height d-flex flex-column">
+    <v-card class="fill-height d-flex flex-column" outlined>
+        <v-card-title class="ma-0 pa-2">
+            <slot>
+                Chat
+            </slot>
+        </v-card-title>
+        <v-divider></v-divider>
         <!--content-->
-        <v-card-text class="d-flex flex-column">
-
-            <div v-for="(m,index) in messages" :key="index" class="d-flex flex-column ">
-                <MessageRender :data="m"></MessageRender>
+        <v-card-text class="app-messages">
+            <div class="messages-container">
+                <div class="messages" v-chat-scroll>
+                    <div v-for="(m,index) in messages" :key="index" class="d-flex flex-column" style="position: relative">
+                        <MessageRender :data="m"></MessageRender>
+                    </div>
+                </div>
             </div>
-        </v-card-text>
 
+
+        </v-card-text>
+        <v-divider></v-divider>
         <!--footer-->
-        <v-card-text class="white mt-auto d-flex align-stretch">
-            <v-text-field v-model="text_message" outlined class="ma-0 pa-0"
+        <v-card-actions class="white d-flex align-stretch">
+            <v-text-field v-model="text_message"
+                          outlined
+                          dense
+                          class="ma-0 pa-0"
                           hide-details
                           append-outer-icon="mdi-send"
                           placeholder="Type a message.."
                           @keypress.13="send_message"
                           @click:append-outer="send_message"/>
-        </v-card-text>
-    </div>
+        </v-card-actions>
+    </v-card>
 
 </template>
 
@@ -25,6 +39,7 @@
     import moment from "moment"
     import {mapState} from "vuex";
     import MessageRender from "./MessageRender";
+
     export default {
         name: "Chat",
         components: {MessageRender},
@@ -81,15 +96,15 @@
             send_message() {
                 if (this.text_message.trim().length > 0) {
                     let data = {
-                        "command" : "new_message",
-                        'room' : this.roomId,
-                        'classroom' : this.classroomId,
+                        "command": "new_message",
+                        'room': this.roomId,
+                        'classroom': this.classroomId,
                         'content': {
-                            "type" : "text",
-                            "message" : this.text_message,
-                            "timestamp" : moment().format('LT')
+                            "type": "text",
+                            "message": this.text_message,
+                            "timestamp": moment().format('LT')
                         },
-                        'user' : this.user
+                        'user': this.user
                     }
                     this.socket_send(data);
                     this.text_message = null
@@ -103,4 +118,53 @@
 </script>
 
 <style scoped>
+    .app-messages {
+        background: #FFFFFF;
+        position: relative;
+        height: 100%;
+        padding: 2px ;
+    }
+    .messages-container {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+
+    .messages {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        flex-shrink: 1;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        position: relative;
+        width: 100%;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+
+
 </style>

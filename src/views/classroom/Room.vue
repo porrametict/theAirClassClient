@@ -1,9 +1,20 @@
 <template>
-    <div class="fill-height">
-        this is a room page.
+    <div class="fill-height overflow-hidden">
+        <v-row style="box-sizing: border-box" class="fill-height">
+            <v-col cols="9">
+                <div>
+                    <ScreenSharing></ScreenSharing>
+                </div>
+
+            </v-col>
+            <v-col cols="3" >
+                <Chat
+                        room-id="155432415"
+                        :classroom-id="classroom_id"
+                ></Chat>
+            </v-col>
+        </v-row>
         <div class="d-flex fill-height ">
-            <ScreenSharing></ScreenSharing>
-            <Chat room-id="155432415" :classroom-id="classroom_id"></Chat>
         </div>
     </div>
 </template>

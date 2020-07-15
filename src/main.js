@@ -6,6 +6,9 @@ import vuetify from './plugins/vuetify';
 import Axios from 'axios'
 import lodash from 'lodash'
 import moment from 'moment'
+import VueChatScroll from 'vue-chat-scroll'
+
+Vue.use(VueChatScroll)
 
 window._ = lodash()
 
