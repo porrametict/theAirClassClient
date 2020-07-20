@@ -1,3 +1,6 @@
+const classroom_api = "/api/v1/classroom/classroom/"
+import room from "./room";
+
 export default {
     namespaced: true,
     state: {
@@ -23,7 +26,7 @@ export default {
         },
         async createClassroom(context, params) {
             let fd = await context.dispatch('jsonToFormData', params)
-            return await axios.post('/api/v1/classroom/', fd)
+            return await axios.post(`${classroom_api}`, fd)
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
@@ -32,7 +35,7 @@ export default {
                 })
         },
         async getListClassroom(context, params = null) {
-            return await axios.get('/api/v1/classroom/', params = {params})
+            return await axios.get(`${classroom_api}`, params = {params})
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
@@ -50,7 +53,7 @@ export default {
                 })
         },
         async getClassroomByCode(context, id) {
-            return await axios.get(`/api/v1/classroom/${id}/`)
+            return await axios.get(`${classroom_api}${id}/`)
                 .then((response) => {
                     context.commit('setClassroom', response.data)
                     return response.data
@@ -60,7 +63,7 @@ export default {
                 })
         },
         async retrieveClassroom(context, id) {
-            return await axios.get(`/api/v1/classroom/${id}/`)
+            return await axios.get(`${classroom_api}${id}/`)
                 .then((response) => {
                     context.commit('setClassroom', response.data)
                     return response.data
@@ -72,7 +75,7 @@ export default {
         async updateClassroom(context, params) {
             let id = params.id
             let fd = await context.dispatch('jsonToFormData', params)
-            return await axios.put(`/api/v1/classroom/${id}/`, fd)
+            return await axios.put(`${classroom_api}${id}/`, fd)
                 .then((response) => {
                     context.commit('setClassroom', response.data)
                     return response.data
@@ -82,13 +85,18 @@ export default {
                 })
         },
         async deleteClassroom(context, id) {
-            return await axios.delete(`/api/v1/classroom/${id}/`)
+            return await axios.delete(`${classroom_api}${id}/`)
                 .then((response) => {
                     return true  // 204 No Content
                 }).catch((error) => {
                     console.error(error)
                     return null
                 })
-        }
+        },
+
+
+    },
+    modules: {
+        room: room
     }
 }

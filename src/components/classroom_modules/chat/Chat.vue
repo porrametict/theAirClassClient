@@ -47,7 +47,6 @@
                               :placeholder="chat_input_disable ? 'Wait please..' : 'Type a message..'"
                               @keypress.13="send_message"
                               @click:append-outer="send_message"/>
-
             </div>
         </v-card-actions>
     </v-card>
@@ -63,12 +62,8 @@
         name: "Chat",
         components: {InputImageSelect, MessageRender},
         props: {
-            roomId: {
-                type: [String, Number],
-                require: true
-            },
-            classroomId: {
-                type: [String, Number],
+            room: {
+                type: [Object],
                 require: true
             },
         },
@@ -99,7 +94,7 @@
             newWebSocket() {
                 let self = this
                 this.chat_socket = new WebSocket(
-                    `${window.baseWsURL}/chat/${self.roomId}/`
+                    `${window.baseWsURL}/chat/${self.room.room_code}/`
                 )
                 this.chat_socket.onopen = function () {
                     self.fetch_message()
@@ -124,7 +119,7 @@
                 let data = {
                     "command": "fetch_message",
                     "data": {
-                        'room': this.roomId,
+                        'room': this.room.id,
                     },
                 }
                 this.socket_send(data);
@@ -144,8 +139,7 @@
                     let data = {
                         "command": "new_message",
                         "data": {
-                            'classroom': this.classroomId,
-                            'room': this.roomId,
+                            'room': this.room.id,
                             'user': this.user,
                             'content_type': content_type,
                             'image_url': this.image.image_url,

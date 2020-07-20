@@ -41,7 +41,7 @@
         <v-divider class="my-2"></v-divider>
         <!--body-->
         <div>
-            <v-btn @click="$router.push({name:'RoomClassroom' ,params : {id: $route.params.id}})">Go To Room Page
+            <v-btn @click="gotoRoom">Go To Room Page
             </v-btn>
             <p class="display-4 text-center grey--text">Coming Soon.</p>
         </div>
@@ -71,6 +71,13 @@
             async loadData() {
                 let id = this.$route.params.id
                 await this.$store.dispatch('classroom/retrieveClassroom', id)
+            },
+            async gotoRoom() {
+                let id = this.$route.params.id
+                let room = await this.$store.dispatch('classroom/room/createRoom', {classroom: id})
+                if (room) {
+                    await this.$router.push({name: 'RoomClassroom', params: {id: id, room_id : room.id}})
+                }
             }
         }
     }

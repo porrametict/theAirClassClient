@@ -14,7 +14,7 @@ export default {
             component: () => import('../../views/classroom/Board')
         },
         {
-            path: ":id/room",
+            path: ":id/room/:room_id",
             name: "RoomClassroom",
             component: () => import('../../views/classroom/Room')
         },

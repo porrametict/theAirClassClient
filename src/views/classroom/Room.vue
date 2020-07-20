@@ -1,5 +1,5 @@
 <template>
-    <div class="fill-height overflow-hidden">
+    <div class="fill-height overflow-hidden" v-if="room">
         <v-row style="box-sizing: border-box" class="fill-height">
             <v-col cols="9">
                 <div>
@@ -7,9 +7,9 @@
                 </div>
 
             </v-col>
-            <v-col cols="3" >
+            <v-col cols="3">
                 <Chat
-                        room-id="155432415"
+                        :room="room"
                         :classroom-id="classroom_id"
                 ></Chat>
             </v-col>
@@ -28,10 +28,17 @@
         components: {Chat, ScreenSharing},
         data() {
             return {
+                room: null,
                 classroom_id: this.$route.params.id
             }
         },
         mounted() {
+            this.loadData()
+        },
+        methods: {
+            async loadData() {
+                this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
+            }
         }
     }
 </script>
