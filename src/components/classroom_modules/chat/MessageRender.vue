@@ -2,9 +2,10 @@
 
     <!-- if Me-->
     <div v-if="user.pk === data.user.pk" class="d-flex ml-auto">
-        <v-card class="my-1 mx-2" outlined>
-            <v-card-text class="primary">
+        <v-card class="my-1 mx-2" outlined >
+            <v-card-text class="primary" >
                 <p class="ma-0 pa-0">{{data.message}}</p>
+                <ImageMessage :data="data"></ImageMessage>
                 <p class="caption ma-0 pa-0 text-end">{{getTimeFormat(data.timestamp)}}</p>
             </v-card-text>
         </v-card>
@@ -21,6 +22,7 @@
             <v-card outlined class="my-1 mx-2">
                 <v-card-text class="grey lighten-2">
                     <p class=" ma-0 pa-0">{{data.message}}</p>
+
                     <p class="caption ma-0 pa-0  ">{{getTimeFormat(data.timestamp)}}</p>
                 </v-card-text>
             </v-card>
@@ -33,11 +35,12 @@
     import {mapState} from 'vuex'
     import ImageProfile from "../../core/user/ImageProfile";
     import moment from 'moment'
+    import ImageMessage from "./ImageMessage";
 
 
     export default {
         name: "MessageRender",
-        components: {ImageProfile},
+        components: {ImageMessage, ImageProfile},
         props: {
             data: {
                 type: Object

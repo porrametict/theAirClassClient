@@ -21,29 +21,47 @@
         </v-card-text>
         <v-divider></v-divider>
         <!--footer-->
-        <v-card-actions class="white d-flex align-stretch">
-            <v-text-field v-model="text_message"
-                          outlined
-                          dense
-                          class="ma-0 pa-0"
-                          hide-details
-                          append-outer-icon="mdi-send"
-                          placeholder="Type a message.."
-                          @keypress.13="send_message"
-                          @click:append-outer="send_message"/>
+        <v-card-actions class="d-flex flex-column">
+
+            <v-card v-if="image.name" outlined height="50" class="my-2">
+                <v-card-text class="ma-0 pa-2 d-flex justify-center align-center">
+                    <span class="text-truncate">
+                    {{image.name}}
+                    </span>
+                    <v-btn icon class="ma-0 pa-0" @click="deleteImageMessage">
+                        <v-icon small class="ma-0 pa-0">mdi-close</v-icon>
+                    </v-btn>
+
+                </v-card-text>
+            </v-card>
+
+            <div class="white d-flex align-center">
+                <InputImageSelect class="mr-1" @change="uploadImage"></InputImageSelect>
+                <v-text-field v-model="text_message"
+                              outlined
+                              dense
+                              :disabled="chat_input_disable"
+                              class="ma-0 pa-0"
+                              hide-details
+                              append-outer-icon="mdi-send"
+                              :placeholder="chat_input_disable ? 'Wait please..' : 'Type a message..'"
+                              @keypress.13="send_message"
+                              @click:append-outer="send_message"/>
+
+            </div>
         </v-card-actions>
     </v-card>
 
 </template>
 
 <script>
-    import moment from "moment"
     import {mapState} from "vuex";
     import MessageRender from "./MessageRender";
+    import InputImageSelect from "../../share/InputImageSelect";
 
     export default {
         name: "Chat",
-        components: {MessageRender},
+        components: {InputImageSelect, MessageRender},
         props: {
             roomId: {
                 type: [String, Number],
@@ -55,8 +73,14 @@
             },
         },
         data: () => ({
+            chat_input_disable: false,
             chat: null,
             text_message: null,
+            image: {
+                id: null,
+                name: null,
+                image_url: null,
+            },
             messages: []
             ,
         }),
@@ -109,6 +133,13 @@
                 this.messages = e.data
             },
             send_message() {
+                let content_type;
+                if (this.image.id) {
+                    content_type = 'image'
+                } else {
+                    content_type = 'text'
+                }
+
                 if (this.text_message.trim().length > 0) {
                     let data = {
                         "command": "new_message",
@@ -116,17 +147,44 @@
                             'classroom': this.classroomId,
                             'room': this.roomId,
                             'user': this.user,
-                            'content_type': "text",
-                            'image_url': null,
+                            'content_type': content_type,
+                            'image_url': this.image.image_url,
                             "message": this.text_message,
                         },
                     }
                     this.socket_send(data);
                     this.text_message = null
+                    this.clearImageMessage()
                 }
             },
             on_new_message(e) {
                 this.messages.push(e.data)
+            },
+            async uploadImage(e) {
+                this.image.name = e.name
+                this.chat_input_disable = true
+                const fd = new FormData();
+                fd.append('image', e, e.name)
+                let data = await this.$store.dispatch('classroom_modules/chat/uploadImageMessage', fd)
+                if (data) {
+                    this.image.id = data.id
+                    this.image.image_url = data.image
+                }
+                this.chat_input_disable = false
+            },
+            clearImageMessage() {
+                this.image = {
+                    id: null,
+                    name: null,
+                    image_url: null,
+                }
+            },
+            async deleteImageMessage() {
+                let data = await this.$store.dispatch('classroom_modules/chat/deleteImageMessage', this.image.id)
+                if (data != null) {
+                    this.clearImageMessage()
+                }
+
             },
         }
     }
