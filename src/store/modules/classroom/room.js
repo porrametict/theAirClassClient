@@ -21,5 +21,14 @@ export default {
                     return null
                 })
         },
+        async updateRoom(context, params) {
+            return await axios.put(`${room_api}${params.id}/`,params )
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    console.error(error)
+                    return null
+                })
+        },
     }
 }

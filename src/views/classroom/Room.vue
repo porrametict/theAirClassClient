@@ -4,6 +4,7 @@
             <v-col cols="9">
                 <div>
                     <ScreenSharing></ScreenSharing>
+                    <v-btn color="red" class="white--text" @click="end">End</v-btn>
                 </div>
 
             </v-col>
@@ -38,6 +39,13 @@
         methods: {
             async loadData() {
                 this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
+            },
+            async end() {
+                this.room['status'] = false
+                let data = await this.$store.dispatch('classroom/room/updateRoom', this.room)
+                if (data && data['status'] === false) {
+                    await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
+                }
             }
         }
     }
