@@ -1,8 +1,9 @@
+const chat_image = '/api/v1/classroom-module/chat/image/'
 export default {
     namespaced: true,
     actions: {
         async uploadImageMessage(context, params) {
-            return await axios.post('/api/v1/classroom-module/chat/image/', params)
+            return await axios.post(`${chat_image}`, params)
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
@@ -11,7 +12,7 @@ export default {
                 })
         },
         async deleteImageMessage(context, id) {
-            return await axios.delete('/api/v1/classroom-module/chat/image/'+id+'/')
+            return await axios.delete(`${chat_image}${id}/`)
                 .then((response) => {
                     return response.data
                 }).catch((error) => {

@@ -1,4 +1,5 @@
 const classroom_api = "/api/v1/classroom/classroom/"
+const member_lof_api = "/api/v1/classroom-module/member/lof/"
 import room from "./room";
 
 export default {
@@ -44,18 +45,8 @@ export default {
                 })
         },
         async getListClassroomByUser(context, params = null) {
-            return await axios.get('/api/v1/classroom-module/member/lof/', params = {params})
+            return await axios.get(`${member_lof_api}`, params = {params})
                 .then((response) => {
-                    return response.data
-                }).catch((error) => {
-                    console.error(error)
-                    return null
-                })
-        },
-        async getClassroomByCode(context, id) {
-            return await axios.get(`${classroom_api}${id}/`)
-                .then((response) => {
-                    context.commit('setClassroom', response.data)
                     return response.data
                 }).catch((error) => {
                     console.error(error)

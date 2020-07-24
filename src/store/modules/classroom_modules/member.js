@@ -1,8 +1,9 @@
+const  member_api = "/api/v1/classroom-module/member/main/"
 export default {
     namespaced: true,
     actions: {
         async addClassroomMember(context, params) {
-            return await axios.post('/api/v1/classroom-module/member/main/', params)
+            return await axios.post(`${member_api}`, params)
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
@@ -11,7 +12,7 @@ export default {
                 })
         },
         async getListMember(context, params = null) {
-            return await axios.get('/api/v1/classroom-module/member/main/', params = {params})
+            return await axios.get(`${member_api}`, params = {params})
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
@@ -21,7 +22,7 @@ export default {
         },
         async updateMember(context, params = null) {
             let id = params.id
-            return await axios.put(`/api/v1/classroom-module/member/main/${id}/`, params)
+            return await axios.put(`${member_api}${id}/`, params)
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
@@ -30,7 +31,7 @@ export default {
                 })
         },
         async deleteMember(context, id) {
-            return await axios.delete(`/api/v1/classroom-module/member/main/${id}/`)
+            return await axios.delete(`${member_api}${id}/`)
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
