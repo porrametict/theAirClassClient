@@ -1,4 +1,5 @@
 import member from "../classroom_modules/member";
+import choicequiz from "./choicequiz";
 
 export default {
     path: 'classroom-module',
@@ -10,5 +11,6 @@ export default {
             component: () => import('../../views/classroom_modules/Index')
         },
         member,
+        choicequiz,
     ]
 }
