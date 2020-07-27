@@ -57,7 +57,7 @@
                 </v-col>
             </v-row>
 
-            <template>
+            <template v-if="pagination.page_length >=2">
                 <div class="text-center">
                     <v-pagination
                             v-model="pagination.page"
