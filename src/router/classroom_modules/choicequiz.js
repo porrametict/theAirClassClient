@@ -1,5 +1,5 @@
 export default {
-    path: 'choice-quiz',
+    path: ':classroom_module/choice-quiz',
     component: () => import('../../views/classroom_modules/choicequiz/Template'),
     children: [
         {

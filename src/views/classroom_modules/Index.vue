@@ -5,7 +5,7 @@
         <div class="d-flex justify-center">
 
             <div class="ma-5" v-for="(c,index) in c_modules" :key="index">
-                <v-card width="300" @click="router_push(`${c.module.name}Index`)">
+                <v-card width="300" @click="router_push(`${c.module.name}Index`,c.id)">
                     <v-card-title class="d-flex flex-column">
                         <v-icon large>{{c.module.icon}}</v-icon>
                         <p class="title mt-3">{{c.module.label}}</p>
@@ -40,9 +40,9 @@
                 let data = await this.$store.dispatch('classroom_modules/classroom_module/getListClassroomModule', this.form_params)
                 this.c_modules = data.results
             },
-            router_push(name) {
+            router_push(name,classroom_module) {
                 if (this.$router.currentRoute.name !== name) {
-                    this.$router.replace({name: name}).catch((any) => {
+                    this.$router.replace({name: name , params : {classroom_module : classroom_module}}).catch((any) => {
                         console.log(any)
                     })
                 }
