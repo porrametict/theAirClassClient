@@ -9,9 +9,9 @@
     >
       <v-layout column align-center>
         <v-flex class="mt-10 mb-8">
-          <v-avatar>
-            <v-icon large color="black">mdi-home</v-icon>
-          </v-avatar>
+<!--          <v-avatar size="30">-->
+<!--          </v-avatar>-->
+
         </v-flex>
       </v-layout>
       <v-list>
@@ -51,7 +51,7 @@ export default {
       { icon: "mdi-home", text: "Home", route: "/home" },
       { icon: "mdi-school", text: "Classroom", route: "/classroom" },
       { icon: "mdi-account", text: "Profile", route: "/user" }
-    ]
+    ],
   })
 };
 </script>
