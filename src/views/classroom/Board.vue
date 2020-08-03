@@ -43,6 +43,14 @@
         <div>
             <p class="display-4 text-center grey--text">Coming Soon.</p>
         </div>
+
+        <v-btn icon
+               outlined
+               color="grey"
+               dark
+
+        >
+        </v-btn>
     </div>
 </template>
 
