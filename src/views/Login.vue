@@ -74,8 +74,6 @@
                     await this.$router.push({
                         name: 'Home'
                     })
-                } else {
-                    alert("login failed")
                 }
             }
         }

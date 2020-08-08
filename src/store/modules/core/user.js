@@ -1,3 +1,5 @@
+// context.dispatch("success/setSuccess", response.data, {root: true});
+// context.dispatch("error/setError", error.response.data, {root: true});
 export default {
     namespaced: true,
     state: {
@@ -25,7 +27,7 @@ export default {
                     return response.data
                 })
                 .catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
             return data
@@ -37,7 +39,7 @@ export default {
                     return response.data
                 })
                 .catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -46,10 +48,11 @@ export default {
             localStorage.clear()  // clear old access_token because it invalid token if send request with token
             return await axios.post(`/rest-auth/registration/`, params)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true})
                     return response.data
                 })
                 .catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -62,7 +65,7 @@ export default {
                     return response.data
                 })
                 .catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -73,9 +76,10 @@ export default {
 
             return await axios.post('/api/v1/core/user-profile/', fd)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true})
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -87,9 +91,10 @@ export default {
 
             return await axios.put(`/api/v1/core/user-profile/${id}/`, fd)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true})
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -102,9 +107,10 @@ export default {
                 return await axios.put('/rest-auth/user/', params)
                     .then((response) => {
                         context.commit('setUser', response.data)
+                        context.dispatch("success/setSuccess", response.data, {root: true})
                         return response.data
                     }).catch((error) => {
-                        console.error(error)
+                        context.dispatch("error/setError", error.response.data, {root: true});
                         return null
                     })
             }

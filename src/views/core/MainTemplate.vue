@@ -36,8 +36,7 @@
                 if (!this.user) {
                     let data = await this.$store.dispatch('user/getUser')
                     if (!data) {
-                        alert("Please Login.")
-                        this.$router.push({
+                        await this.$router.push({
                             name: 'Login'
                         })
                     }
