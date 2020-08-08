@@ -52,7 +52,7 @@
                 <v-col cols="12" md="4" v-for="(classroom,index) in classrooms" :key="index">
                     <ClassroomCard
                             class="ma-5"
-                            :classroom="classroom.classroom"
+                            :classroom="classroom.classroom_data"
                     ></ClassroomCard>
                 </v-col>
             </v-row>

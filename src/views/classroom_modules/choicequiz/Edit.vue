@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ContentHeader class="my-2">Create : Choice Quiz</ContentHeader>
+        <ContentHeader class="my-2">Edit : Choice Quiz</ContentHeader>
         <div>
             <!-- Name -->
             <div>
@@ -118,10 +118,10 @@
 </template>
 
 <script>
-    import ContentHeader from "../../../components/share/ContentHeader";
-    import ButtonPrimary from "../../../components/share/ButtonPrimary";
+import ContentHeader from "../../../components/share/ContentHeader";
+import ButtonPrimary from "../../../components/share/ButtonPrimary";
 
-    export default {
+export default {
         name: "ChoiceQuizCreate",
         components: {ButtonPrimary, ContentHeader},
         data: () => ({
@@ -151,7 +151,14 @@
                 ]
             }
         }),
-        methods: {
+      mounted() {
+        this.loadData()
+      },
+      methods: {
+          async loadData(){
+            let id = this.$route.params.choice_quiz_id
+            this.form = await this.$store.dispatch('classroom_modules/choicequiz/getChoiceQuiz', id)
+          },
             delete_question(index) {
                 if (this.form.question_set.length > 1) {
                     this.form.question_set.splice(index, 1)
@@ -192,8 +199,7 @@
                 }
             },
             async save() {
-                this.form.classroom_module = this.$route.params.classroom_module
-                let data = await this.$store.dispatch("classroom_modules/choicequiz/createChoiceQuiz", this.form)
+                let data = await this.$store.dispatch("classroom_modules/choicequiz/updateChoiceQuiz", this.form)
                 if (data) {
                     await this.$router.push({'name': 'ChoiceQuizIndex'})
                 }

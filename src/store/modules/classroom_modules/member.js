@@ -20,6 +20,15 @@ export default {
                     return null
                 })
         },
+        async getMember(context,id) {
+            return await axios.get(`${member_api}${id}`, )
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    console.error(error)
+                    return null
+                })
+        },
         async updateMember(context, params = null) {
             let id = params.id
             return await axios.put(`${member_api}${id}/`, params)

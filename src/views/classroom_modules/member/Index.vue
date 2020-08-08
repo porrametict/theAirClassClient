@@ -27,8 +27,8 @@
                             :headers="headers_member"
                             :items="members"
                     >
-                        <template v-slot:item.user="{item}">
-                            {{item.user.first_name}} {{item.user.last_name}}
+                        <template v-slot:item.user_data="{item}">
+                            {{item.user_data.first_name}} {{item.user_data.last_name}}
                         </template>
 
                         <template v-slot:item.role="{item}">
@@ -46,6 +46,7 @@
                                             outlined
                                             color="red"
                                             v-on="on"
+                                            :disabled="item.role ===1 "
                                     >
                                         <v-icon>mdi-delete</v-icon>
                                     </v-btn>
@@ -79,7 +80,7 @@
                         text: 'Name ',
                         align: 'start',
                         sortable: false,
-                        value: 'user',
+                        value: 'user_data',
                     },
                     {
                         text: 'Role ',

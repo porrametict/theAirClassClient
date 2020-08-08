@@ -3,7 +3,7 @@
         <Navbar/>
         <v-content  class="fill-height" :style="{background: $vuetify.theme.themes.light.background}">
             <v-layout class=" pa-6 fill-height">
-                <v-container class="white rounded" >
+                <v-container class="white rounded" fluid>
                     <router-view/>
                 </v-container>
             </v-layout>

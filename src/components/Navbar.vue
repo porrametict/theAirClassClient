@@ -6,6 +6,10 @@
             app
             class="yellow accent-4"
             permanent
+            expand-on-hover
+            :mini-variant.sync="mini"
+
+
     >
       <v-layout column align-center>
         <v-flex class="mt-10 mb-8">
@@ -32,11 +36,20 @@
       </v-list>
 
       <template v-slot:append>
-        <div class="pa-2">
+
+        <div class="pa-2"  v-if="!mini">
           <v-btn
-            block
-            @click="$store.dispatch('user/logout') & $router.push({ name: 'Login' })"
+              block
+              @click="$store.dispatch('user/logout') & $router.push({ name: 'Login' })"
           >Logout</v-btn>
+        </div>
+
+        <div v-else>
+          <v-btn icon large color="black">
+            <v-icon>
+              mdi-account-arrow-right
+            </v-icon>
+          </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -47,6 +60,7 @@ export default {
   name: "NavBar",
   data: () => ({
     drawer: true,
+    mini  : true,
     links: [
       { icon: "mdi-home", text: "Home", route: "/home" },
       { icon: "mdi-school", text: "Classroom", route: "/classroom" },
