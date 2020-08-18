@@ -6,17 +6,13 @@
         {{count_answer}}
       </p>
     </div>
-    <div>
-      <ButtonPrimary @click="on_click">Answer</ButtonPrimary>
-    </div>
+    <p class="headline">Please wait..</p>
   </div>
 </template>
 
 <script>
-import ButtonPrimary from "@/components/share/ButtonPrimary";
 export default {
-  name: "HostWaitAnswer",
-  components: {ButtonPrimary},
+  name: "WaitAnswer",
   props: {
     data: {
       type: [Object],
@@ -35,13 +31,10 @@ export default {
     countAnswer() {
       this.data.choice_students.forEach((o) => {
         if (o.question.id === this.data.choice_quiz.question_set[this.data.current_question_index].id) {  //question == current_question
-          this.count_answer = o.choice_selects.length
+          this.count_answer +=1
         }
       })
-    },
-    on_click() {
-      this.$emit('change', {'event': 'answer'})
-    },
+    }
   }
 }
 </script>

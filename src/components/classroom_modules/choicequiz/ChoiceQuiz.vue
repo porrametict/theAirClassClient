@@ -16,26 +16,41 @@
       ></component>
     </v-card-text>
   </v-card>
-
 </template>
 
 <script>
 import {mapState} from 'vuex'
 
-import ChoiceQuizSelect from "@/components/classroom_modules/choicequiz/ChoiceQuizSelect";
-import ShowQuestion from "@/components/classroom_modules/choicequiz/ShowQuestion";
-import WaitAnswer from "@/components/classroom_modules/choicequiz/WaitAnswer";
-import Start from "@/components/classroom_modules/choicequiz/Start";
-import HostWaitAnswer from "@/components/classroom_modules/choicequiz/HostWaitAnswer";
-import HostAnswerResult from "@/components/classroom_modules/choicequiz/HostAnswerResult";
-import AnswerResult from "@/components/classroom_modules/choicequiz/AnswerResult";
-import Summary from "@/components/classroom_modules/choicequiz/Summary";
+import ChoiceQuizSelect from "@/components/classroom_modules/choicequiz/host/ChoiceQuizSelect";
+import ShowQuestion from "@/components/classroom_modules/choicequiz/student/ShowQuestion";
+import WaitAnswer from "@/components/classroom_modules/choicequiz/student/WaitAnswer";
+import Start from "@/components/classroom_modules/choicequiz/student/Start";
+import HostWaitAnswer from "@/components/classroom_modules/choicequiz/host/HostWaitAnswer";
+import HostAnswerResult from "@/components/classroom_modules/choicequiz/host/HostAnswerResult";
+import AnswerResult from "@/components/classroom_modules/choicequiz/student/AnswerResult";
+import Summary from "@/components/classroom_modules/choicequiz/student/Summary";
+import HostSummary from "@/components/classroom_modules/choicequiz/host/HostSummary";
+import ViewerAnswerResult from "@/components/classroom_modules/choicequiz/viewer/ViewerAnswerResult";
+import ViewerStart from "@/components/classroom_modules/choicequiz/viewer/ViewerStart";
+import ViewerWaitAnswer from "@/components/classroom_modules/choicequiz/viewer/ViewerWaitAnswer";
+import ViewerSummary from "@/components/classroom_modules/choicequiz/viewer/ViewerSummary";
 
 export default {
   name: "ChoiceQuiz",
   components: {
+    ViewerSummary,
+    ViewerWaitAnswer,
+    ViewerStart,
+    ViewerAnswerResult,
+    HostSummary,
     Summary,
-    AnswerResult, HostAnswerResult, HostWaitAnswer, Start, WaitAnswer, ShowQuestion, ChoiceQuizSelect
+    AnswerResult,
+    HostAnswerResult,
+    HostWaitAnswer,
+    Start,
+    WaitAnswer,
+    ShowQuestion,
+    ChoiceQuizSelect
   },
   props: {
     host: {
@@ -58,12 +73,14 @@ export default {
   async mounted() {
     this.getClassroomModule()
     this.newWebSocket()
-
     if (this.user.pk === this.host.pk) {
       this.is_host = true
-      await this.loadData()
+    } else if (this.role <= 2) { // is teacher or owner
+      this.is_viewer = true
+      this.state.state = 'start'
+      this.state.component = 'ViewerStart'
+
     } else {
-      this.is_host = false
       this.state.state = 'start'
       this.state.component = 'Start'
     }
@@ -76,11 +93,33 @@ export default {
   data() {
     return {
       is_host: false,
+      is_viewer: false,
       component_key: 0,
       classroom_module: null,
       state: {
-        state: null,
+        state: 'start',
         component: null,
+        'component_set': {
+          'host': {
+            'start': ['ChoiceQuizSelect'],
+            'newQuestion': ['HostWaitAnswer'],
+            'AnswerResult': ['HostAnswerResult'],
+            'Summary': ['HostSummary'],
+          },
+          'student': {
+            'start': ['Start'],
+            'newQuestion': ['ShowQuestion', 'WaitAnswer'],
+            'AnswerResult': ['AnswerResult'],
+            'Summary': ['Summary'],
+          },
+          'viewer': {
+            'start': ['ViewerStart'],
+            'newQuestion': ['ViewerWaitAnswer'],
+            'AnswerResult': ['ViewerAnswerResult'],
+            'Summary': ['ViewerSummary'],
+          },
+
+        },
         data: {
           choice_quizzes: null,
           choice_quiz: null,
@@ -117,13 +156,14 @@ export default {
         'answer': this.on_answer_event,
         'next_question': this.on_next_question_event,
         'end_question': this.on_end_question_event,
+        'end_choice_quiz': this.on_end_choice_quiz_event,
 
       }
       events[e.event](e.data)
 
     },
     on_choice_quiz_select(e) {
-      this.choice_quiz = e
+      this.state.data.choice_quiz = e
       this.new_game()
     },
     on_select_choice(e) {
@@ -141,7 +181,10 @@ export default {
       this.next_question()
     },
     on_end_question_event() {
-      this.on_end_question()
+      this.end_question()
+    },
+    on_end_choice_quiz_event() {
+      this.end_choice_quiz()
     },
 
     // main WenSocket
@@ -151,16 +194,19 @@ export default {
           `${window.baseWsURL}/choicequiz/${self.room.room_code}/`
       )
       this.module_socket.onopen = function () {
+        self.get_current_state()
       }
       this.module_socket.onclose = function (e) {
         console.error('Choice Quiz socket closed unexpectedly', e);
       }
       let commands = {
+        'on_get_current_state': self.on_get_current_state,
         'on_new_game': self.on_new_game,
         'on_student_select': self.on_student_select,
         'on_answer': self.on_answer,
         'on_next_question': self.on_next_question,
         'on_end_question': self.on_end_question,
+        'on_end_choice_quiz': self.on_end_choice_quiz,
       }
       this.module_socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
@@ -174,28 +220,57 @@ export default {
 
 
     // WebSocket functions
+    get_current_state() {
+      let content = {
+        "command": "get_current_state",
+        "data": {
+          "user": this.user,
+        }
+      }
+      this.socket_send(content);
+    },
+    async on_get_current_state(e) {
+      let state = e['data']['state']
+      console.log(state,'state')
+      state['component'] = this.get_component_by_state(state)
+      this.state = state
+
+      if (this.is_host) {
+        await this.loadData()
+      }
+      this.component_key += 1
+
+    },
+    get_component_by_state(state, component_index = 0) {
+      let state_name = state.state
+      let component = null
+      console.log(state)
+      if (this.is_host) {
+        component = state['component_set']['host'][state_name][component_index]
+      } else if (this.is_viewer) {
+        component = state['component_set']['viewer'][state_name][component_index]
+      } else {
+        component = state['component_set']['student'][state_name][component_index]
+      }
+      return component
+    },
     new_game() {
+      this.state.state = 'newQuestion'
+      this.state.data.current_question_index = 0
+
       this.socket_send(
           {
             "command": "new_game",
             "data": {
-              "choice_quiz": this.choice_quiz,
+              "state": this.state,
             }
           }
       )
     },
     on_new_game(e) {
-      if (this.is_host) {
-        this.state.state = 'waitAnswer'
-        this.state.component = 'HostWaitAnswer'
-      } else {
-        this.state.state = 'newQuestion'
-        this.state.component = 'ShowQuestion'
-      }
-
-      this.state.data.choice_quiz = e.data.choice_quiz
-      this.state.data.current_question_index = 0
-      this.state.data.choice_quizzes = null // clear unused variable
+      console.log(e)
+      this.state = e['data']['state']
+      this.state.component = this.get_component_by_state(this.state)
       this.component_key += 1
     },
     student_select(e) {
@@ -208,8 +283,10 @@ export default {
     },
     on_student_select(e) {
       if (!this.is_host) {
-        this.state.state = 'waitAnswer'
-        this.state.component = 'WaitAnswer'
+        if (e.data.user.pk === this.user.pk) {
+          this.state.state = 'newQuestion'
+          this.state.component = 'WaitAnswer'
+        }
       }
 
       if (this.state.data.choice_students.length > 0) {
@@ -246,57 +323,104 @@ export default {
     },
 
     answer() {
+      this.state.state = 'AnswerResult'
       this.socket_send(
           {
             "command": "answer",
-            "data": null
+            "data": {
+              'state': this.state
+            }
           }
       )
     },
     on_answer(e) {
 
-      if (this.is_host) {
-        this.state.component = 'HostAnswerResult'
-      } else {
-        this.state.component = 'AnswerResult'
-      }
-      this.state.state = 'AnswerResult'
+      this.state = e['data']['state']
+      this.state.component = this.get_component_by_state(this.state)
+      this.component_key += 1
 
     },
     next_question() {
+      this.state.state = 'newQuestion'
+      this.state.data.current_question_index += 1
       this.socket_send(
           {
             "command": "next_question",
             "data": {
-              current_question_index: this.state.data.current_question_index + 1
+              'state': this.state
             }
           }
       )
     },
     on_next_question(e) {
-      if (this.is_host) {
-        this.state.state = 'waitAnswer'
-        this.state.component = 'HostWaitAnswer'
-      } else {
-        this.state.state = 'newQuestion'
-        this.state.component = 'ShowQuestion'
-      }
-      this.state.data.current_question_index = e.data.current_question_index
+      this.state = e['data']['state']
+      this.state.component = this.get_component_by_state(this.state)
       this.component_key += 1
 
     },
     end_question() {
+      this.state.state = "Summary"
       this.socket_send(
           {
             "command": "end_question",
-            "data": {}
+            "data": {
+              'state' : this.state
+            }
           }
       )
 
     },
     on_end_question(e) {
-      this.state.state = "Summary"
-      this.state.component = "Summary"
+      this.state = e['data']['state']
+      this.state.component = this.get_component_by_state(this.state)
+      this.component_key += 1
+
+    },
+    end_choice_quiz() {
+      this.state = {
+        state: 'start',
+        component: null,
+        'component_set': {
+          'host': {
+            'start': ['ChoiceQuizSelect'],
+            'newQuestion': ['HostWaitAnswer'],
+            'AnswerResult': ['HostAnswerResult'],
+            'Summary': ['HostSummary'],
+          },
+          'student': {
+            'start': ['Start'],
+            'newQuestion': ['ShowQuestion', 'WaitAnswer'],
+            'AnswerResult': ['AnswerResult'],
+            'Summary': ['Summary'],
+          },
+          'viewer': {
+            'start': ['ViewerStart'],
+            'newQuestion': ['ViewerWaitAnswer'],
+            'AnswerResult': ['ViewerAnswerResult'],
+            'Summary': ['ViewerSummary'],
+          },
+
+        },
+        data: {
+          choice_quizzes: null,
+          choice_quiz: null,
+          current_question_index: null,
+          choice_students: []
+        }
+      }
+      this.socket_send(
+          {
+            "command": "end_choice_quiz",
+            "data": {
+              'state' : this.state
+            }
+          }
+      )
+    },
+    on_end_choice_quiz(e) {
+      this.$emit(
+          'ended', {event: 'choice_quiz'}
+      )
     }
   }
 }

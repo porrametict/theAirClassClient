@@ -1,10 +1,13 @@
 <template>
   <div class="text-center">
-    <div v-if="result">
+    <div v-if="result === true">
       <p class="headline green--text">Correct</p>
     </div>
-    <div v-else>
+    <div v-else-if="result === false">
       <p class="headline red--text">Incorrect</p>
+    </div>
+    <div v-else-if="result === null">
+      <p class="headline grey--text">Did not answer</p>
     </div>
   </div>
 </template>
@@ -30,7 +33,7 @@ export default {
   },
   data() {
     return {
-      result: true
+      result: null
     }
   },
   methods: {
@@ -50,7 +53,6 @@ export default {
               })
             }
           })
-          this.count_answer = o.choice_selects.length
         }
       })
     },

@@ -17,7 +17,7 @@
       </v-card-text>
     </v-card>
     <div class="text-center">
-      <ButtonPrimary @click="on_start">Start</ButtonPrimary>
+      <v-btn @click="on_start" :disabled="!selectedChoiceQuiz" color="primary" rounded>Start</v-btn>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="fill-height overflow-hidden" v-if="room">
     <v-row style="box-sizing: border-box" class="fill-height">
-      <v-col cols="9">
+      <v-col >
         <div>
           <v-row>
             <v-col>
@@ -9,7 +9,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col>
+            <v-col >
               <div class="d-flex justify-center align-center">
                 <v-btn @click="new_action('ChoiceQuiz')"> start choice quiz</v-btn>
                 <v-btn color="red" large class="white--text" @click="end">End</v-btn>
@@ -19,7 +19,7 @@
         </div>
       </v-col>
 
-      <v-col cols="3">
+      <v-col cols="2">
         <component
             v-if="room_state.module"
             :is="room_state.module"
@@ -27,6 +27,7 @@
             :classroom_modules="classroom_modules"
             :role="my_role"
             :host="room_state.host"
+            @ended="module_end"
         >
         </component>
         <Chat
@@ -78,7 +79,6 @@ export default {
   },
   methods: {
 
-
     //GE functions
     async loadData() {
       this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
@@ -103,6 +103,21 @@ export default {
       }
     },
 
+
+    module_end(e) {
+
+      let events = {
+        'choice_quiz': this.choice_quiz_end,
+      }
+      events[e.event](e.data)
+
+    },
+    choice_quiz_end (e){
+      this.room_state.state = "normal"
+      this.room_state.module = null
+      this.room_state.host = null
+    },
+
     // main WebSocket
     newWebSocket() {
       let self = this
@@ -111,6 +126,7 @@ export default {
       )
       this.room_socket.onopen = function () {
         self.join_room()
+        self.get_current_state()
 
       }
       this.room_socket.onclose = function (e) {
@@ -119,6 +135,7 @@ export default {
       let commands = {
         'on_new_action': self.on_new_action,
         'on_member_join': self.on_member_join,
+        'on_get_current_state': self.on_get_current_state,
       }
       this.room_socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
@@ -148,20 +165,33 @@ export default {
         this.my_role = e['data']['role']
       }
     },
+    get_current_state () {
+      let content = {
+        "command": "get_current_state",
+        "data": {
+          "user": this.user,
+        }
+      }
+      this.socket_send(content);
+    },
+    on_get_current_state(e){
+      this.room_state= e['data']['state']
+    },
     new_action(module_name) {
       let content = {
         "command": "new_action",
         "data": {
-          "module": module_name,
-          "host": this.user
+          'state' : {
+            'state' : 'playing',
+            "module": module_name,
+            "host": this.user
+          }
         }
       }
       this.socket_send(content);
     },
     on_new_action(e) {
-      this.room_state.state = "playing"
-      this.room_state.module = e.data.module
-      this.room_state.host = e.data.host
+      this.room_state = e['data']['state']
     },
 
   }
