@@ -231,7 +231,6 @@ export default {
     },
     async on_get_current_state(e) {
       let state = e['data']['state']
-      console.log(state,'state')
       state['component'] = this.get_component_by_state(state)
       this.state = state
 
@@ -364,7 +363,8 @@ export default {
           {
             "command": "end_question",
             "data": {
-              'state' : this.state
+              'state': this.state,
+              'classroom_module' : this.classroom_module
             }
           }
       )
@@ -412,7 +412,7 @@ export default {
           {
             "command": "end_choice_quiz",
             "data": {
-              'state' : this.state
+              'state': this.state
             }
           }
       )

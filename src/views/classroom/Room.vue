@@ -1,7 +1,7 @@
 <template>
   <div class="fill-height overflow-hidden" v-if="room">
     <v-row style="box-sizing: border-box" class="fill-height">
-      <v-col >
+      <v-col>
         <div>
           <v-row>
             <v-col>
@@ -9,7 +9,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col >
+            <v-col>
               <div class="d-flex justify-center align-center">
                 <v-btn @click="new_action('ChoiceQuiz')"> start choice quiz</v-btn>
                 <v-btn color="red" large class="white--text" @click="end">End</v-btn>
@@ -112,7 +112,7 @@ export default {
       events[e.event](e.data)
 
     },
-    choice_quiz_end (e){
+    choice_quiz_end(e) {
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
@@ -165,7 +165,7 @@ export default {
         this.my_role = e['data']['role']
       }
     },
-    get_current_state () {
+    get_current_state() {
       let content = {
         "command": "get_current_state",
         "data": {
@@ -174,15 +174,15 @@ export default {
       }
       this.socket_send(content);
     },
-    on_get_current_state(e){
-      this.room_state= e['data']['state']
+    on_get_current_state(e) {
+      this.room_state = e['data']['state']
     },
     new_action(module_name) {
       let content = {
         "command": "new_action",
         "data": {
-          'state' : {
-            'state' : 'playing',
+          'state': {
+            'state': 'playing',
             "module": module_name,
             "host": this.user
           }
