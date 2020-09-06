@@ -5,29 +5,18 @@
       <p class="title">
         {{ data.question }}
       </p>
-      <div>
-        <v-btn @click="on_click">next</v-btn>
-      </div>
     </div>
     <div class="text-center">
       <p>ผู้ตอบ</p>
       <p>{{ data.student.first_name }} {{ data.student.last_name }}</p>
     </div>
 
-    <div>
-      <v-btn large color="green" class="white--text" @click="on_click(true)">
-        Correct
-      </v-btn>
-      <v-btn large color="red" class="white--text" @click="on_click(false)">
-        InCorrect
-      </v-btn>
-    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "HostAnswer",
+  name: "ViewerAnswer",
   props: {
     data: {
       type: [Object],

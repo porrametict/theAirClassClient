@@ -1,4 +1,4 @@
-const  member_api = "/api/v1/classroom-module/member/member/"
+const  member_api = "/api/v1/classroom/member/"
 export default {
     namespaced: true,
     actions: {

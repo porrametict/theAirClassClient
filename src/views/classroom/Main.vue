@@ -11,8 +11,6 @@
                 </v-tab>
             </v-tabs>
             <router-view></router-view>
-
-
         </div>
     </div>
 </template>

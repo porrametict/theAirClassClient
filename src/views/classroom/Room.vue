@@ -6,12 +6,15 @@
           <v-row>
             <v-col>
               <ScreenSharing></ScreenSharing>
+
             </v-col>
           </v-row>
           <v-row>
             <v-col>
-              <div class="d-flex justify-center align-center">
+              <div class="d-flex justify-center align-center flex-column">
                 <v-btn @click="new_action('ChoiceQuiz')"> start choice quiz</v-btn>
+                <v-btn @click="new_action('Attendance')"> start Attendance</v-btn>
+                <v-btn @click="new_action('GameQuestion')"> start Game Question</v-btn>
                 <v-btn color="red" large class="white--text" @click="end">End</v-btn>
               </div>
             </v-col>
@@ -35,6 +38,8 @@
             :room="room"
             :classroom-id="classroom_id"
         ></Chat>
+
+
       </v-col>
     </v-row>
 
@@ -46,10 +51,12 @@ import ScreenSharing from "../../components/classroom_modules/screensharing/Scre
 import Chat from "../../components/classroom_modules/chat/Chat";
 import ChoiceQuiz from "../../components/classroom_modules/choicequiz/ChoiceQuiz";
 import {mapState} from "vuex";
+import Attendance from "@/components/classroom_modules/attendance/Attendance";
+import GameQuestion from "@/components/classroom_modules/gamequestion/GameQuestion";
 
 export default {
   name: "ClassroomRoom",
-  components: {Chat, ScreenSharing, ChoiceQuiz},
+  components: {GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
   data() {
     return {
       my_role: null,
@@ -82,7 +89,7 @@ export default {
     //GE functions
     async loadData() {
       this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
-      await this.getClassroomModules()
+      // await this.getClassroomModules()
     },
     async getClassroomModules() {
       let classroom_modules = await this.$store.dispatch('classroom_modules/classroom_module/getListClassroomModule', {classroom__id: this.classroom_id})
@@ -108,11 +115,23 @@ export default {
 
       let events = {
         'choice_quiz': this.choice_quiz_end,
+        'attendance': this.attendance_end,
+        'game_question': this.game_question_end,
       }
       events[e.event](e.data)
 
     },
     choice_quiz_end(e) {
+      this.room_state.state = "normal"
+      this.room_state.module = null
+      this.room_state.host = null
+    },
+    attendance_end(e) {
+      this.room_state.state = "normal"
+      this.room_state.module = null
+      this.room_state.host = null
+    },
+    game_question_end(e) {
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null

@@ -42,11 +42,11 @@
                             {{classroom.course_credit}}({{classroom.lecture_unit}}-{{classroom.lab_unit}}-{{classroom.
                             lecture_unit}})
                         </span>
-                        <span class="mx-2 red--text">
+                        <span class="mx-2 ">
                             <span class="font-weight-bold">
                                 Amount  :
                             </span>
-                             NONE
+                             {{classroom.number_member}}
                         </span>
 
                         <br>

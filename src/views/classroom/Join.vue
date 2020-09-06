@@ -83,7 +83,7 @@ export default {
     async joinClassroom() {
       this.form.user = this.user.pk
       this.form.classroom = this.classroom.id
-      let data = await this.$store.dispatch('classroom_modules/member/addClassroomMember', this.form)
+      let data = await this.$store.dispatch('classroom/member/addClassroomMember', this.form)
       console.log(data)
       if (data) {
         await this.$router.push({

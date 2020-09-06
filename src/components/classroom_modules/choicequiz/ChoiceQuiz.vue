@@ -218,7 +218,6 @@ export default {
       this.module_socket.send(JSON.stringify(data));
     },
 
-
     // WebSocket functions
     get_current_state() {
       let content = {
@@ -243,7 +242,6 @@ export default {
     get_component_by_state(state, component_index = 0) {
       let state_name = state.state
       let component = null
-      console.log(state)
       if (this.is_host) {
         component = state['component_set']['host'][state_name][component_index]
       } else if (this.is_viewer) {

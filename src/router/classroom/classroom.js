@@ -1,4 +1,5 @@
 import classroom_module_index from "../classroom_modules/classroom_module_index";
+import member from "@/router/classroom/member";
 export default {
     path: '/classroom',
     component: () => import('../../views/classroom/Template'),
@@ -36,6 +37,7 @@ export default {
             name: "MainClassroom",
             component: () => import('../../views/classroom/Main'),
             children: [
+                member,
                 classroom_module_index
             ]
         },

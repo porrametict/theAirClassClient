@@ -1,4 +1,3 @@
-import member from "../classroom_modules/member";
 import choicequiz from "./choicequiz";
 
 export default {
@@ -10,7 +9,6 @@ export default {
             name: 'ClassroomModuleIndex',
             component: () => import('../../views/classroom_modules/Index')
         },
-        member,
         choicequiz,
     ]
 }

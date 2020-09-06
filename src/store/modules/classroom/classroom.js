@@ -1,6 +1,7 @@
 const classroom_api = "/api/v1/classroom/classroom/"
-const member_lof_api = "/api/v1/classroom-module/member/lof/"
+const member_lof_api = "/api/v1/classroom/member-lof/"
 import room from "./room";
+import member from "@/store/modules/classroom/member";
 
 export default {
     namespaced: true,
@@ -88,6 +89,7 @@ export default {
 
     },
     modules: {
-        room: room
+        room: room,
+        member : member,
     }
 }

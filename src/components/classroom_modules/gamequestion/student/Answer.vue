@@ -5,34 +5,34 @@
       <p class="title">
         {{ data.question }}
       </p>
-      <div>
-        <v-btn @click="on_click">next</v-btn>
-      </div>
     </div>
-    <div class="text-center">
+    <div class="text-center" v-if="data.student.pk != this.user.pk">
       <p>ผู้ตอบ</p>
-      <p>{{ data.student.first_name }} {{ data.student.last_name }}</p>
+      <p class="title">{{ data.student.first_name }} {{ data.student.last_name }}</p>
     </div>
 
-    <div>
-      <v-btn large color="green" class="white--text" @click="on_click(true)">
-        Correct
-      </v-btn>
-      <v-btn large color="red" class="white--text" @click="on_click(false)">
-        InCorrect
-      </v-btn>
+    <div class="text-center" v-else>
+      <p class="title">คุณคือผู้ตอบ</p>
     </div>
+
   </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
-  name: "HostAnswer",
+  name: "Answer",
   props: {
     data: {
       type: [Object],
       require: true
     },
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user.user
+    })
   },
   methods: {
     on_click(e) {

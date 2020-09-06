@@ -59,7 +59,7 @@ export default {
       },
       choice_quizzes: null,
       headers: [
-        {text: 'Name', value: 'name'},
+        {text: 'Name', value: 'quiz_title'},
         {text: 'Manage', align: 'center', value: 'manage'},
       ]
     }
