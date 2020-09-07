@@ -3,7 +3,7 @@
     <div class="text-center">
       <p class="">Question</p>
       <p class="title">
-        {{ data.question }}
+        {{ data.question.text }}
       </p>
     </div>
     <div class="text-center">
@@ -12,10 +12,10 @@
     </div>
 
     <div>
-      <v-btn large color="green" class="white--text" @click="on_click(true)">
+      <v-btn large block color="green" class="white--text ma-1" @click="on_click(true)">
         Correct
       </v-btn>
-      <v-btn large color="red" class="white--text" @click="on_click(false)">
+      <v-btn large block color="red" class="white--text ma-1" @click="on_click(false)">
         InCorrect
       </v-btn>
     </div>

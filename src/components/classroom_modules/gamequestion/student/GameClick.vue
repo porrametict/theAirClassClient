@@ -4,7 +4,7 @@
       <div>
         คลิกให้ไวที่สุดเพื่อชนะ
       </div>
-      <v-btn x-large block color="green" @click="game_click">
+      <v-btn x-large block color="green" class="white--text" @click="game_click">
         Click me
       </v-btn>
     </div>
@@ -16,7 +16,7 @@ import {mapState} from 'vuex'
 
 export default {
   name: "GameClick",
-  props : {
+  props: {
     room: {
       type: [Object],
       require: true

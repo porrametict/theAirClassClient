@@ -3,7 +3,7 @@
     <div class="text-center">
       <p class="">Question</p>
       <p class="title">
-        {{ data.question }}
+        {{ data.question.text }}
       </p>
     </div>
     <div class="text-center" v-if="data.student.pk != this.user.pk">

@@ -2,10 +2,10 @@
   <div class="text-center">
     <p class="">Question</p>
     <p class="title">
-      {{ data.question }}
+      {{ data.question.text }}
     </p>
     <div>
-      <v-btn @click="on_click">next </v-btn>
+      <v-btn @click="on_click" rounded block color="primary">next </v-btn>
     </div>
   </div>
 

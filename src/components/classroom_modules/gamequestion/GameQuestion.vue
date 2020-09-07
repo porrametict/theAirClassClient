@@ -60,7 +60,7 @@ export default {
       require: true
     },
   }, async mounted() {
-    console.log(this.user ,this.role)
+    console.log(this.user, this.role)
     this.newWebSocket()
     if (this.user.pk === this.host.pk) {
       this.is_host = true
@@ -141,7 +141,7 @@ export default {
       }
     },
     on_get_answer(e) {
-      this.state.data.is_true = e
+      this.state.data.is_true = e.result
       this.end_gamequestion()
     },
 
@@ -191,6 +191,7 @@ export default {
       state['component'] = this.get_component_by_state(state)
       this.state = state
       this.component_key += 1
+      console.log(this.state)
     },
     get_component_by_state(state, component_index = 0) {
       let state_name = state.state
@@ -235,7 +236,6 @@ export default {
       this.socket_send(content);
     },
     on_select_responder(e) {
-      console.log(this.is_host, this.is_viewer)
       this.state = e['data']['state']
       this.state.component = this.get_component_by_state(this.state)
       this.component_key += 1

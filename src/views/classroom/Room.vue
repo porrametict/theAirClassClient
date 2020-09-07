@@ -125,16 +125,21 @@ export default {
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
+      this.set_room_state()
+
     },
     attendance_end(e) {
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
+      this.set_room_state()
+
     },
     game_question_end(e) {
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
+      this.set_room_state()
     },
 
     // main WebSocket
@@ -195,6 +200,15 @@ export default {
     },
     on_get_current_state(e) {
       this.room_state = e['data']['state']
+    },
+    set_room_state() {
+      let content = {
+        "command": "new_action",
+        "data": {
+          'state': this.room_state
+        }
+      }
+      this.socket_send(content);
     },
     new_action(module_name) {
       let content = {

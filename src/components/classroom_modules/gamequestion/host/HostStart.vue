@@ -1,15 +1,14 @@
 <template>
   <div>
-    <h1>Create Question</h1>
-    <v-text-field
-        v-model="question"
-    >
-    </v-text-field>
+    <h1 class="mb-2">Create Question</h1>
+    <VoiceAnswerQuestion v-model="question"></VoiceAnswerQuestion>
 
     <v-btn
         @click="on_click"
         color="primary"
         rounded
+        block
+        large
     >
       next
     </v-btn>
@@ -17,11 +16,16 @@
 </template>
 
 <script>
+import VoiceAnswerQuestion from "@/components/classroom_modules/question/VoiceAnswerQuestion";
+
 export default {
   name: "HostStart",
+  components: {VoiceAnswerQuestion},
   data() {
     return {
-      question: null
+      question: {
+        text : null
+      }
     }
   },
   methods: {
