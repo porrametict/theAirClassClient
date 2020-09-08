@@ -4,8 +4,14 @@ export default {
     children: [
         {
             path: "",
-            name: "FirstClassroomIndex",
+            name: "firstclassroom",
             component: () => import('../../views/classroom_modules/firstclassroom/firstclassroom')
         },
+        {
+            path: "secondclassroom",
+            name: "SecondClassroomIndex",
+            component: () => import('../../views/classroom_modules/firstclassroom/secondclassroom')
+        },
+
     ]
 }

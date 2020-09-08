@@ -14,6 +14,6 @@ export default new Vuex.Store({
     modules: {
         user: user,
         classroom: classroom,
-        classroom_modules: classroom_modules
+        classroom_modules: classroom_modules,
     }
 })
