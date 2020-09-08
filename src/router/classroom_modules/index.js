@@ -1,9 +1,6 @@
-import firstclassroom from "../classroom_modules/firstclassroom"
-
 export default {
     path: 'module',
-    component: () => import('../../views/classroom_modules/firstclassroom/Template'),
+    component: () => import('../../views/classroom_modules/Template'),
     children: [
-        firstclassroom,
     ]
 }

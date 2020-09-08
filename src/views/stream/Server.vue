@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Classroom Server</h1>
+    <ContentHeader text="Classroom Server"></ContentHeader>
 
     <!--id-->
     <div>
@@ -19,14 +19,6 @@
     <div>
       <v-btn small color="primary" @click="connectPeer">connect</v-btn>
     </div>
-
-<!--    <div>-->
-<!--      <v-btn small color="primary" @click="startSteam">Start Steam</v-btn>-->
-<!--    </div>-->
-
-    <!--      <p>Server's Video</p>-->
-    <!--          <video ref="video" style="max-height: 600px; max-width: 900px;"></video>-->
-
 
     <!--show-->
     <div class="d-flex justify-center">
@@ -78,45 +70,53 @@
 </template>
 
 <script>
-  import Peer from "peerjs";
+import Peer from "peerjs";
+import ContentHeader from "../../components/share/ContentHeader";
 
-  export default {
-  name: "SecondClassroomIndex",
-    data: () => ({
-      peer: null,
-      peerId: "1",
-      peerConnectTo: "2",
-    }),
-    created() {
-      this.initPeer();
+export default {
+  name: "ServerIndex",
+  components: {
+    ContentHeader
+  },
+  data: () => ({
+    peer: null,
+    peerId: "001",
+    peerConnectTo: "002",
+  }),
+  created() {
+    this.initPeer();
+  },
+  methods: {
+    initPeer() {
+      this.peer = new Peer(this.peerId);
     },
-    methods: {
-      initPeer() {
-        this.peer = new Peer(this.peerId);
-      },
-      connectPeer() {
-        let conn = this.peer.connect(this.peerConnectTo);
-        // on open will be launch when you successfully connect to PeerServer
-        conn.on("open", function () {
-          // here you have conn.id
-          conn.send("hi! i'm server");
+
+    connectPeer() {
+      let conn = this.peer.connect(this.peerConnectTo);
+      // on open will be launch when you successfully connect to PeerServer
+      conn.on("open", function () {
+        // here you have conn.id
+        conn.send("hi! i'm server");
+      });
+
+      this.peer.on("connection", function (conn) {
+        conn.on("data", function (data) {
+          console.log("server receive : ", data);
         });
-        this.peer.on("connection", function (conn) {
-          conn.on("data", function (data) {
-            console.log("server receive : ", data);
-          });
-        });
-        // this.peer.on("call", this.peerCall);
-      },
-      async startSteam() {
-        let stream = await navigator.mediaDevices.getDisplayMedia({
-          video: true,
-        });
-        let call = this.peer.call(this.peerConnectTo, stream);
-        call.on("stream", (remoteStream) => {
-          console.log(remoteStream);
-        });
-      },
+      });
+      // this.peer.on("call", this.peerCall);
     },
-  };
+
+
+    async startSteam() {
+      let stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+      });
+      let call = this.peer.call(this.peerConnectTo, stream);
+      call.on('stream', (remoteStream) => {
+        console.log('server remote Stream',remoteStream)
+      });
+    },
+  },
+};
 </script>
