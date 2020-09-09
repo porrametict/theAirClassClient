@@ -1,36 +1,21 @@
 <template>
-  <div>
-    <p class="headline">
-      {{ choice_quiz.question_set[data.current_question_index].text }}
-    </p>
-
-    <div class="ma-1"
-        v-for="(item,index) in choice_quiz.question_set[data.current_question_index].choice_set"
-        :key="index"
-    >
-      <v-hover
-          v-slot:default="{ hover }"
-      >
-        <v-card
-            :color="hover? 'primary' : 'white'"
-            style="cursor: pointer"
-            @click="on_select(item.id)"
-        >
-          <v-card-text class="pa-2 ma-0  d-flex justify-center align-center">
-            <p class="title text-center ma-0 pa-0">
-              {{ item.text }}
-            </p>
-          </v-card-text>
-        </v-card>
-      </v-hover>
-    </div>
+  <div class="">
+    <p>Question : </p>
+    <component :is="`${choice_quiz.questions[data.current_question_index].resourcetype}Show`"
+               :question="choice_quiz.questions[data.current_question_index]"
+               @change="on_select"
+    />
 
   </div>
 </template>
 
 <script>
+import MultiChoiceQuestionShow from "@/components/classroom_modules/question/MultiChoiceQuestionShow";
+import YesNoQuestionShow from "@/components/classroom_modules/question/YesNoQuestionShow";
+
 export default {
   name: "ShowQuestion",
+  components: {YesNoQuestionShow, MultiChoiceQuestionShow},
   props: {
     data: {
       type: [Object],

@@ -1,12 +1,12 @@
 <template>
   <div class="text-center">
-    <div v-if="result === true">
+    <div v-if="is_true === true">
       <p class="headline green--text">Correct</p>
     </div>
-    <div v-else-if="result === false">
+    <div v-else-if="is_true === false">
       <p class="headline red--text">Incorrect</p>
     </div>
-    <div v-else-if="result === null">
+    <div v-else-if="is_reply !== true">
       <p class="headline grey--text">Did not answer</p>
     </div>
   </div>
@@ -33,26 +33,18 @@ export default {
   },
   data() {
     return {
-      result: null
+      is_true: null,
+      is_reply: null,
+
     }
   },
   methods: {
     getResult() {
-
-      this.data.choice_students.forEach((o) => {
-        if (o.question.id === this.data.choice_quiz.question_set[this.data.current_question_index].id) {  //question == current_question
-
-          o.choice_selects.forEach((c) => {
-            if (c.user.pk === this.user.pk) {  /// is me
-
-              o.question.choice_set.forEach((cs) => {
-
-                if (c.choice_select === cs.id) { //is selected choice
-                  this.result = cs.is_true
-                }
-              })
-            }
-          })
+      let current_question_index = this.data.current_question_index
+      this.data.question_replies[current_question_index].students.forEach(e => {
+        if (e.student === this.user.pk) {
+          this.is_true = e.is_true
+          this.is_reply = e.is_reply
         }
       })
     },

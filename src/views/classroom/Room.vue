@@ -27,7 +27,6 @@
             v-if="room_state.module"
             :is="room_state.module"
             :room="room"
-            :classroom_modules="classroom_modules"
             :role="my_role"
             :host="room_state.host"
             @ended="module_end"
@@ -62,7 +61,6 @@ export default {
       my_role: null,
       room: null,
       member: [],
-      classroom_modules: [],
       classroom_id: this.$route.params.id,
       room_state: {
         state: "normal", // normal $$ playing,
@@ -89,19 +87,8 @@ export default {
     //GE functions
     async loadData() {
       this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
-      // await this.getClassroomModules()
     },
-    async getClassroomModules() {
-      let classroom_modules = await this.$store.dispatch('classroom_modules/classroom_module/getListClassroomModule', {classroom__id: this.classroom_id})
-      let cm_data = classroom_modules.results
-      for (let i = 0; i < cm_data.length; i++) {
-        let data = {
-          classroom_module_id: cm_data[i]['id'],
-          module_name: cm_data[i]['module']['name']
-        }
-        this.classroom_modules.push(data)
-      }
-    },
+
     async end() {
       this.room['status'] = false
       let data = await this.$store.dispatch('classroom/room/updateRoom', this.room)
@@ -122,24 +109,39 @@ export default {
 
     },
     choice_quiz_end(e) {
+      let host = this.room_state.host
+
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
-      this.set_room_state()
+
+      if (host.pk === this.user.pk) {
+        this.set_room_state()
+      }
+
 
     },
     attendance_end(e) {
+      let host = this.room_state.host
+
+
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
-      this.set_room_state()
-
+      if (host.pk === this.user.pk) {
+        this.set_room_state()
+      }
     },
     game_question_end(e) {
+      let host = this.room_state.host
+
+
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
-      this.set_room_state()
+      if (host.pk === this.user.pk) {
+        this.set_room_state()
+      }
     },
 
     // main WebSocket

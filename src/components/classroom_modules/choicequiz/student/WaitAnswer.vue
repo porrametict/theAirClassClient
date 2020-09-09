@@ -3,7 +3,7 @@
     <div>
       <p>count responder</p>
       <p class="title">
-        {{count_answer}}
+        {{data.count_current_question_responders}}
       </p>
     </div>
     <p class="headline">Please wait..</p>
@@ -19,23 +19,6 @@ export default {
       require: true
     },
   },
-  created() {
-    this.countAnswer()
-  },
-  data() {
-    return {
-      count_answer: 0
-    }
-  },
-  methods: {
-    countAnswer() {
-      this.data.choice_students.forEach((o) => {
-        if (o.question.id === this.data.choice_quiz.question_set[this.data.current_question_index].id) {  //question == current_question
-          this.count_answer +=1
-        }
-      })
-    }
-  }
 }
 </script>
 

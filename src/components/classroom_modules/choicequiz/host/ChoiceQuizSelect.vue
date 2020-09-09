@@ -47,7 +47,6 @@ export default {
     on_start() {
       this.$emit('change', {'event': 'choice_quiz_select', 'data': this.selectedChoiceQuiz})
     }
-
   }
 }
 </script>

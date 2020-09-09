@@ -55,10 +55,6 @@ export default {
       type: [Number],
       require: true
     },
-    classroom_modules: {
-      type: [Array],
-      require: true
-    },
   }, async mounted() {
     console.log(this.user, this.role)
     this.newWebSocket()

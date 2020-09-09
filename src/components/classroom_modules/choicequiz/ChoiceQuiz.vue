@@ -65,13 +65,8 @@ export default {
       type: [Number],
       require: true
     },
-    classroom_modules: {
-      type: [Array],
-      require: true
-    },
   },
   async mounted() {
-    this.getClassroomModule()
     this.newWebSocket()
     if (this.user.pk === this.host.pk) {
       this.is_host = true
@@ -121,31 +116,20 @@ export default {
 
         },
         data: {
-          choice_quizzes: null,
-          choice_quiz: null,
-          current_question_index: null,
-          choice_students: []
+          'classroom': null,
+          'room': null,
+          'all_students': null,
+          'student_replies': null,
+          'question_replies': null,
+          'choice_quizzes': null,
+          'choice_quiz': null,
+          'current_question_index': null,
         }
       }
     }
   },
   methods: {
     // general functions
-    getClassroomModule() {
-      let module_name = "ChoiceQuiz"
-      this.classroom_modules.forEach((o) => {
-        if (o.module_name === module_name) {
-          this.classroom_module = o
-        }
-      })
-    },
-    async loadData() {
-      let data = await this.$store.dispatch('classroom_modules/choicequiz/getChoiceQuizzes', {'classroom_module__id': this.classroom_module.classroom_module_id})
-
-      this.state.data.choice_quizzes = data.results
-      this.state.state = 'start'
-      this.state.component = 'ChoiceQuizSelect'
-    },
 
     // Event functions
     eventChange(e) {
@@ -230,12 +214,19 @@ export default {
     },
     async on_get_current_state(e) {
       let state = e['data']['state']
-      state['component'] = this.get_component_by_state(state)
+      if (!state['data']['choice_quizzes']) {
+        this.get_current_state()
+        return;
+      }
       this.state = state
 
-      if (this.is_host) {
-        await this.loadData()
+      if (state['state'] === 'newQuestion' && !this.is_host && !this.is_viewer) {
+
+        state['component'] = this.get_component_by_state(state, this.student_replied() ? 1 : 0)
+      } else {
+        state['component'] = this.get_component_by_state(state)
       }
+
       this.component_key += 1
 
     },
@@ -279,46 +270,27 @@ export default {
       )
     },
     on_student_select(e) {
+      this.state = e['data']['state']
       if (!this.is_host) {
-        if (e.data.user.pk === this.user.pk) {
+        if (this.student_replied()) {
           this.state.state = 'newQuestion'
-          this.state.component = 'WaitAnswer'
+          this.state.component = this.get_component_by_state(this.state, 1)
         }
-      }
-
-      if (this.state.data.choice_students.length > 0) {
-
-        let choice_students = this.state.data.choice_students
-        let have_current_question = false
-
-        choice_students.forEach((o) => {
-
-          if (o.question.id === this.state.data.choice_quiz.question_set[this.state.data.current_question_index]) {  //question == current_question
-            have_current_question = true
-            o.choice_selects.push(e.data)
-          }
-
-        })
-
-        if (!have_current_question) {   // don't have current question
-          let data = {
-            question: this.state.data.choice_quiz.question_set[this.state.data.current_question_index],
-            choice_selects: [e.data]
-          }
-          this.state.data.choice_students.push(data)
-        }
-
-      } else {   // empty list
-        let data = {
-          question: this.state.data.choice_quiz.question_set[this.state.data.current_question_index],
-          choice_selects: [e.data]
-        }
-        this.state.data.choice_students.push(data)
+      } else {
+        this.state.component = this.get_component_by_state(this.state)
       }
       this.component_key += 1
-
     },
-
+    student_replied() {
+      let replied = false
+      let current_question_index = this.state.data.current_question_index
+      this.state.data.question_replies[current_question_index].students.forEach(e => {
+        if (e.student === this.user.pk) {
+          replied = true
+        }
+      })
+      return replied
+    },
     answer() {
       this.state.state = 'AnswerResult'
       this.socket_send(
@@ -362,7 +334,7 @@ export default {
             "command": "end_question",
             "data": {
               'state': this.state,
-              'classroom_module' : this.classroom_module
+              'classroom_module': this.classroom_module
             }
           }
       )
@@ -375,37 +347,7 @@ export default {
 
     },
     end_choice_quiz() {
-      this.state = {
-        state: 'start',
-        component: null,
-        'component_set': {
-          'host': {
-            'start': ['ChoiceQuizSelect'],
-            'newQuestion': ['HostWaitAnswer'],
-            'AnswerResult': ['HostAnswerResult'],
-            'Summary': ['HostSummary'],
-          },
-          'student': {
-            'start': ['Start'],
-            'newQuestion': ['ShowQuestion', 'WaitAnswer'],
-            'AnswerResult': ['AnswerResult'],
-            'Summary': ['Summary'],
-          },
-          'viewer': {
-            'start': ['ViewerStart'],
-            'newQuestion': ['ViewerWaitAnswer'],
-            'AnswerResult': ['ViewerAnswerResult'],
-            'Summary': ['ViewerSummary'],
-          },
 
-        },
-        data: {
-          choice_quizzes: null,
-          choice_quiz: null,
-          current_question_index: null,
-          choice_students: []
-        }
-      }
       this.socket_send(
           {
             "command": "end_choice_quiz",

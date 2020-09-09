@@ -58,10 +58,6 @@ export default {
       type: [Number],
       require: true
     },
-    classroom_modules: {
-      type: [Array],
-      require: true
-    },
   }, async mounted() {
     this.newWebSocket()
     if (this.user.pk === this.host.pk) {
@@ -73,6 +69,8 @@ export default {
       this.is_viewer = true
       this.state.state = 'start'
       this.state.component = 'ViewerStart'
+
+      this.end_attendance()
 
     } else {
       this.state.state = 'start'
@@ -140,7 +138,12 @@ export default {
     async on_get_current_state(e) {
       this.state = e['data']['state']
       this.state['component'] = this.get_component_by_state(this.state)
-      this.check_attended()
+
+
+      if (!this.is_viewer && !this.is_viewer) {
+        this.check_attended()
+      }
+
     },
     check_attended() {
       this.state.data.all_students.forEach(e => {
