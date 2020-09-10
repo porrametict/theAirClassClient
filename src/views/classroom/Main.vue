@@ -10,7 +10,7 @@
           {{ tab.name }}
         </v-tab>
       </v-tabs>
-      <router-view></router-view>
+      <router-view v-if="classroom"></router-view>
     </div>
   </div>
 </template>
@@ -40,6 +40,9 @@ export default {
     }
   },
   async mounted() {
+    if (!this.classroom) {
+      await this.$store.dispatch('classroom/retrieveClassroom', this.$route.params.id)
+    }
     this.router_push('MemberIndex')
     await this.loadData()
     await this.checkUserRole()

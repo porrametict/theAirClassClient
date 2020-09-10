@@ -18,8 +18,6 @@ export default new Vuex.Store({
         user: user,
         classroom: classroom,
         classroom_modules: classroom_modules,
-
-
         spinner: spinner,
         success: success,
         error: error,

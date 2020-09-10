@@ -103,17 +103,29 @@ export default {
                 //In Current data ,we sent ImageURL but server need  ImageFile .
                 delete params.profile  // if you want to update profile , you must update serializer and viewSet on server-side for Ignore Image_data.
             }
-                let id = params.id
-                return await axios.put('/rest-auth/user/', params)
-                    .then((response) => {
-                        context.commit('setUser', response.data)
-                        context.dispatch("success/setSuccess", response.data, {root: true})
-                        return response.data
-                    }).catch((error) => {
-                        context.dispatch("error/setError", error.response.data, {root: true});
-                        return null
-                    })
-            }
-        ,
+            let id = params.id
+            return await axios.put('/rest-auth/user/', params)
+                .then((response) => {
+                    context.commit('setUser', response.data)
+                    context.dispatch("success/setSuccess", response.data, {root: true})
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
+        async changePassword(context, params) {
+
+            return await axios.post('/rest-auth/password/change/', params)
+                .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true})
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
         }
-    }
+
+    },
+
+}
