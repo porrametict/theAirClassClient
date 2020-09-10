@@ -7,7 +7,7 @@ export default {
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -16,7 +16,7 @@ export default {
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },

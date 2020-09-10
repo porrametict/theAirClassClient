@@ -30,9 +30,10 @@ export default {
             let fd = await context.dispatch('jsonToFormData', params)
             return await axios.post(`${classroom_api}`, fd)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true});
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -41,7 +42,7 @@ export default {
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -50,7 +51,7 @@ export default {
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -60,7 +61,7 @@ export default {
                     context.commit('setClassroom', response.data)
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -70,26 +71,27 @@ export default {
             return await axios.put(`${classroom_api}${id}/`, fd)
                 .then((response) => {
                     context.commit('setClassroom', response.data)
+                    context.dispatch("success/setSuccess", response.data, {root: true});
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
         async deleteClassroom(context, id) {
             return await axios.delete(`${classroom_api}${id}/`)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true});
                     return true  // 204 No Content
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
 
-
     },
     modules: {
         room: room,
-        member : member,
+        member: member,
     }
 }

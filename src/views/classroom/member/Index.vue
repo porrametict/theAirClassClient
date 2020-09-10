@@ -11,6 +11,8 @@
               dense
               append-icon="mdi-magnify"
               placeholder="search"
+              v-model="form_params.search"
+              @keydown.13="loadData"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -33,7 +35,7 @@
             </template>
 
             <template v-slot:item.role="{item}">
-              {{ getRoleName(item.role) }}
+              <RoleSelect :value="item.role" @input="changeMemberRole(item,$event)"></RoleSelect>
             </template>
 
             <template v-slot:item.manage="{ item }">
@@ -56,6 +58,16 @@
               </ConfirmDialog>
             </template>
           </v-data-table>
+          <v-divider></v-divider>
+
+          <div class="text-center" v-if="form_params.length>1">
+            <v-pagination
+                v-model="form_params.page"
+                :length="form_params.length"
+                circle
+                @input="changePage"
+            ></v-pagination>
+          </div>
         </v-card>
       </div>
     </div>
@@ -66,15 +78,20 @@
 import ContentHeader from "../../../components/share/ContentHeader";
 import ButtonIcon from "../../../components/share/ButtonIcon";
 import ConfirmDialog from "../../../components/share/ConfirmDialog";
+import {mapState} from "vuex";
+import RoleSelect from "@/components/classroom/member/RoleSelect";
 
 export default {
   name: "MemberIndex",
-  components: {ConfirmDialog, ButtonIcon, ContentHeader},
+  components: {RoleSelect, ConfirmDialog, ButtonIcon, ContentHeader},
   data() {
     return {
       members: null,
       form_params: {
         search: null,
+        classroom__id: null,
+        page: 1,
+        length: 0,
       },
       headers_member: [
         {
@@ -87,6 +104,7 @@ export default {
           text: 'Role ',
           align: 'center',
           sortable: false,
+          width: 300,
           value: 'role',
         },
         {
@@ -94,27 +112,46 @@ export default {
           align: 'center',
           value: "manage"
         },
-
       ],
     }
 
   },
-  mounted() {
-    this.loadData()
+  computed: {
+    ...mapState({
+      classroom: state => state.classroom.classroom,
+      user: state => state.user.user
+
+    })
+  },
+  async mounted() {
+    this.form_params.classroom__id = this.classroom.id
+    await this.loadData()
+    await this.checkUserRole()
+
   },
   methods: {
-    getRoleName(roleId) {
-      if (roleId === 1) {
-        return 'Owner'
-      } else if (roleId === 2) {
-        return 'Teacher'
-      } else if (roleId === 3) {
-        return 'Student'
-      }
+    async checkUserRole() {
+      let data = await this.$store.dispatch('classroom/getListClassroomByUser', {
+        'user__id': this.user.pk,
+        'classroom_id': this.classroom.id
+      })
+      this.user_role = data.results[0]['role']
     },
     async loadData() {
       let data = await this.$store.dispatch('classroom/member/getListMember', this.form_params)
+      this.form_params.length = Math.ceil(data.count / 10)
       this.members = data.results
+    },
+    changePage(page) {
+      this.form_params.page = page
+      this.loadData()
+    },
+    async changeMemberRole(item, new_role) {
+      item.role = new_role
+      let data = await this.$store.dispatch('classroom/member/updateMember', item)
+      if (data != null) {
+        await this.loadData()
+      }
     },
     async delete_member(e, item) {
       if (e) {

@@ -8,6 +8,7 @@
           filled
           rounded
           dense
+          hint="insert classroom code , e.g. GX19H5B0"
       >
       </v-text-field>
       <v-btn rounded
@@ -15,11 +16,13 @@
              class="black--text"
              large
              @click="searchClassroom"
+             :disabled="join_btn_disable"
       >
         join new classroom
       </v-btn>
     </div>
     <DialogPrimary
+        dialog_id="join_found"
         title="Join Classroom"
         @primary_btn_click="joinClassroom"
     >
@@ -36,6 +39,20 @@
         <ButtonPrimary v-on="on">Join</ButtonPrimary>
       </template>
     </DialogPrimary>
+    <DialogPrimary
+        dialog_id="join_not_found"
+        title="Join Classroom"
+    >
+      <div class="text-center ma-5"
+      >
+        <p class="display-1 black--text">
+          Not Found.
+        </p>
+      </div>
+      <template v-slot:right_btn="{on}">
+        <ButtonPrimary v-on="on">OK</ButtonPrimary>
+      </template>
+    </DialogPrimary>
   </div>
 </template>
 
@@ -50,6 +67,10 @@ export default {
   components: {DialogPrimary, ButtonPrimary},
   data: () => ({
     dialog: false,
+    join_btn_disable: true,
+    rules: {
+      required: value => !!value || 'Required.',
+    },
     form_params: {
       search: null
     },
@@ -65,6 +86,14 @@ export default {
       user: state => state.user.user
     })
   },
+  watch: {
+    form_params: {
+      handler: function (newVal, oldVal) {
+        this.join_btn_disable = newVal.search.length !== 8;
+      },
+      deep: true
+    }
+  },
   methods: {
     async searchClassroom() {
       if (this.form_params.search) {
@@ -72,12 +101,10 @@ export default {
         this.classrooms = data.results
         if (this.classrooms.length) {
           this.classroom = this.classrooms[0]
-          EventBus.$emit('open-dialog-primary');
+          EventBus.$emit('open-dialog-primary', {dialog_id: 'join_found'});
         } else {
-          alert("Not Found")
+          EventBus.$emit('open-dialog-primary', {dialog_id: 'join_not_found'});
         }
-      } else {
-        alert("Please enter Classroom Code")
       }
     },
     async joinClassroom() {

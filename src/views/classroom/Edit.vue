@@ -167,8 +167,6 @@
                 let data = await this.$store.dispatch("classroom/updateClassroom", this.form)
                 if (data) {
                     await this.$router.go(-1)
-                } else {
-                    alert("error")
                 }
             }
         }
