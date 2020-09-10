@@ -15,6 +15,7 @@
                 <v-btn @click="new_action('ChoiceQuiz')"> start choice quiz</v-btn>
                 <v-btn @click="new_action('Attendance')"> start Attendance</v-btn>
                 <v-btn @click="new_action('GameQuestion')"> start Game Question</v-btn>
+                <v-btn @click="new_action('Poll')"> start Poll</v-btn>
                 <v-btn color="red" large class="white--text" @click="end">End</v-btn>
               </div>
             </v-col>
@@ -38,7 +39,6 @@
             :classroom-id="classroom_id"
         ></Chat>
 
-
       </v-col>
     </v-row>
 
@@ -52,10 +52,11 @@ import ChoiceQuiz from "../../components/classroom_modules/choicequiz/ChoiceQuiz
 import {mapState} from "vuex";
 import Attendance from "@/components/classroom_modules/attendance/Attendance";
 import GameQuestion from "@/components/classroom_modules/gamequestion/GameQuestion";
+import Poll from "@/components/classroom_modules/poll/Poll";
 
 export default {
   name: "ClassroomRoom",
-  components: {GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
+  components: {Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
   data() {
     return {
       my_role: null,
@@ -104,6 +105,7 @@ export default {
         'choice_quiz': this.choice_quiz_end,
         'attendance': this.attendance_end,
         'game_question': this.game_question_end,
+        'poll': this.poll_end,
       }
       events[e.event](e.data)
 
@@ -133,6 +135,16 @@ export default {
       }
     },
     game_question_end(e) {
+      let host = this.room_state.host
+
+
+      this.room_state.state = "normal"
+      this.room_state.module = null
+      this.room_state.host = null
+      if (host.pk === this.user.pk) {
+        this.set_room_state()
+      }
+    }, poll_end(e) {
       let host = this.room_state.host
 
 
