@@ -43,7 +43,7 @@ export default {
     if (!this.classroom) {
       await this.$store.dispatch('classroom/retrieveClassroom', this.$route.params.id)
     }
-    this.router_push('MemberIndex')
+    // this.router_push('MemberIndex')
     await this.loadData()
     await this.checkUserRole()
 

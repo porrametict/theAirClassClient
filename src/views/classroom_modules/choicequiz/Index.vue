@@ -1,44 +1,68 @@
 <template>
   <div v-if="choice_quizzes">
     <ContentHeader class="my-2">Choice Quiz</ContentHeader>
-    <ButtonPrimary @click="$router.push({name :'ChoiceQuizCreate'})">Add</ButtonPrimary>
-    <v-data-table
-        :headers="headers"
-        :items="choice_quizzes"
-        hide-default-footer
-    >
-      <template v-slot:item.manage=" { item } ">
-        <div class="d-flex justify-center">
-          <ButtonIcon class="mx-1" icon="mdi-pencil" tooltip_text="edit" @click="gotoEdit(item)"></ButtonIcon>
-          <ConfirmDialog
-              message="remove this item ?"
-              @change="DeleteItem($event,item)"
-          >
-            <template v-slot:activator="{on}">
-              <v-btn
-                  icon
-                  outlined
-                  color="red"
-                  v-on="on"
-                  :disabled="item.role ===1 "
+
+    <v-card>
+      <v-card-title class="d-flex justify-space-between ">
+        <v-row align="center" justify="end">
+          <v-col>
+            <ButtonPrimary @click="$router.push({name :'ChoiceQuizCreate'})">Add</ButtonPrimary>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-text-field
+                filled
+                rounded
+                hide-details
+                dense
+                append-icon="mdi-magnify"
+                placeholder="search"
+                v-model="form_params.search"
+                @keydown.13="loadData"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <v-card-text>
+        <v-data-table
+            :headers="headers"
+            :items="choice_quizzes"
+            hide-default-footer
+        >
+          <template v-slot:item.manage=" { item } ">
+            <div class="d-flex justify-center">
+              <ButtonIcon class="mx-1" icon="mdi-pencil" tooltip_text="edit" @click="gotoEdit(item)"></ButtonIcon>
+              <ConfirmDialog
+                  message="remove this item ?"
+                  @change="DeleteItem($event,item)"
               >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </template>
+                <template v-slot:activator="{on}">
+                  <v-btn
+                      icon
+                      outlined
+                      color="red"
+                      v-on="on"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
 
-          </ConfirmDialog>
+              </ConfirmDialog>
+            </div>
+          </template>
+        </v-data-table>
+        <v-divider></v-divider>
+
+        <div class="text-center" v-if="form_params.total_page > 1">
+          <v-pagination v-model="form_params.page"
+                        :length="form_params.total_page"
+                        circle
+                        :total-visible="5"
+                        @input="change_page"
+          ></v-pagination>
         </div>
-      </template>
-    </v-data-table>
+      </v-card-text>
+    </v-card>
 
-    <div class="text-center">
-      <v-pagination v-model="form_params.page"
-                    :length="total_page"
-                    circle
-                    :total-visible="5"
-                    @input="change_page"
-      ></v-pagination>
-    </div>
   </div>
 </template>
 
@@ -54,25 +78,28 @@ export default {
   data() {
     return {
       form_params: {
-        total_page : 0,
-        page : 1
+        search: "",
+        classroom: null,
+        total_page: 0,
+        page: 1,
       },
       choice_quizzes: null,
       headers: [
-        {text: 'Name', value: 'quiz_title'},
+        {text: 'Name', value: 'name'},
         {text: 'Manage', align: 'center', value: 'manage'},
       ]
     }
   },
   mounted() {
+    this.form_params.classroom = this.$route.params.id
     this.loadData()
   },
   methods: {
-    change_page (e){
+    change_page(e) {
       this.form_params.page = e
       this.loadData()
     },
-    generate_page (data){
+    generate_page(data) {
       this.total_page = Math.ceil(data.count / 10)
     },
     async loadData() {
@@ -88,7 +115,7 @@ export default {
         }
       })
     },
-    async DeleteItem(e,item) {
+    async DeleteItem(e, item) {
       if (e) {
         let data = await this.$store.dispatch('classroom_modules/choicequiz/deleteChoiceQuiz', item.id)
         if (data != null) {
