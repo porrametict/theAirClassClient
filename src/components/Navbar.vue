@@ -9,6 +9,7 @@
     >
       <v-layout column align-center>
         <v-flex class="mt-10 mb-8">
+          <v-avatar tile src = "logo_theairclass.PNG"></v-avatar>
 <!--          <v-avatar size="30">-->
 <!--          </v-avatar>-->
 

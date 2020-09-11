@@ -1,10 +1,9 @@
 <template>
   <div>
     <ContentHeader text="Classroom Server"></ContentHeader>
-
     <!--id-->
     <div>
-      <div>
+      <div class="d-flex justify-center">
         <v-col cols="12" sm="6" md="4">
           <v-text-field
               v-model="peerConnectTo"
@@ -16,15 +15,15 @@
       </div>
     </div>
 
-    <div>
-      <v-btn small color="primary" @click="connectPeer">connect</v-btn>
-    </div>
+      <div class="d-flex justify-center">
+        <v-btn small color="primary" @click="connectPeer">connect</v-btn>
+      </div>
 
     <!--show-->
-    <div class="d-flex justify-center">
+    <div class="d-flex justify-center ma-3">
       <v-card
           height="600px"
-          width="900px"
+          width="1000px"
       >
         <div>
           <video id="video" playsinline autoplay muted></video>
@@ -35,12 +34,14 @@
     <!--button-->
     <div class=" d-flex justify-space-around ma-4 ">
       <v-bottom-navigation
+          v-model ="button"
+          multiple
           rounded-pill
           height="50"
           width="800"
           dark
       >
-        <v-btn>
+        <v-btn @click="peerCall">
           <span>Mute</span>
           <v-icon>mdi-microphone</v-icon>
         </v-btn>
@@ -70,25 +71,38 @@
 </template>
 
 <script>
-import Peer from "peerjs";
 import ContentHeader from "../../components/share/ContentHeader";
+import Peer from "peerjs";
 
 export default {
   name: "ServerIndex",
   components: {
-    ContentHeader
+    ContentHeader,
   },
   data: () => ({
     peer: null,
     peerId: "001",
     peerConnectTo: "002",
+    muted: false,
+    button: [],
+    form: {
+      status: true
+    }
   }),
   created() {
     this.initPeer();
+
   },
   methods: {
     initPeer() {
       this.peer = new Peer(this.peerId);
+      this.peer.on("open", function (id) {
+        let peerId = id;
+        console.log("Ask your friend to join using your peer ID: " + peerId);
+      });
+      this.peer.on("error", function (err) {
+        console.log("error" + err);
+      });
     },
 
     connectPeer() {
@@ -104,17 +118,34 @@ export default {
           console.log("server receive : ", data);
         });
       });
-      // this.peer.on("call", this.peerCall);
     },
-
 
     async startSteam() {
       let stream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
+        audio: true,
       });
       let call = this.peer.call(this.peerConnectTo, stream);
-      call.on('stream', (remoteStream) => {
-        console.log('server remote Stream',remoteStream)
+      call.on("stream", (remoteStream) => {
+        console.log(remoteStream);
+        let video = this.$refs["video"];
+        video.srcObject = stream;
+        video.play();
+      });
+    },
+
+    async peerCall() {
+      // await this.checkForVideoAudioAccess()
+      let stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      let call = this.peer.call(this.peerConnectTo, stream);
+
+      call.on("stream", (remoteStream) => {
+        let video = this.$refs["video"];
+        video.srcObject = remoteStream;
+        video.play();
       });
     },
   },
