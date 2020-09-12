@@ -10,16 +10,16 @@
       <v-card-title class="d-flex justify-space-between ">
         <v-row align="center" justify="end">
           <v-col cols="12" md="4">
-<!--            <v-text-field-->
-<!--                filled-->
-<!--                rounded-->
-<!--                hide-details-->
-<!--                dense-->
-<!--                append-icon="mdi-magnify"-->
-<!--                placeholder="search"-->
-<!--                v-model="form_params.search"-->
-<!--                @keydown.13="loadData"-->
-<!--            ></v-text-field>-->
+            <!--            <v-text-field-->
+            <!--                filled-->
+            <!--                rounded-->
+            <!--                hide-details-->
+            <!--                dense-->
+            <!--                append-icon="mdi-magnify"-->
+            <!--                placeholder="search"-->
+            <!--                v-model="form_params.search"-->
+            <!--                @keydown.13="loadData"-->
+            <!--            ></v-text-field>-->
           </v-col>
         </v-row>
       </v-card-title>
@@ -29,27 +29,20 @@
             :items="attendance_plays"
             hide-default-footer
         >
+
+          <template v-slot:item.created="{item}">
+            <div>
+              {{ get_th_time(item.created) }}
+            </div>
+          </template>
+
           <template v-slot:item.manage=" { item } ">
             <div class="d-flex justify-center">
               <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
-<!--              <ConfirmDialog-->
-<!--                  message="remove this item ?"-->
-<!--                  @change="DeleteItem($event,item)"-->
-<!--              >-->
-<!--                <template v-slot:activator="{on}">-->
-<!--                  <v-btn-->
-<!--                      icon-->
-<!--                      outlined-->
-<!--                      color="red"-->
-<!--                      v-on="on"-->
-<!--                  >-->
-<!--                    <v-icon>mdi-delete</v-icon>-->
-<!--                  </v-btn>-->
-<!--                </template>-->
-
-<!--              </ConfirmDialog>-->
             </div>
           </template>
+
+
         </v-data-table>
         <v-divider></v-divider>
 
@@ -87,6 +80,7 @@ export default {
       attendance_plays: null,
       headers: [
         {text: 'Name', value: 'module_data.name', sortable: false},
+        {text: 'Created', value: 'created', sortable: false},
         {text: 'Manage', align: 'center', value: 'manage', sortable: false},
       ]
     }

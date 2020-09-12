@@ -32,6 +32,12 @@
             :items="choice_quizzes"
             hide-default-footer
         >
+          <template v-slot:item.created="{item}">
+            <div>
+              {{ get_th_time(item.created) }}
+            </div>
+          </template>
+
           <template v-slot:item.manage=" { item } ">
             <div class="d-flex justify-center">
               <ButtonIcon class="mx-1" icon="mdi-pencil" tooltip_text="edit" @click="gotoEdit(item)"></ButtonIcon>
@@ -53,6 +59,7 @@
               </ConfirmDialog>
             </div>
           </template>
+
         </v-data-table>
         <v-divider></v-divider>
 
@@ -90,6 +97,7 @@ export default {
       choice_quizzes: null,
       headers: [
         {text: 'Name', value: 'name', sortable: false},
+        {text: 'Created', value: 'created', sortable: false},
         {text: 'Manage', align: 'center', value: 'manage', sortable: false},
       ]
     }

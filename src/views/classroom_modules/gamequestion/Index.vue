@@ -1,8 +1,8 @@
 <template>
-  <div v-if="poll_plays">
+  <div v-if="game_question_plays">
     <ContentHeader class="my-2">
       <div class="">
-        <span>Poll</span>
+        <span>Game Question</span>
       </div>
     </ContentHeader>
 
@@ -26,20 +26,17 @@
       <v-card-text>
         <v-data-table
             :headers="headers"
-            :items="poll_plays"
+            :items="game_question_plays"
             hide-default-footer
         >
-          <template v-slot:item.results_count="{ item }">
-            <div v-for="choice in item.results_count" :key="choice.id">
-              <span class="font-weight-bold">{{ choice.text }} </span> - <span> {{ choice.count }} คน</span>
-            </div>
-          </template>
 
           <template v-slot:item.created="{item}">
             <div>
               {{ get_th_time(item.created) }}
             </div>
           </template>
+
+
         </v-data-table>
 
 
@@ -66,7 +63,7 @@ import ContentHeader from "@/components/share/ContentHeader";
 import ConfirmDialog from "@/components/share/ConfirmDialog";
 
 export default {
-  name: "PollIndex",
+  name: "GameQuestionIndex",
   components: {ConfirmDialog, ContentHeader, ButtonIcon, ButtonPrimary},
   data() {
     return {
@@ -76,11 +73,9 @@ export default {
         total_page: 0,
         page: 1,
       },
-      poll_plays: null,
+      game_question_plays: null,
       headers: [
         {text: 'Name', value: 'module_data.name', sortable: false},
-        {text: 'Result', value: 'results_count', sortable: false},
-        {text: 'Created', value: 'created', sortable: false},
       ]
     }
   },
@@ -97,9 +92,9 @@ export default {
       this.total_page = Math.ceil(data.count / 10)
     },
     async loadData() {
-      let data = await this.$store.dispatch('classroom_modules/poll/getPollPlays', this.form_params)
+      let data = await this.$store.dispatch('classroom_modules/gamequestion/getGameQuestionPlays', this.form_params)
       this.generate_page(data)
-      this.poll_plays = data.results
+      this.game_question_plays = data.results
     },
   }
 }

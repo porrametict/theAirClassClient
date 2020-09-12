@@ -1,6 +1,7 @@
 import choicequiz from "./choicequiz";
 import attendance from "@/router/classroom_modules/attendance";
 import poll from "@/router/classroom_modules/poll";
+import gamequestion from "@/router/classroom_modules/gamequestion";
 
 export default {
     path: 'classroom-module',
@@ -13,6 +14,7 @@ export default {
         },
         choicequiz,
         attendance,
-        poll
+        poll,
+        gamequestion,
     ]
 }
