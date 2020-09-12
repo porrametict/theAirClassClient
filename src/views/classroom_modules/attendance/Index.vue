@@ -32,22 +32,22 @@
           <template v-slot:item.manage=" { item } ">
             <div class="d-flex justify-center">
               <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
-              <ConfirmDialog
-                  message="remove this item ?"
-                  @change="DeleteItem($event,item)"
-              >
-                <template v-slot:activator="{on}">
-                  <v-btn
-                      icon
-                      outlined
-                      color="red"
-                      v-on="on"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
+<!--              <ConfirmDialog-->
+<!--                  message="remove this item ?"-->
+<!--                  @change="DeleteItem($event,item)"-->
+<!--              >-->
+<!--                <template v-slot:activator="{on}">-->
+<!--                  <v-btn-->
+<!--                      icon-->
+<!--                      outlined-->
+<!--                      color="red"-->
+<!--                      v-on="on"-->
+<!--                  >-->
+<!--                    <v-icon>mdi-delete</v-icon>-->
+<!--                  </v-btn>-->
+<!--                </template>-->
 
-              </ConfirmDialog>
+<!--              </ConfirmDialog>-->
             </div>
           </template>
         </v-data-table>

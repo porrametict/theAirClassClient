@@ -69,7 +69,7 @@ export default {
       let id = this.$route.params.attendance_play_id
       let data = await this.$store.dispatch('classroom_modules/attendance/getAttendancePlay', id)
       this.data = data
-      this.data_table = data.attendancestudentplay_set_data
+      this.data_table = data.studentplay_set_data
     },
   }
 }
