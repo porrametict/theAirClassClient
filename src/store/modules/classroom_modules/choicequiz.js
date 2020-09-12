@@ -1,4 +1,5 @@
 const choice_quiz_api = '/api/v1/classroom-module/choice-quiz/choice-quiz/'
+const choice_quiz_play_api = '/api/v1/classroom-module/choice-quiz/choice-quiz-play/'
 export default {
     namespaced: true,
     actions: {
@@ -45,6 +46,16 @@ export default {
             return await axios.delete(`${choice_quiz_api}${id}/`)
                 .then((response) => {
                     context.dispatch("success/setSuccess", response.data, {root: true});
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
+
+        async getChoiceQuizPlays(context, params) {
+            return await axios.get(`${choice_quiz_play_api}`, params = {params})
+                .then((response) => {
                     return response.data
                 }).catch((error) => {
                     context.dispatch("error/setError", error.response.data, {root: true});

@@ -28,8 +28,7 @@
           >
           </v-text-field>
           <div class=" d-flex align-center flex-column flex-md-row justify-space-between mb-8">
-            <v-checkbox label="Remember me"></v-checkbox>
-            <a>Forgot Password</a>
+            <v-checkbox label="Remember me" v-model="form.remember_me"></v-checkbox>
           </div>
           <div class="text-center ">
             <v-btn
@@ -57,6 +56,7 @@
 
 <script>
 import Base from '@/components/share/base/Base'
+
 export default {
   extends: Base,
   name: 'Login',
@@ -67,14 +67,33 @@ export default {
       required: value => !!value || 'Required.',
     },
     form: {
-      username: "admin",
-      password: "password",
+      username: "",
+      password: "",
+      remember_me: false
     },
   }),
+  created() {
+    this.get_logInItem()
+  },
   methods: {
+    remember__me() {
+      let item = JSON.stringify(this.form)
+      localStorage.setItem('login_item', item)
+    },
+    get_logInItem() {
+      if (localStorage.getItem('login_item')) {
+        let item = localStorage.getItem('login_item')
+        localStorage.removeItem('login_item')
+        this.form = JSON.parse(item)
+      }
+
+    },
     async getUserToken() {
       let token = await this.$store.dispatch('user/getUserToken', this.form)
       if (token) {
+        if (this.form.remember_me) {
+          this.remember__me()
+        }
         await this.$router.push({
           name: 'Home'
         })

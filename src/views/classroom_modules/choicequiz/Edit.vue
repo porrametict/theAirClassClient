@@ -68,8 +68,8 @@ export default {
       ]
     }
   }),
-  mounted() {
-    this.loadData()
+  async mounted() {
+    await this.loadData()
   },
   methods: {
     async loadData() {

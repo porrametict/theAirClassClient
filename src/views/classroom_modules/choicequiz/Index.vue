@@ -1,6 +1,10 @@
 <template>
   <div v-if="choice_quizzes">
-    <ContentHeader class="my-2">Choice Quiz</ContentHeader>
+    <ContentHeader class="my-2">
+      <div class="">
+        <span>Choice Quiz</span> |
+      </div>
+    </ContentHeader>
 
     <v-card>
       <v-card-title class="d-flex justify-space-between ">
@@ -90,9 +94,9 @@ export default {
       ]
     }
   },
-  mounted() {
+  async mounted() {
     this.form_params.classroom = this.$route.params.id
-    this.loadData()
+    await this.loadData()
   },
   methods: {
     change_page(e) {

@@ -15,13 +15,11 @@ export default {
     },
     actions: {
         getUserToken: async function (context, params) {
-            // clear old access_token
             delete axios.defaults.headers.common["Authorization"];
-            localStorage.clear()
+            localStorage.removeItem('access_token')
 
             let data = await axios.post(`/rest-auth/login/`, params)
                 .then((response) => {
-                    // console.log("response", response.data)
                     localStorage.setItem('access_token', response.data.key)
                     axios.defaults.headers.common['Authorization'] = `Token ${localStorage.getItem('access_token')}`;
                     return response.data
@@ -61,7 +59,7 @@ export default {
                 .then((response) => {
                     // console.log("response", response.data)
                     delete axios.defaults.headers.common["Authorization"];
-                    localStorage.clear()
+                    localStorage.removeItem('access_token')
                     return response.data
                 })
                 .catch((error) => {
