@@ -1,4 +1,5 @@
 import choicequiz from "./choicequiz";
+import attendance from "@/router/classroom_modules/attendance";
 
 export default {
     path: 'classroom-module',
@@ -10,5 +11,6 @@ export default {
             component: () => import('../../views/classroom_modules/Index')
         },
         choicequiz,
+        attendance,
     ]
 }

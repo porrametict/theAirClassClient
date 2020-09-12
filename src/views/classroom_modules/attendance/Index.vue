@@ -1,40 +1,37 @@
 <template>
-  <div v-if="choice_quizzes">
+  <div v-if="attendance_plays">
     <ContentHeader class="my-2">
       <div class="">
-        <span>Choice Quiz</span> |
+        <span>Attendance</span>
       </div>
     </ContentHeader>
 
     <v-card>
       <v-card-title class="d-flex justify-space-between ">
         <v-row align="center" justify="end">
-          <v-col>
-            <ButtonPrimary @click="$router.push({name :'ChoiceQuizCreate'})">Add</ButtonPrimary>
-          </v-col>
           <v-col cols="12" md="4">
-            <v-text-field
-                filled
-                rounded
-                hide-details
-                dense
-                append-icon="mdi-magnify"
-                placeholder="search"
-                v-model="form_params.search"
-                @keydown.13="loadData"
-            ></v-text-field>
+<!--            <v-text-field-->
+<!--                filled-->
+<!--                rounded-->
+<!--                hide-details-->
+<!--                dense-->
+<!--                append-icon="mdi-magnify"-->
+<!--                placeholder="search"-->
+<!--                v-model="form_params.search"-->
+<!--                @keydown.13="loadData"-->
+<!--            ></v-text-field>-->
           </v-col>
         </v-row>
       </v-card-title>
       <v-card-text>
         <v-data-table
             :headers="headers"
-            :items="choice_quizzes"
+            :items="attendance_plays"
             hide-default-footer
         >
           <template v-slot:item.manage=" { item } ">
             <div class="d-flex justify-center">
-              <ButtonIcon class="mx-1" icon="mdi-pencil" tooltip_text="edit" @click="gotoEdit(item)"></ButtonIcon>
+              <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
               <ConfirmDialog
                   message="remove this item ?"
                   @change="DeleteItem($event,item)"
@@ -77,25 +74,25 @@ import ContentHeader from "@/components/share/ContentHeader";
 import ConfirmDialog from "@/components/share/ConfirmDialog";
 
 export default {
-  name: "ChoiceQuizIndex",
+  name: "AttendanceIndex",
   components: {ConfirmDialog, ContentHeader, ButtonIcon, ButtonPrimary},
   data() {
     return {
       form_params: {
         search: "",
-        classroom: null,
+        room__classroom__id: null,
         total_page: 0,
         page: 1,
       },
-      choice_quizzes: null,
+      attendance_plays: null,
       headers: [
-        {text: 'Name', value: 'name', sortable: false},
+        {text: 'Name', value: 'module_data.name', sortable: false},
         {text: 'Manage', align: 'center', value: 'manage', sortable: false},
       ]
     }
   },
   async mounted() {
-    this.form_params.classroom = this.$route.params.id
+    this.form_params.room__classroom__id = this.$route.params.id
     await this.loadData()
   },
   methods: {
@@ -107,21 +104,21 @@ export default {
       this.total_page = Math.ceil(data.count / 10)
     },
     async loadData() {
-      let data = await this.$store.dispatch('classroom_modules/choicequiz/getChoiceQuizzes', this.form_params)
+      let data = await this.$store.dispatch('classroom_modules/attendance/getAttendancePlays', this.form_params)
       this.generate_page(data)
-      this.choice_quizzes = data.results
+      this.attendance_plays = data.results
     },
-    async gotoEdit(item) {
+    async gotoView(item) {
       await this.$router.push({
-        name: 'ChoiceQuizEdit',
+        name: 'AttendanceView',
         params: {
-          choice_quiz_id: item.id
+          attendance_play_id: item.id
         }
       })
     },
     async DeleteItem(e, item) {
       if (e) {
-        let data = await this.$store.dispatch('classroom_modules/choicequiz/deleteChoiceQuiz', item.id)
+        let data = await this.$store.dispatch('classroom_modules/attendance/deleteAttendancePlay', item.id)
         if (data != null) {
           await this.loadData()
         }

@@ -1,12 +1,13 @@
-import classroom_module from "./classroom_module";
-import chat from "./chat"
-import choicequiz from "./choicequiz";
+import chat from "@/store/modules/classroom_modules/chat";
+import choicequiz from "@/store/modules/classroom_modules/choicequiz";
+import attendance from "@/store/modules/classroom_modules/attendance";
 
 export default {
     namespaced: true,
     modules: {
-        classroom_module: classroom_module,
         chat: chat,
         choicequiz: choicequiz,
+        attendance: attendance,
+
     }
 }
