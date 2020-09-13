@@ -16,6 +16,7 @@
     "peer": "^0.5.3",
     "peerjs": "^1.2.0",
     "socket.io": "^2.3.0",
+    "uuid": "^8.3.0",
     "vue": "^2.6.11",
     "vue-advanced-cropper": "^0.16.5",
     "vue-router": "^3.3.2",
