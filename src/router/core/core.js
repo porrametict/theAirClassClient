@@ -1,5 +1,6 @@
 import user from './user'
 import classroom from "../classroom/classroom";
+import stream from "../stream/stream";
 
 export default {
     path: '',
@@ -11,6 +12,7 @@ export default {
             component: () => import('../../views/core/Home')
         },
         user,
-        classroom
+        classroom,
+        stream
     ]
 }
