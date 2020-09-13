@@ -1,11 +1,13 @@
 <template>
-    <router-view></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
-    export default {
-        name: "ClassroomTemplate",
-    }
+import {mapState} from "vuex";
+
+export default {
+  name: "ClassroomTemplate",
+}
 </script>
 
 <style scoped>

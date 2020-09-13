@@ -79,23 +79,69 @@
         <v-divider class="mt-6"></v-divider>
 
         <div>
-            <div class="d-flex justify-space-between ma-6">
+            <div class="d-flex justify-space-between ma-6 mb-0">
                 <p class="title">Classroom</p>
-                <v-btn text small @click="$router.push({name : 'IndexClassroom'})">more >></v-btn>
+                <v-btn v-if="classrooms && classrooms.length" text small @click="$router.push({name : 'IndexClassroom'})">more >></v-btn>
             </div>
         </div>
-        <div class="display-4 grey--text text-center">
-                    Coming Soon.
+        <div v-if="classrooms && classrooms.length">
+            <v-row justify-sm="center" justify-md="start">
+                <v-col cols="12" md="4" v-for="(classroom,index) in classrooms" :key="index">
+                    <ClassroomCard
+                            class="ma-5"
+                            :classroom="classroom.classroom_data"
+                    ></ClassroomCard>
+                </v-col>
+            </v-row>
+        </div>
+        <div v-else class="d-flex flex-column justify-center align-center ">
+            <p class="headline">You don't have any classroom.</p>
+            <p>Join classroom now.</p>
+            <ButtonPrimary
+                    @click="$router.push({name : 'JoinClassroom'})"
+            >
+                Join Class
+
+            </ButtonPrimary>
+
         </div>
     </div>
 </template>
 <script>
+    import {mapState} from 'vuex'
     import ButtonPrimary from "../../components/share/ButtonPrimary";
+    import ClassroomCard from "../../components/classroom/ClassroomCard";
+
     export default {
         name: "Home",
-        components: {ButtonPrimary},
+        components: {ClassroomCard, ButtonPrimary},
         data() {
             return {
+                classrooms: null,
+                form_params: {
+                    role: null,
+                    limit: 3,
+                    offset: 0,
+                    user__id: null
+                },
+            }
+        },
+        computed: {
+            ...mapState({
+                user: state => state.user.user
+            })
+        },
+        async mounted() {
+            if (!this.user) {
+                await this.$store.dispatch('user/getUser')
+            }
+            await this.loadData()
+        },
+        methods: {
+            async loadData() {
+                this.form_params.user__id = this.user.pk
+                let data = await this.$store.dispatch('classroom/getListClassroomByUser', this.form_params)
+                this.classrooms = data.results
             }
         }
     }
