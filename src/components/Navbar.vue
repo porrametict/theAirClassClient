@@ -6,12 +6,18 @@
             app
             class="yellow accent-4"
             permanent
+            expand-on-hover
+            :mini-variant.sync="mini"
+
+
     >
       <v-layout column align-center>
         <v-flex class="mt-10 mb-8">
-          <v-avatar tile src = "logo_theairclass.PNG"></v-avatar>
-<!--          <v-avatar size="30">-->
-<!--          </v-avatar>-->
+                      <v-img :src="require(`@/assets/logo_theairclass.png`)" 
+                      width="100%" 
+                      height="100%"
+                      />
+
 
         </v-flex>
       </v-layout>
@@ -33,11 +39,20 @@
       </v-list>
 
       <template v-slot:append>
-        <div class="pa-2">
+
+        <div class="pa-2"  v-if="!mini">
           <v-btn
-            block
-            @click="$store.dispatch('user/logout') & $router.push({ name: 'Login' })"
+              block
+              @click="$store.dispatch('user/logout') & $router.push({ name: 'Login' })"
           >Logout</v-btn>
+        </div>
+
+        <div v-else>
+          <v-btn icon large color="black">
+            <v-icon>
+              mdi-account-arrow-right
+            </v-icon>
+          </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -48,6 +63,7 @@ export default {
   name: "NavBar",
   data: () => ({
     drawer: true,
+    mini  : true,
     links: [
       { icon: "mdi-home", text: "Home", route: "/home" },
       { icon: "mdi-school", text: "Classroom", route: "/classroom" },

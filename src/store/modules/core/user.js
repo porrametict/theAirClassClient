@@ -1,3 +1,5 @@
+// context.dispatch("success/setSuccess", response.data, {root: true});
+// context.dispatch("error/setError", error.response.data, {root: true});
 export default {
     namespaced: true,
     state: {
@@ -13,19 +15,17 @@ export default {
     },
     actions: {
         getUserToken: async function (context, params) {
-            // clear old access_token
             delete axios.defaults.headers.common["Authorization"];
-            localStorage.clear()
+            localStorage.removeItem('access_token')
 
             let data = await axios.post(`/rest-auth/login/`, params)
                 .then((response) => {
-                    // console.log("response", response.data)
                     localStorage.setItem('access_token', response.data.key)
                     axios.defaults.headers.common['Authorization'] = `Token ${localStorage.getItem('access_token')}`;
                     return response.data
                 })
                 .catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
             return data
@@ -37,19 +37,22 @@ export default {
                     return response.data
                 })
                 .catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
 
         registerUser: async function (context, params) {
             localStorage.clear()  // clear old access_token because it invalid token if send request with token
+            localStorage.removeItem('access_token')
+
             return await axios.post(`/rest-auth/registration/`, params)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true})
                     return response.data
                 })
                 .catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -58,11 +61,11 @@ export default {
                 .then((response) => {
                     // console.log("response", response.data)
                     delete axios.defaults.headers.common["Authorization"];
-                    localStorage.clear()
+                    localStorage.removeItem('access_token')
                     return response.data
                 })
                 .catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -73,9 +76,10 @@ export default {
 
             return await axios.post('/api/v1/core/user-profile/', fd)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true})
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -87,9 +91,10 @@ export default {
 
             return await axios.put(`/api/v1/core/user-profile/${id}/`, fd)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true})
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
@@ -98,16 +103,29 @@ export default {
                 //In Current data ,we sent ImageURL but server need  ImageFile .
                 delete params.profile  // if you want to update profile , you must update serializer and viewSet on server-side for Ignore Image_data.
             }
-                let id = params.id
-                return await axios.put('/rest-auth/user/', params)
-                    .then((response) => {
-                        context.commit('setUser', response.data)
-                        return response.data
-                    }).catch((error) => {
-                        console.error(error)
-                        return null
-                    })
-            }
-        ,
+            let id = params.id
+            return await axios.put('/rest-auth/user/', params)
+                .then((response) => {
+                    context.commit('setUser', response.data)
+                    context.dispatch("success/setSuccess", response.data, {root: true})
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
+        async changePassword(context, params) {
+
+            return await axios.post('/rest-auth/password/change/', params)
+                .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true})
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
         }
-    }
+
+    },
+
+}

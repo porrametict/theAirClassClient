@@ -65,12 +65,21 @@
                 type: String,
                 require: false,
                 default: 'dialog'
+            },
+            dialog_id : {
+              type: String,
+              require: false,
+              default : 'd_101'
             }
         },
         mounted() {
-            EventBus.$on('open-dialog-primary', () => {
+            EventBus.$on('open-dialog-primary', (data) => {
+
+              if(this.dialog_id === data.dialog_id){
                 this.dialog = !this.dialog
                 EventBus.$off('my-event-name');
+              }
+
             });
         },
         components: {ButtonPrimary, ButtonCancel},
