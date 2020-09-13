@@ -1,12 +1,12 @@
 <template>
   <div class="fill-height overflow-hidden" v-if="room">
-    <v-row style="box-sizing: border-box" class="fill-height">
+    <ContentHeader text="Classroom"></ContentHeader>
+    <br style="box-sizing: border-box" class="fill-height">
       <v-col>
         <div>
           <v-row>
             <v-col>
               <ScreenSharing></ScreenSharing>
-
             </v-col>
           </v-row>
           <v-row>
@@ -35,6 +35,66 @@
         </div>
       </v-col>
 
+      <br/>
+    <v-row>
+      <v-col cols="9">
+        <div>
+          <!--show-->
+          <div class="d-flex justify-center ma-3">
+            <v-card
+                height="600px"
+                width="1000px"
+            >
+              <div>
+                <video id="video" playsinline autoplay muted></video>
+              </div>
+            </v-card>
+          </div>
+
+          <!--button-->
+          <div class=" d-flex justify-space-around ma-4 ">
+            <v-bottom-navigation
+                v-model ="button"
+                multiple
+                rounded-pill
+                height="50"
+                width="800"
+                dark
+            >
+              <v-btn>
+                <span>Mute</span>
+                <v-icon>mdi-microphone</v-icon>
+              </v-btn>
+
+              <v-btn>
+                <span>Pause Video</span>
+                <v-icon>mdi-video</v-icon>
+              </v-btn>
+
+              <v-btn>
+                <span>Share Screen</span>
+                <v-icon>mdi-laptop</v-icon>
+              </v-btn>
+
+              <v-btn>
+                <span>other</span>
+                <v-icon>mdi-</v-icon>
+              </v-btn>
+
+              <v-btn>
+                <span>Show Chat</span>
+                <v-icon>mdi-forum</v-icon>
+              </v-btn>
+
+              <v-btn>
+                <span>End Call</span>
+                <v-icon>mdi-phone-off-outline</v-icon>
+              </v-btn>
+            </v-bottom-navigation>
+          </div>
+        </div>
+      </v-col>
+
       <v-col cols="3">
         <component
             class="text-center"
@@ -51,14 +111,13 @@
             :room="room"
             :classroom-id="classroom_id"
         ></Chat>
-
       </v-col>
     </v-row>
-
   </div>
 </template>
 
 <script>
+import ContentHeader from "@/components/share/ContentHeader";
 import ScreenSharing from "../../components/classroom_modules/screensharing/ScreenSharing";
 import Chat from "../../components/classroom_modules/chat/Chat";
 import ChoiceQuiz from "../../components/classroom_modules/choicequiz/ChoiceQuiz";
@@ -69,11 +128,12 @@ import Poll from "@/components/classroom_modules/poll/Poll";
 
 export default {
   name: "ClassroomRoom",
-  components: {Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
+  components: {Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz,ContentHeader},
   data() {
     return {
       my_role: null,
       room: null,
+      button: [],
       member: [],
       classroom_id: this.$route.params.id,
       room_state: {
