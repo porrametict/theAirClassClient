@@ -38,8 +38,17 @@
             </div>
           </template>
 
+          <template v-slot:item.usage_status="{item}">
+            <div>
+              <v-icon :color="item.usage_status ? 'green' : 'grey'">
+                mdi-check
+                <!--                {{ item.usage_status ? 'mdi-check' : 'mdi-close' }}-->
+              </v-icon>
+            </div>
+          </template>
+
           <template v-slot:item.manage=" { item } ">
-            <div class="d-flex justify-center">
+            <div class="d-flex justify-center" v-if="!item.usage_status">
               <ButtonIcon class="mx-1" icon="mdi-pencil" tooltip_text="edit" @click="gotoEdit(item)"></ButtonIcon>
               <ConfirmDialog
                   message="remove this item ?"
@@ -57,6 +66,9 @@
                 </template>
 
               </ConfirmDialog>
+            </div>
+            <div v-else>
+              a used quiz can't modify.
             </div>
           </template>
 
@@ -98,6 +110,7 @@ export default {
       headers: [
         {text: 'Name', value: 'name', sortable: false},
         {text: 'Created', value: 'created', sortable: false},
+        {text: 'Usage Status', align: 'center', value: 'usage_status', sortable: false},
         {text: 'Manage', align: 'center', value: 'manage', sortable: false},
       ]
     }

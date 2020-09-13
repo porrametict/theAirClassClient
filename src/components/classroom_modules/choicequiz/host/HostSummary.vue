@@ -9,7 +9,7 @@
               <v-icon large color="primary">mdi-crown</v-icon>
             </div>
             <p class="ma-0 pa-0 ">
-              {{ item.user.first_name }} {{ item.user.last_name }} <br/> {{ item.point }} points
+              {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
             </p>
           </div>
           <div v-else-if="index===1">
@@ -17,7 +17,7 @@
               <v-icon large color="blue">mdi-chess-queen</v-icon>
             </div>
             <p class="ma-0 pa-0 ">
-              {{ item.user.first_name }} {{ item.user.last_name }} <br/> {{ item.point }} points
+              {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
             </p>
           </div>
           <div v-else-if="index===2">
@@ -25,12 +25,12 @@
               <v-icon large color="black">mdi-sword-cross</v-icon>
             </div>
             <p class="ma-0 pa-0 ">
-              {{ item.user.first_name }} {{ item.user.last_name }} <br/> {{ item.point }} points
+              {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
             </p>
           </div>
           <div v-else>
             <p class="ma-0 pa-0">
-              {{ item.user.first_name }} {{ item.user.last_name }} <br/> {{ item.point }} points
+              {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
             </p>
           </div>
         </v-card-text>
@@ -44,7 +44,7 @@
       </v-card-text>
     </v-card>
     <div class="text-center">
-      <ButtonPrimary @click="on_click">End</ButtonPrimary>
+      <ButtonPrimary @click.native="on_click">End</ButtonPrimary>
     </div>
 
   </div>

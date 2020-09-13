@@ -1,12 +1,21 @@
 <template>
   <div class="title">
           Please wait ..
+    <FreeLicenseImage
+        asset_src="loading.png"
+        height="260"
+        a_text="Designed by stories / Freepik"
+        href="http://www.freepik.com"
+    >
+    </FreeLicenseImage>
   </div>
 </template>
 
 <script>
+import FreeLicenseImage from "@/components/share/FreeLicenseImage";
 export default {
-  name: "Start"
+  name: "Start",
+  components: {FreeLicenseImage}
 }
 </script>
 

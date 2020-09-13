@@ -21,7 +21,7 @@
         </v-card-text>
         <v-divider></v-divider>
         <!--footer-->
-        <v-card-actions class="d-flex flex-column">
+        <v-card-actions class="d-flex flex-column ">
 
             <v-card v-if="image.name" outlined height="50" class="my-2">
                 <v-card-text class="ma-0 pa-2 d-flex justify-center align-center">
@@ -35,7 +35,7 @@
                 </v-card-text>
             </v-card>
 
-            <div class="white d-flex align-center">
+            <div class="d-flex align-center align-self-stretch">
                 <InputImageSelect class="mr-1" @change="uploadImage"></InputImageSelect>
                 <v-text-field v-model="text_message"
                               outlined

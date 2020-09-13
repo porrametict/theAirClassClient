@@ -44,6 +44,8 @@ export default {
 
         registerUser: async function (context, params) {
             localStorage.clear()  // clear old access_token because it invalid token if send request with token
+            localStorage.removeItem('access_token')
+
             return await axios.post(`/rest-auth/registration/`, params)
                 .then((response) => {
                     context.dispatch("success/setSuccess", response.data, {root: true})

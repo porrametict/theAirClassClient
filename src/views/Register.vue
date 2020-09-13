@@ -113,10 +113,7 @@ export default {
     async registerUser() {
       let data = await this.$store.dispatch('user/registerUser', this.form)
       if (data) {
-        alert("register success")
         await this.$router.push({name: 'Login'})
-      } else {
-        alert("register failed")
       }
     }
   }

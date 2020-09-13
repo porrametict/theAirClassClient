@@ -12,19 +12,32 @@
           <v-row>
             <v-col>
               <div class="d-flex justify-center align-center flex-column">
-                <v-btn @click="new_action('ChoiceQuiz')"> start choice quiz</v-btn>
-                <v-btn @click="new_action('Attendance')"> start Attendance</v-btn>
-                <v-btn @click="new_action('GameQuestion')"> start Game Question</v-btn>
-                <v-btn @click="new_action('Poll')"> start Poll</v-btn>
-                <v-btn color="red" large class="white--text" @click="end">End</v-btn>
+                <div v-if="my_role <=2">
+                  <v-btn @click="new_action('ChoiceQuiz')" :disabled="room_state.state !== 'normal'">
+                    start choice quiz
+                  </v-btn>
+                  <v-btn @click="new_action('Attendance')" :disabled="room_state.state !== 'normal'">
+                    start Attendance
+                  </v-btn>
+                  <v-btn @click="new_action('GameQuestion')" :disabled="room_state.state !== 'normal'">
+                    start Game Question
+                  </v-btn>
+                  <v-btn @click="new_action('Poll')" :disabled="room_state.state !== 'normal'">
+                    start Poll
+                  </v-btn>
+                </div>
+                <v-btn color="red" large class="white--text" @click="end" :disabled="room_state.state !== 'normal'">
+                  End
+                </v-btn>
               </div>
             </v-col>
           </v-row>
         </div>
       </v-col>
 
-      <v-col cols="2">
+      <v-col cols="3">
         <component
+            class="text-center"
             v-if="room_state.module"
             :is="room_state.module"
             :room="room"

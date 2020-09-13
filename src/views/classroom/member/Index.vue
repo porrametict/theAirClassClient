@@ -35,7 +35,7 @@
             </template>
 
             <template v-slot:item.role="{item}">
-              <RoleSelect :value="item.role" @input="changeMemberRole(item,$event)"></RoleSelect>
+              <RoleSelect :value="item.role" @input="changeMemberRole(item,$event)" :disable="user_role !== 1"></RoleSelect>
             </template>
 
             <template v-slot:item.manage="{ item }">
@@ -49,7 +49,7 @@
                       outlined
                       color="red"
                       v-on="on"
-                      :disabled="item.role ===1 "
+                      :disabled="item.role ===1 || user_role !==1"
                   >
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
@@ -86,6 +86,7 @@ export default {
   components: {RoleSelect, ConfirmDialog, ButtonIcon, ContentHeader},
   data() {
     return {
+      user_role : null,
       members: null,
       form_params: {
         search: null,

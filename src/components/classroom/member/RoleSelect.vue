@@ -8,6 +8,7 @@
         :items="items"
         item-text="text"
         item-value="id"
+        :disabled="disable"
         @input="$emit('input',role)"
     ></v-select>
   </div>
@@ -17,6 +18,11 @@
 export default {
   name: "RoleSelect",
   props: {
+    disable: {
+      type: Boolean,
+      require: false,
+      default: false
+    },
     value: {
       type: Number,
       require: true,

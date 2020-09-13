@@ -2,12 +2,21 @@
   <div class="text-center">
     <div v-if="is_true === true">
       <p class="headline green--text">Correct</p>
+      <v-icon class="display-4" color="green">
+        mdi-emoticon-cool
+      </v-icon>
     </div>
     <div v-else-if="is_true === false">
       <p class="headline red--text">Incorrect</p>
+      <v-icon class="display-4" color="red">
+        mdi-emoticon-dead
+      </v-icon>
     </div>
     <div v-else-if="is_reply !== true">
       <p class="headline grey--text">Did not answer</p>
+      <v-icon class="display-4" color="grey">
+        mdi-emoticon-neutral
+      </v-icon>
     </div>
   </div>
 </template>
