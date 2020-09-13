@@ -52,10 +52,21 @@
                 <v-col cols="12" md="4" v-for="(classroom,index) in classrooms" :key="index">
                     <ClassroomCard
                             class="ma-5"
-                            :classroom="classroom"
+                            :classroom="classroom.classroom_data"
                     ></ClassroomCard>
                 </v-col>
             </v-row>
+
+            <template v-if="pagination.page_length >=2">
+                <div class="text-center">
+                    <v-pagination
+                            v-model="pagination.page"
+                            :length="pagination.page_length"
+                            circle
+                            @input="page_change"
+                    ></v-pagination>
+                </div>
+            </template>
         </div>
         <div v-else class="d-flex flex-column justify-center align-center">
             <FreeLicenseImage
@@ -68,10 +79,13 @@
             </FreeLicenseImage>
         </div>
 
+
+
     </div>
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     import ContentHeader from "../../components/share/ContentHeader";
     import ClassroomCard from "../../components/classroom/ClassroomCard";
     import FreeLicenseImage from "../../components/share/FreeLicenseImage";
@@ -81,6 +95,13 @@
         components: {FreeLicenseImage, ClassroomCard, ContentHeader},
         data() {
             return {
+                pagination: {
+                    page: 1,
+                    page_length: 2,
+                    limit : 6,
+                    offset:  0,
+
+                },
                 role_filter_list: [
                     {
                         id: null,
@@ -100,19 +121,32 @@
                 ],
                 form_params: {
                     search: null,
-                    role: null
+                    role: null,
+                    limit: 6,
+                    offset: 0,
+                    user__id: null
                 },
                 classrooms: null
             }
         },
+        computed: {
+            ...mapState({
+                user: state => state.user.user
+            })
+
+        },
         async mounted() {
+            if (!this.user) {
+                await this.$store.dispatch('user/getUser')
+            }
             await this.loadData()
         },
         methods: {
             async loadData() {
-                let classrooms = await this.$store.dispatch("classroom/getListClassroom", this.form_params)
+                this.form_params.user__id = this.user.pk
+                let classrooms = await this.$store.dispatch("classroom/getListClassroomByUser", this.form_params)
                 this.classrooms = classrooms.results
-
+                this.page_generator(classrooms)
             },
             search() {
                 this.loadData()
@@ -120,8 +154,16 @@
             filter(e) {
                 this.form_params.role = e.id
                 this.loadData()
+            },
+            page_generator (e) {
+                let limit =  this.form_params.limit
+                let total_page = e.count / limit
+                this.pagination.page_length = Math.ceil(total_page)
+            },
+            page_change(e){
+                this.form_params.offset = (e-1) * this.pagination.limit
+                this.loadData()
             }
-
         }
     }
 </script>

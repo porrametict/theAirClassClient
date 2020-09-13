@@ -4,6 +4,7 @@ export default {
     children: [
         {
             path: "",
+            redirect: {name: 'EditProfile'},
             name: "Profile",
             component: () => import('../../views/core/user/Profile')
         },

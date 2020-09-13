@@ -51,13 +51,13 @@
             </p>
 
             <p>
-                <FreeLicenseImage
-                        width="150"
-                        asset_src="classroom.png"
-                        a_text="Designed by stories / Freepik"
-                        href="http://www.freepik.com"
-                >
-                </FreeLicenseImage>
+<!--                <FreeLicenseImage-->
+<!--                        width="150"-->
+<!--                        asset_src="classroom.png"-->
+<!--                        a_text="Designed by stories / Freepik"-->
+<!--                        href="http://www.freepik.com"-->
+<!--                >-->
+<!--                </FreeLicenseImage>-->
             </p>
             <p>
                 <DialogPrimary

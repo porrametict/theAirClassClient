@@ -13,20 +13,6 @@
                                 href="http://www.freepik.com"
                         >
                         </FreeLicenseImage>
-<!--                        <div>-->
-<!--                            <v-img class="ma-0 pa-0"-->
-<!--                                   height="260"-->
-<!--                                   src="@/assets/create_classroom.jpg"-->
-<!--                                   alt=""-->
-<!--                            >-->
-<!--                            </v-img>-->
-<!--                            <a class="overline  grey&#45;&#45;text ma-0 pa-0 text&#45;&#45;disabled"-->
-<!--                               style="text-decoration: none"-->
-<!--                               href="http://www.freepik.com">-->
-<!--                                Designed by stories / Freepik-->
-<!--                            </a>-->
-<!--                        </div>-->
-
                     </v-card-text>
 
                 </v-card>
@@ -186,8 +172,6 @@
                 let data = await this.$store.dispatch("classroom/createClassroom", this.form)
                 if (data) {
                     await this.$router.push({name: "IndexClassroom"})
-                } else {
-                    alert("error")
                 }
 
             }

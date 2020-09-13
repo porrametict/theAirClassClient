@@ -13,6 +13,7 @@
                        :height="height"
                        :width="width"
                        :circle="circle"
+                       :font_size_class="font_size_class"
         >
         </DefaultAvatar>
     </div>
@@ -25,6 +26,11 @@
         name: "ImageProfile",
         components: {DefaultAvatar},
         props: {
+            font_size_class: {
+                type: String,
+                require: false,
+                default: 'display-2'
+            },
             user: {
                 type: Object,
                 require: true

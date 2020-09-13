@@ -1,3 +1,8 @@
+const classroom_api = "/api/v1/classroom/classroom/"
+const member_lof_api = "/api/v1/classroom/member-lof/"
+import room from "./room";
+import member from "@/store/modules/classroom/member";
+
 export default {
     namespaced: true,
     state: {
@@ -23,63 +28,71 @@ export default {
         },
         async createClassroom(context, params) {
             let fd = await context.dispatch('jsonToFormData', params)
-            return await axios.post('/api/v1/classroom/', fd)
-                .then((response) => {
-                    return response.data
-                }).catch((error) => {
-                    console.error(error)
-                    return null
-                })
-        },
-        async getListClassroom(context, params = null) {
-            return await axios.get('/api/v1/classroom/', params = {params})
+            return await axios.post(`${classroom_api}`, fd)
                 .then((response) => {
                     context.dispatch("success/setSuccess", response.data, {root: true});
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
-        async getClassroomByCode(context, id) {
-            return await axios.get(`/api/v1/classroom/${id}/`)
+        async getListClassroom(context, params = null) {
+            return await axios.get(`${classroom_api}`, params = {params})
                 .then((response) => {
-                    context.commit('setClassroom', response.data)
+                    context.dispatch("success/setSuccess", response.data, {root: true});
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
+        async getListClassroomByUser(context, params = null) {
+            return await axios.get(`${member_lof_api}`, params = {params})
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
         async retrieveClassroom(context, id) {
-            return await axios.get(`/api/v1/classroom/${id}/`)
+            return await axios.get(`${classroom_api}${id}/`)
                 .then((response) => {
                     context.commit('setClassroom', response.data)
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
         async updateClassroom(context, params) {
             let id = params.id
             let fd = await context.dispatch('jsonToFormData', params)
-            return await axios.put(`/api/v1/classroom/${id}/`, fd)
+            return await axios.put(`${classroom_api}${id}/`, fd)
                 .then((response) => {
+                    context.commit('setClassroom', response.data)
+                    context.dispatch("success/setSuccess", response.data, {root: true});
                     return response.data
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
         },
         async deleteClassroom(context, id) {
-            return await axios.delete(`/api/v1/classroom/${id}/`)
+            return await axios.delete(`${classroom_api}${id}/`)
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true});
                     return true  // 204 No Content
                 }).catch((error) => {
-                    console.error(error)
+                    context.dispatch("error/setError", error.response.data, {root: true});
                     return null
                 })
-        }
+        },
+
+    },
+    modules: {
+        room: room,
+        member: member,
     }
 }
