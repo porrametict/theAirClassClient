@@ -34,6 +34,7 @@ export default {
         async getListClassroom(context, params = null) {
             return await axios.get('/api/v1/classroom/', params = {params})
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true});
                     return response.data
                 }).catch((error) => {
                     console.error(error)
@@ -65,7 +66,6 @@ export default {
             let fd = await context.dispatch('jsonToFormData', params)
             return await axios.put(`/api/v1/classroom/${id}/`, fd)
                 .then((response) => {
-                    context.commit('setClassroom', response.data)
                     return response.data
                 }).catch((error) => {
                     console.error(error)
