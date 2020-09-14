@@ -6,13 +6,12 @@
           <v-row>
             <v-col>
               <ScreenSharing></ScreenSharing>
-
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <div class="d-flex justify-center align-center flex-column">
-                <div v-if="my_role <=2">
+                <div v-if="my_role <= 2">
                   <v-btn @click="new_action('ChoiceQuiz')" :disabled="room_state.state !== 'normal'">
                     start choice quiz
                   </v-btn>
@@ -138,8 +137,6 @@ export default {
     },
     attendance_end(e) {
       let host = this.room_state.host
-
-
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
@@ -149,8 +146,6 @@ export default {
     },
     game_question_end(e) {
       let host = this.room_state.host
-
-
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
@@ -181,11 +176,14 @@ export default {
 
       }
       this.room_socket.onclose = function (e) {
-        console.error('Room socket closed unexpectedly', e);
+        if (e.code !== 1000) {
+          console.log('Room socket closed', e);
+        }
       }
       let commands = {
         'on_new_action': self.on_new_action,
         'on_member_join': self.on_member_join,
+        'on_member_leave': self.on_member_leave,
         'on_get_current_state': self.on_get_current_state,
       }
       this.room_socket.onmessage = function (e) {
@@ -211,10 +209,13 @@ export default {
       this.socket_send(content);
     },
     on_member_join(e) {
-      this.member.push(e['data'])
-      if (e['data']['user'] === this.user.pk) { // is me
-        this.my_role = e['data']['role']
+      this.member.push(e['data']['member'])
+      if (e['data']['user']['user'] === this.user.pk) { // is me
+        this.my_role = e['data']['user']['role']
       }
+    },
+    on_member_leave(e) {
+      this.member.push(e['data'])
     },
     get_current_state() {
       let content = {
@@ -254,7 +255,12 @@ export default {
       this.room_state = e['data']['state']
     },
 
-  }
+  },
+  destroyed() {
+    if (this.room_socket) {
+      this.room_socket.close(1000)
+    }
+  },
 }
 </script>
 
