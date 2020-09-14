@@ -76,6 +76,7 @@ export default {
       game_question_plays: null,
       headers: [
         {text: 'Name', value: 'module_data.name', sortable: false},
+        {text: 'Crated', value: 'created', sortable: false},
       ]
     }
   },
