@@ -41,6 +41,11 @@
     <v-divider class="my-2"></v-divider>
     <!--body-->
     <div>
+      <div v-if="rooms">
+        <div v-for="(room,index) in rooms" :key="index">
+          {{ room }}
+        </div>
+      </div>
       <v-btn @click="gotoRoom">Go To Room Page
       </v-btn>
       <p class="display-4 text-center grey--text">Coming Soon.</p>
@@ -58,7 +63,8 @@ export default {
   components: {ClassroomImageDisplay, ButtonIcon},
   data() {
     return {
-      user_role: null
+      user_role: null,
+      rooms: null
     }
   },
   computed: {
@@ -79,9 +85,15 @@ export default {
       })
       this.user_role = data.results[0]['role']
     },
+    async loadRoomsData() {
+      let classroom_id = this.$route.params.id
+      this.rooms = await this.$store.dispatch('classroom/room/getRooms', {'classroom__id': classroom_id})
+
+    },
     async loadData() {
       let id = this.$route.params.id
       await this.$store.dispatch('classroom/retrieveClassroom', id)
+      // await this.loadRoomsData()
     },
     async gotoRoom() {
       let id = this.$route.params.id
