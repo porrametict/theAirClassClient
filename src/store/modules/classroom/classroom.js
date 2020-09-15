@@ -40,6 +40,7 @@ export default {
         async getListClassroom(context, params = null) {
             return await axios.get(`${classroom_api}`, params = {params})
                 .then((response) => {
+                    context.dispatch("success/setSuccess", response.data, {root: true});
                     return response.data
                 }).catch((error) => {
                     context.dispatch("error/setError", error.response.data, {root: true});
