@@ -80,7 +80,7 @@ export default {
       let content = {
         "command": "game_click",
         "data": {
-          user: this.user
+          'user': this.user
         }
       }
       this.socket_send(content);
@@ -103,7 +103,6 @@ export default {
 
   },
   destroyed() {
-    console.log('destroy')
     if (this.module_socket) {
       this.module_socket.close(1000)
     }
