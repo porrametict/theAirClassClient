@@ -26,8 +26,13 @@
                   </v-btn>
                 </div>
                 <v-btn color="red" large class="white--text" @click="end" :disabled="room_state.state !== 'normal'">
-                  End
+                  leave
                 </v-btn>
+                <div v-if="room_state.state === 'normal'">
+                  <v-btn @click="SwitchChatParticipant">
+                    Show {{ room_state.module === 'Chat' ? 'Participant' : 'Chat' }}
+                  </v-btn>
+                </div>
               </div>
             </v-col>
           </v-row>
@@ -35,22 +40,33 @@
       </v-col>
 
       <v-col cols="3">
-        <component
-            class="text-center"
-            v-if="room_state.module"
-            :is="room_state.module"
-            :room="room"
-            :role="my_role"
-            :host="room_state.host"
-            @ended="module_end"
-        >
-        </component>
-        <Chat
-            v-if="room_state.state === 'normal'"
-            :room="room"
-            :classroom-id="classroom_id"
-        ></Chat>
+        <template v-if="room_state.state ==='playing'">
 
+          <component
+              class="text-center"
+              v-if="room_state.module"
+              :is="room_state.module"
+              :room="room"
+              :role="my_role"
+              :host="room_state.host"
+              @ended="module_end"
+          >
+          </component>
+        </template>
+        <template v-if="room_state.state === 'normal'">
+          <KeepAlive>
+            <component
+                class="text-center"
+                v-if="room_state.module"
+                :is="room_state.module"
+                :room="room"
+                :classroom-id="classroom_id"
+                :member="member"
+                @ended="module_end"
+            >
+            </component>
+          </KeepAlive>
+        </template>
       </v-col>
     </v-row>
 
@@ -65,10 +81,11 @@ import {mapState} from "vuex";
 import Attendance from "@/components/classroom_modules/attendance/Attendance";
 import GameQuestion from "@/components/classroom_modules/gamequestion/GameQuestion";
 import Poll from "@/components/classroom_modules/poll/Poll";
+import ParticipantCard from "@/components/classroom/room/ParticipantCard";
 
 export default {
   name: "ClassroomRoom",
-  components: {Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
+  components: {ParticipantCard, Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
   data() {
     return {
       my_role: null,
@@ -96,18 +113,28 @@ export default {
     })
   },
   methods: {
+    SwitchChatParticipant() {
+      if (this.room_state.module === 'Chat') {
+        this.room_state.module = 'ParticipantCard'
+      } else {
+        this.room_state.module = 'Chat'
+
+      }
+
+    },
 
     //GE functions
     async loadData() {
       this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
+
+      if (this.room['status'] === false) {
+        await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
+      }
+
     },
 
     async end() {
-      this.room['status'] = false
-      let data = await this.$store.dispatch('classroom/room/updateRoom', this.room)
-      if (data && data['status'] === false) {
-        await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
-      }
+      await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
     },
 
 
@@ -209,13 +236,13 @@ export default {
       this.socket_send(content);
     },
     on_member_join(e) {
-      this.member.push(e['data']['member'])
+      this.member = e['data']['member']
       if (e['data']['user']['user'] === this.user.pk) { // is me
         this.my_role = e['data']['user']['role']
       }
     },
     on_member_leave(e) {
-      this.member.push(e['data'])
+      this.member = e['data']['member']
     },
     get_current_state() {
       let content = {
@@ -228,6 +255,7 @@ export default {
     },
     on_get_current_state(e) {
       this.room_state = e['data']['state']
+      this.room_state.module = 'Chat'
     },
     set_room_state() {
       let content = {
@@ -253,6 +281,8 @@ export default {
     },
     on_new_action(e) {
       this.room_state = e['data']['state']
+      this.room_state.module = this.room_state.module ? this.room_state.module : 'Chat'
+
     },
 
   },

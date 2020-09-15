@@ -15,7 +15,7 @@
           {{ classroom.name }}
         </p>
         <div>
-          <v-btn @click="startMeeting" small tile color="primary" class="mx-2">
+          <v-btn @click="startMeeting" :disabled="disableMeetBtn" small tile color="primary" class="mx-2">
             <v-icon class="mr-1">
               mdi-video-box
             </v-icon>
@@ -82,13 +82,15 @@ export default {
   components: {RoomRender, FreeLicenseImage, RoomNameInputDialog, ClassroomImageDisplay, ButtonIcon},
   data() {
     return {
+      disableMeetBtn :false,
       dialog: false,
       RoomNameInputDialogKey: 0,
       user_role: null,
       rooms: [],
       room_form: {
         classroom: null,
-        name: null
+        name: null,
+        status: true
       }
     }
   },
@@ -112,8 +114,13 @@ export default {
     },
     async loadRooms() {
       let classroom_id = this.$route.params.id
-      let data = await this.$store.dispatch('classroom/room/getRooms', {'classroom__id': classroom_id})
-      this.rooms = data.results
+      this.rooms = await this.$store.dispatch('classroom/room/getRooms', {'classroom__id': classroom_id})
+      this.checkLastRoomStatus()
+    },
+    checkLastRoomStatus () {
+      if(this.rooms){
+        this.disableMeetBtn = this.rooms[this.rooms.length-1].status
+      }
     },
     async loadData() {
       let id = this.$route.params.id
@@ -128,6 +135,7 @@ export default {
       this.room_form.classroom = this.$route.params.id
       this.room_form.name = name
       let room = await this.$store.dispatch('classroom/room/createRoom', this.room_form)
+      console.log(room)
       if (room) {
         await this.gotoRoom(room)
       }
