@@ -10,16 +10,6 @@
       <v-card-title class="d-flex justify-space-between ">
         <v-row align="center" justify="end">
           <v-col cols="12" md="4">
-            <!--            <v-text-field-->
-            <!--                filled-->
-            <!--                rounded-->
-            <!--                hide-details-->
-            <!--                dense-->
-            <!--                append-icon="mdi-magnify"-->
-            <!--                placeholder="search"-->
-            <!--                v-model="form_params.search"-->
-            <!--                @keydown.13="loadData"-->
-            <!--            ></v-text-field>-->
           </v-col>
         </v-row>
       </v-card-title>
@@ -39,6 +29,22 @@
           <template v-slot:item.manage=" { item } ">
             <div class="d-flex justify-center">
               <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
+              <ConfirmDialog
+                  message="remove this item ?"
+                  @change="deleteItem($event,item)"
+              >
+                <template v-slot:activator="{on}">
+                  <v-btn
+                      icon
+                      outlined
+                      color="red"
+                      v-on="on"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+
+              </ConfirmDialog>
             </div>
           </template>
 
@@ -95,7 +101,8 @@ export default {
       this.loadData()
     },
     generate_page(data) {
-      this.total_page = Math.ceil(data.count / 10)
+      this.form_params.total_page = Math.ceil(data.count / 10)
+
     },
     async loadData() {
       let data = await this.$store.dispatch('classroom_modules/attendance/getAttendancePlays', this.form_params)
@@ -110,7 +117,7 @@ export default {
         }
       })
     },
-    async DeleteItem(e, item) {
+    async deleteItem(e, item) {
       if (e) {
         let data = await this.$store.dispatch('classroom_modules/attendance/deleteAttendancePlay', item.id)
         if (data != null) {

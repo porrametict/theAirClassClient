@@ -41,24 +41,26 @@
             </template>
 
             <template v-slot:item.manage="{ item }">
-              <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
-              <ConfirmDialog
-                  message="remove this user form classroom ?"
-                  @change="delete_member($event,item)"
-              >
-                <template v-slot:activator="{on}">
-                  <v-btn
-                      icon
-                      outlined
-                      color="red"
-                      v-on="on"
-                      :disabled="item.role ===1 || user_role !==1"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
+              <div class="d-flex justify-center">
+                <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
+                <ConfirmDialog
+                    message="remove this user form classroom ?"
+                    @change="delete_member($event,item)"
+                >
+                  <template v-slot:activator="{on}">
+                    <v-btn
+                        icon
+                        outlined
+                        color="red"
+                        v-on="on"
+                        :disabled="item.role ===1 || user_role !==1"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                </ConfirmDialog>
+              </div>
 
-              </ConfirmDialog>
             </template>
           </v-data-table>
           <v-divider></v-divider>
@@ -67,6 +69,7 @@
             <v-pagination
                 v-model="form_params.page"
                 :length="form_params.length"
+                :total-visible="5"
                 circle
                 @input="changePage"
             ></v-pagination>

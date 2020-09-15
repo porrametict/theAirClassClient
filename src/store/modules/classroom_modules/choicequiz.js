@@ -62,5 +62,23 @@ export default {
                     return null
                 })
         },
+        async getChoiceQuizPlay(context, id) {
+            return await axios.get(`${choice_quiz_play_api}${id}/`, )
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
+        async deleteChoiceQuizPlay(context, id) {
+            return await axios.delete(`${choice_quiz_play_api}${id}/`, )
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
     }
 }

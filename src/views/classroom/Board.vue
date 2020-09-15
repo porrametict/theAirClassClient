@@ -65,7 +65,7 @@
         </FreeLicenseImage>
       </div>
     </div>
-    <RoomNameInputDialog :key="RoomNameInputDialogKey" :dialog="dialog" @change="gotoRoom"></RoomNameInputDialog>
+    <RoomNameInputDialog :key="RoomNameInputDialogKey" :dialog="dialog" @change="createRoom"></RoomNameInputDialog>
   </div>
 </template>
 
