@@ -1,10 +1,11 @@
 const room_api = "/api/v1/classroom/room/"
+const room_lof_api = "/api/v1/classroom/room-lof/"
 
 export default {
     namespaced: true,
     actions: {
         async getRooms(context, params) {
-            return await axios.post(`${room_api}`, params)
+            return await axios.get(`${room_lof_api}`, params)
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
