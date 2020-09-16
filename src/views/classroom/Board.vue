@@ -40,10 +40,27 @@
     </div>
     <v-divider class="my-2"></v-divider>
     <!--body-->
-    <div>
-      <v-btn @click="gotoRoom">Go To Room Page
+    <div >
+      <v-btn @click="gotoRoom" >Go To Room Page
       </v-btn>
-      <p class="display-4 text-center grey--text">Coming Soon.</p>
+      <p class="display-4 text-center grey--text">Welcome</p>
+      <div class="d-flex justify-lg-space-between pa-2">
+      <v-text-field
+              class="col-sm-6"
+              label="Start a new conversations"
+              prepend-icon="mdi-comment"
+
+      >
+      </v-text-field>
+
+        <v-icon small >
+          mdi-send-outline
+        </v-icon>
+
+      </div>
+
+
+
     </div>
   </div>
 </template>

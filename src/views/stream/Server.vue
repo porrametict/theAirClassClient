@@ -42,24 +42,19 @@
           dark
       >
         <v-btn @click="peerCall">
-          <span>Mute1</span>
-          <v-icon>mdi-microphone</v-icon>
+          <span>Start Video</span>
+          <v-icon>mdi-video-account</v-icon>
         </v-btn>
 
-        <v-btn @click="Microphone">
-          <span>Mute2</span>
-          <v-icon>mdi-microphone</v-icon>
-        </v-btn>
-
-        <v-btn @click="MuteMic">
+        <v-btn @click="ToggleMicEnable">
           <span >Mute</span>
-          <v-icon>mdi-microphone-off</v-icon>
+          <v-icon> {{ microphone == true? 'mdi-microphone' : 'mdi-microphone-off' }} </v-icon>
 
         </v-btn>
 
-        <v-btn>
+        <v-btn @click="ToggleVideoEnable">
           <span>Pause Video</span>
-          <v-icon>mdi-video</v-icon>
+          <v-icon>{{ camera == true? 'mdi-video' : 'mdi-video-off' }}</v-icon>
         </v-btn>
 
         <v-btn @click="startSteam" class="mute">
@@ -84,6 +79,13 @@
 <script>
 import ContentHeader from "../../components/share/ContentHeader";
 import Peer from "peerjs";
+export const createEmptyVideoTrack = ({ width, height }) => {
+  const canvas = Object.assign(document.createElement("canvas"), {
+    width,
+    height,
+  });
+  canvas.getContext("2d").fillRect(0, 0, width, height);
+};
 
 export default {
   name: "ServerIndex",
@@ -94,8 +96,10 @@ export default {
     peer: null,
     peerId: "001",
     peerConnectTo: "002",
-    muted1: false,
-    muted2: false,
+    my_stream : null,
+    microphone: true,
+    camera: true,
+    my_videoStream: null,
     button: [],
     form: {
       status: true
@@ -135,53 +139,56 @@ export default {
     async startSteam() {
       let stream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
-        audio: true,
+        audio: this.peerCall()
       });
-      let call = this.peer.call(this.peerConnectTo, stream);
-      call.on("stream", (remoteStream) => {
+      let call = this.peer.call(this.peerConnectTo, stream, );
+      call.on("my_stream", (remoteStream) => {
         console.log(remoteStream);
         let video = this.$refs["video"];
         video.srcObject = stream;
         video.play();
+
       });
     },
 
     async peerCall() {
       // await this.checkForVideoAudioAccess()
-      let stream = await navigator.mediaDevices.getUserMedia({
+      this.my_stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: this.MuteMic
+        audio: true
+
       });
-      let call = this.peer.call(this.peerConnectTo, stream);
+      this.my_videoStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
 
-
+      });
+      let call = this.peer.call(this.peerConnectTo, this.my_stream);
       call.on("stream", (remoteStream) => {
         let video = this.$refs["video"];
         video.srcObject = remoteStream;
         video.play();
       });
-    },
-     async Microphone() {
-       navigator.mediaDevices.getUserMedia({ audio: true })
-               .then(function(stream) {
-                 console.log('You let me use your mic!')
-               })
-               .catch(function(err) {
-                 console.log('No mic for you!')
-               });
 
      },
-     async MuteMic() {
-      this.Microphone();
-       navigator.mediaDevices.getUserMedia({ audio: false})
-              .then(function (stream) {
-                console.log('No mic for you!')
-              })
-              .catch(function(err) {
-                console.log('You let me use your mic!')
-              });
+     async ToggleMicEnable() {
+       this.microphone = !this.microphone
+       this.my_stream.getAudioTracks()[0].enabled = this.microphone;
 
-     }
+
+
+    },
+    async ToggleVideoEnable() {
+      // let enabled = this.my_stream.getVideoTracks()[0].enabled;
+      this.camera = !this.camera
+      this.my_videoStream.getVideoTracks()[0].enabled = this.camera;
+
+
+
+
+    }
+
+
 
 },
 };
