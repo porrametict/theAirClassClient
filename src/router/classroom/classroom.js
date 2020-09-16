@@ -20,11 +20,6 @@ export default {
             component: () => import('../../views/classroom/Room')
         },
         {
-            path: ":id/roomjoin",
-            name: "RoomJoin",
-            component: () => import('../../views/classroom/RoomJoin')
-        },
-        {
             path: "create",
             name: "CreateClassroom",
             component: () => import('../../views/classroom/Create')
