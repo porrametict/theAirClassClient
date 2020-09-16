@@ -1,5 +1,104 @@
 <template>
   <div class="fill-height overflow-hidden" v-if="room">
+    <ContentHeader text="Classroom Teacher"></ContentHeader>
+    <br style="box-sizing: border-box" class="fill-height">
+    <v-row>
+      <v-col cols="9">
+        <div>
+          <!--show-->
+          <div class="d-flex justify-center ma-3">
+            <v-card
+                height="600px"
+                width="1000px"
+            >
+              <div>
+                <video id="video" playsinline autoplay muted></video>
+              </div>
+            </v-card>
+          </div>
+
+          <!--button-->
+          <div class=" d-flex justify-space-around ma-4 " >
+            <v-bottom-navigation
+                v-model ="button"
+                multiple
+                rounded-pill
+                height="50"
+                width="800"
+                dark
+            >
+              <v-btn>
+                <span>Mute</span>
+                <v-icon>mdi-microphone</v-icon>
+              </v-btn>
+
+              <v-btn>
+                <span>Pause Video</span>
+                <v-icon>mdi-video</v-icon>
+              </v-btn>
+
+              <v-btn>
+                <span>Share Screen</span>
+                <v-icon>mdi-laptop</v-icon>
+              </v-btn>
+
+                <v-bottom-sheet v-model="sheet">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                    >
+                      <span>Other</span>
+                      <v-icon>mdi-dots-horizontal</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item
+                        @click="sheet = false"
+                    >
+                      <v-list-item-title>
+                        <div class=" d-flex justify-space-around ma-4 " >
+                          <v-btn @click="new_action('ChoiceQuiz')" :disabled="room_state.state !== 'normal'" >
+                            <v-icon>mdi-clipboard-edit-outline</v-icon>
+                            <span> Start Choice Quiz</span>
+                          </v-btn>
+
+                          <v-btn @click="new_action('Attendance')" :disabled="room_state.state !== 'normal'">
+                            <v-icon>mdi-account-multiple</v-icon>
+                            <span> Start Attendance</span>
+                          </v-btn>
+
+                          <v-btn @click="new_action('GameQuestion')" :disabled="room_state.state !== 'normal'" >
+                            <v-icon>mdi-gamepad-variant-outline</v-icon>
+                            <span> Start Game Question</span>
+                          </v-btn>
+
+                          <v-btn @click="new_action('Poll')" :disabled="room_state.state !== 'normal'" >
+                          <v-icon>mdi-chart-line</v-icon>
+                          <span> Start Poll</span>
+                        </v-btn>
+                        </div>
+                      </v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-bottom-sheet>
+
+
+              <v-btn>
+                <span>Show Chat</span>
+                <v-icon>mdi-forum</v-icon>
+              </v-btn>
+
+              <v-btn
+                  @click="end"
+                  :disabled="room_state.state !== 'normal'">
+                <span>End Call</span>
+                <v-icon>mdi-phone-off-outline</v-icon>
+              </v-btn>
+            </v-bottom-navigation>
+          </div>
+        </div>
+      </v-col>
     <v-row style="box-sizing: border-box" class="fill-height">
       <v-col>
         <div>
@@ -51,14 +150,13 @@
             :room="room"
             :classroom-id="classroom_id"
         ></Chat>
-
       </v-col>
     </v-row>
-
   </div>
 </template>
 
 <script>
+import ContentHeader from "@/components/share/ContentHeader";
 import ScreenSharing from "../../components/classroom_modules/screensharing/ScreenSharing";
 import Chat from "../../components/classroom_modules/chat/Chat";
 import ChoiceQuiz from "../../components/classroom_modules/choicequiz/ChoiceQuiz";
@@ -70,11 +168,14 @@ import Poll from "@/components/classroom_modules/poll/Poll";
 export default {
   name: "ClassroomRoom",
   components: {Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
+  components: {Poll, GameQuestion, Attendance, Chat, ChoiceQuiz,ContentHeader},
   data() {
     return {
       my_role: null,
       room: null,
+      button: [],
       member: [],
+      sheet: false,
       classroom_id: this.$route.params.id,
       room_state: {
         state: "normal", // normal $$ playing,

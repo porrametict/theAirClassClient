@@ -45,6 +45,14 @@
       </v-btn>
       <p class="display-4 text-center grey--text">Coming Soon.</p>
     </div>
+
+    <div>
+      <v-btn @click="Meet()">Go To Room Page
+      </v-btn>
+      <p class="display-4 text-center grey--text">Coming Soon.</p>
+    </div>
+
+
   </div>
 </template>
 
@@ -89,6 +97,13 @@ export default {
       if (room) {
         await this.$router.push({name: 'RoomClassroom', params: {id: id, room_id: room.id}})
       }
+    },
+    async Meet() {
+      // let id = this.$route.params.id
+      let room = await this.$router.push({name: 'RoomJoin'})
+      // if (room) {
+      //   await this.$router.push({name: 'RoomJoin'})
+      // }
     }
   }
 }
