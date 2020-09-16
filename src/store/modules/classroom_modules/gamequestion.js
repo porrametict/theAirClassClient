@@ -11,5 +11,23 @@ export default {
                     return null
                 })
         },
+        async getGameQuestionPlay(context, id) {
+            return await axios.get(`${game_question_play_api}${id}/`,)
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
+        async deleteGameQuestionPlay(context, id) {
+            return await axios.delete(`${game_question_play_api}${id}/`,)
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
     }
 }

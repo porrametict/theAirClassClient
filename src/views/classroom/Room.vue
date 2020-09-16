@@ -5,7 +5,35 @@
         <div>
           <v-row>
             <v-col>
-
+              <ScreenSharing></ScreenSharing>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <div class="d-flex justify-center align-center flex-column">
+                <div v-if="my_role <= 2">
+                  <v-btn @click="new_action('ChoiceQuiz')" :disabled="room_state.state !== 'normal'">
+                    start choice quiz
+                  </v-btn>
+                  <v-btn @click="new_action('Attendance')" :disabled="room_state.state !== 'normal'">
+                    start Attendance
+                  </v-btn>
+                  <v-btn @click="new_action('GameQuestion')" :disabled="room_state.state !== 'normal'">
+                    start Game Question
+                  </v-btn>
+                  <v-btn @click="new_action('Poll')" :disabled="room_state.state !== 'normal'">
+                    start Poll
+                  </v-btn>
+                </div>
+                <v-btn color="red" large class="white--text" @click="end" :disabled="room_state.state !== 'normal'">
+                  leave
+                </v-btn>
+                <div v-if="room_state.state === 'normal'">
+                  <v-btn @click="SwitchChatParticipant">
+                    Show {{ room_state.module === 'Chat' ? 'Participant' : 'Chat' }}
+                  </v-btn>
+                </div>
+              </div>
             </v-col>
           </v-row>
         </div>
@@ -56,7 +84,7 @@ import ParticipantCard from "@/components/classroom/room/ParticipantCard";
 
 export default {
   name: "ClassroomRoom",
-  components: {Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz,ParticipantCard},
+  components: {ParticipantCard, Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
   data() {
     return {
       my_role: null,
@@ -88,14 +116,23 @@ export default {
         this.room_state.module = 'ParticipantCard'
       } else {
         this.room_state.module = 'Chat'
+
       }
+
     },
+
     //GE functions
     async loadData() {
       this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
+
       if (this.room['status'] === false) {
         await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
       }
+
+    },
+
+    async end() {
+      await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
     },
     async end() {
       await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
@@ -232,7 +269,9 @@ export default {
     on_new_action(e) {
       this.room_state = e['data']['state']
       this.room_state.module = this.room_state.module ? this.room_state.module : 'Chat'
+
     },
+
   },
   destroyed() {
     if (this.room_socket) {

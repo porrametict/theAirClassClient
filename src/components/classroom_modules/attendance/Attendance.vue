@@ -14,7 +14,8 @@
         <div v-for="student in state.data.all_students">
           <p class="title" :class="{'green--text': student['present']  ,'red--text' : !student['present'] }">
             {{ student.user_data.first_name }}
-            {{ student.user_data.last_name }}</p>
+            {{ student.user_data.last_name }}
+          </p>
         </div>
         <br/>
         <v-btn rounded color="blue" class="white--text" @click="end_attendance">
@@ -23,8 +24,18 @@
       </div>
 
 
-      <div v-else-if="is_viewer" class="text-center title">
+      <div v-else-if="is_viewer" class="text-center">
         student(s) : {{ state.data.present_student_count }} / {{ state.data.all_students.length }}
+        <div v-for="student in state.data.all_students">
+          <p class="title" :class="{'green--text': student['present']  ,'red--text' : !student['present'] }">
+            {{ student.user_data.first_name }}
+            {{ student.user_data.last_name }}
+          </p>
+        </div>
+        <br/>
+        <v-btn rounded color="blue" class="white--text" @click="end_attendance">
+          close
+        </v-btn>
       </div>
 
 
@@ -70,8 +81,6 @@ export default {
       this.state.state = 'start'
       this.state.component = 'ViewerStart'
 
-      this.end_attendance()
-
     } else {
       this.state.state = 'start'
       this.state.component = 'Start'
@@ -109,7 +118,9 @@ export default {
         self.get_current_state()
       }
       this.module_socket.onclose = function (e) {
-        console.error('Attendant socket closed unexpectedly', e);
+        if (e.code !== 1000) {
+          console.log('Attendant socket closed', e);
+        }
       }
       let commands = {
         'on_get_current_state': self.on_get_current_state,
@@ -118,7 +129,6 @@ export default {
       this.module_socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
         let command = data['command']
-        console.log(command)
         commands[command](data)
       }
     },
@@ -136,9 +146,11 @@ export default {
       this.socket_send(content);
     },
     async on_get_current_state(e) {
+      if (!e['data']['state']['data']['all_students']) {
+        this.get_current_state()
+      }
       this.state = e['data']['state']
       this.state['component'] = this.get_component_by_state(this.state)
-
 
       if (!this.is_viewer && !this.is_viewer) {
         this.check_attended()
@@ -197,10 +209,16 @@ export default {
       this.$emit(
           'ended', {event: 'attendance'}
       )
+    },
+
+
+  },
+  destroyed() {
+    if (this.module_socket) {
+      this.module_socket.close(1000)
     }
+  },
 
-
-  }
 }
 </script>
 

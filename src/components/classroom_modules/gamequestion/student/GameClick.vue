@@ -47,7 +47,9 @@ export default {
         //self.get_current_state()
       }
       this.module_socket.onclose = function (e) {
-        console.error('Game Click socket closed unexpectedly', e);
+        if (e.code !== 1000) {
+          console.error('Game Click socket closed unexpectedly', e);
+        }
       }
       let commands = {
         'on_new_game': self.on_new_question,
@@ -77,41 +79,21 @@ export default {
     game_click() {
       let content = {
         "command": "game_click",
-        "data": {}
+        "data": {
+          'user': this.user
+        }
       }
       this.socket_send(content);
     },
     on_game_click(e) {
       this.state = e['data']['state']
-      if (this.state.count_click >= this.state.goal_click) {
-        this.get_winner()
-      }
-
     },
-    get_winner() {
-      let content = {
-        "command": "get_winner",
-        "data": {
-          'user': this.user
-        }
+    on_get_winner(e) {
+      if (this.user['pk'] === e['data']['user']['pk']) {
+        this.$emit(
+            'change', {event: 'game_click', data: e['data']['user']}
+        )
       }
-      this.state = {
-        'count_click': 0,
-        'goal_click': 10
-      }
-      console.log("get_winner in function")
-      this.$emit(
-          'change', {event: 'game_click', data: this.user}
-      )
-      this.socket_send(content);
-
-    },
-    on_get_winner() {
-      this.state = {
-        'count_click': 0,
-        'goal_click': 10
-      }
-
       this.$emit(
           'ended', {event: 'game_click', data: {}}
       )
@@ -119,7 +101,12 @@ export default {
     },
 
 
-  }
+  },
+  destroyed() {
+    if (this.module_socket) {
+      this.module_socket.close(1000)
+    }
+  },
 }
 </script>
 
