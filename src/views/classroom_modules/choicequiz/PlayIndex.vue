@@ -1,55 +1,36 @@
 <template>
-  <div v-if="choice_quizzes">
+  <div v-if="data">
     <ContentHeader class="my-2">
       <div class="">
-        <span>Choice Quiz</span> |
+        <span>Choice Quiz : Play</span>
       </div>
     </ContentHeader>
 
     <v-card>
       <v-card-title class="d-flex justify-space-between ">
-        <v-row align="center" justify="end">
-          <v-col>
-            <ButtonPrimary @click="$router.push({name :'ChoiceQuizCreate'})">Add</ButtonPrimary>
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-text-field
-                filled
-                rounded
-                hide-details
-                dense
-                append-icon="mdi-magnify"
-                placeholder="search"
-                v-model="form_params.search"
-                @keydown.13="loadData"
-            ></v-text-field>
-          </v-col>
-        </v-row>
+
       </v-card-title>
       <v-card-text>
         <v-data-table
             :headers="headers"
-            :items="choice_quizzes"
+            :items="data_table"
             hide-default-footer
         >
+          <template v-slot:item.name="{item}">
+            <div>
+              ใช้งานเมื่อ {{ get_th_time(item.created) }}
+            </div>
+          </template>
+
           <template v-slot:item.created="{item}">
             <div>
               {{ get_th_time(item.created) }}
             </div>
           </template>
 
-          <template v-slot:item.usage_status="{item}">
-            <div>
-              <v-icon :color="item.usage_status ? 'green' : 'grey'">
-                mdi-check
-                <!--                {{ item.usage_status ? 'mdi-check' : 'mdi-close' }}-->
-              </v-icon>
-            </div>
-          </template>
-
           <template v-slot:item.manage=" { item } ">
-            <div class="d-flex justify-center" v-if="!item.usage_status">
-              <ButtonIcon class="mx-1" icon="mdi-pencil" tooltip_text="edit" @click="gotoEdit(item)"></ButtonIcon>
+            <div class="d-flex justify-center">
+              <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
               <ConfirmDialog
                   message="remove this item ?"
                   @change="deleteItem($event,item)"
@@ -67,10 +48,8 @@
 
               </ConfirmDialog>
             </div>
-            <div v-else>
-              <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view history" @click="gotoView(item)"></ButtonIcon>
-            </div>
           </template>
+
 
         </v-data-table>
         <v-divider></v-divider>
@@ -85,7 +64,6 @@
         </div>
       </v-card-text>
     </v-card>
-
   </div>
 </template>
 
@@ -96,27 +74,26 @@ import ContentHeader from "@/components/share/ContentHeader";
 import ConfirmDialog from "@/components/share/ConfirmDialog";
 
 export default {
-  name: "ChoiceQuizIndex",
+  name: "ChoiceQuizPlayIndex",
   components: {ConfirmDialog, ContentHeader, ButtonIcon, ButtonPrimary},
   data() {
     return {
+      data: null,
       form_params: {
         search: "",
-        classroom: null,
+        room__classroom__id: null,
         total_page: 0,
         page: 1,
       },
-      choice_quizzes: null,
       headers: [
         {text: 'Name', value: 'name', sortable: false},
         {text: 'Created', value: 'created', sortable: false},
-        {text: 'Usage Status', align: 'center', value: 'usage_status', sortable: false},
         {text: 'Manage', align: 'center', value: 'manage', sortable: false},
-      ]
+      ],
+      data_table: [],
     }
   },
   async mounted() {
-    this.form_params.classroom = this.$route.params.id
     await this.loadData()
   },
   methods: {
@@ -126,31 +103,25 @@ export default {
     },
     generate_page(data) {
       this.form_params.total_page = Math.ceil(data.count / 10)
+
     },
     async loadData() {
-      let data = await this.$store.dispatch('classroom_modules/choicequiz/getChoiceQuizzes', this.form_params)
-      this.generate_page(data)
-      this.choice_quizzes = data.results
-    },
-    async gotoEdit(item) {
-      await this.$router.push({
-        name: 'ChoiceQuizEdit',
-        params: {
-          choice_quiz_id: item.id
-        }
-      })
+      let id = this.$route.params.choice_quiz_id
+      let data = await this.$store.dispatch('classroom_modules/choicequiz/getChoiceQuizPlays', id)
+      this.data = data
+      this.data_table = data.results
     },
     async gotoView(item) {
       await this.$router.push({
-        name: 'ChoiceQuizPlayIndex',
+        name: 'ChoiceQuizPlayView',
         params: {
-          choice_quiz_id: item.id
+          choice_quiz_play_id: item.id
         }
       })
     },
     async deleteItem(e, item) {
       if (e) {
-        let data = await this.$store.dispatch('classroom_modules/choicequiz/deleteChoiceQuiz', item.id)
+        let data = await this.$store.dispatch('classroom_modules/choicequiz/deleteChoiceQuizPlay', item.id)
         if (data != null) {
           await this.loadData()
         }

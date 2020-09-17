@@ -55,7 +55,6 @@ export default {
       this.is_viewer = true
       this.state.state = 'start'
       this.state.component = 'ViewerStart'
-      this.end_poll()
 
     } else {
       this.state.state = 'start'
@@ -120,7 +119,9 @@ export default {
         self.get_current_state()
       }
       this.module_socket.onclose = function (e) {
-        console.error('Poll socket closed unexpectedly', e);
+        if (e.code !== 1000) {
+          console.log('Poll socket closed ', e);
+        }
       }
       let commands = {
         'on_get_current_state': self.on_get_current_state,
@@ -130,7 +131,6 @@ export default {
       this.module_socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
         let command = data['command']
-        console.log(command)
         commands[command](data)
       }
     },
@@ -148,6 +148,9 @@ export default {
       this.socket_send(content);
     },
     async on_get_current_state(e) {
+      if (!e['data']['state']['data']['all_students']) {
+        this.get_current_state()
+      }
       this.state = e['data']['state']
 
       let component_index = 0
@@ -162,7 +165,6 @@ export default {
       }
       this.state['component'] = this.get_component_by_state(this.state, component_index)
       this.component_key += 1
-      console.log(this.state)
 
     },
     new_question(question) {
@@ -247,6 +249,11 @@ export default {
       )
     },
 
+  },
+  destroyed() {
+    if (this.module_socket) {
+      this.module_socket.close(1000)
+    }
   },
 
 

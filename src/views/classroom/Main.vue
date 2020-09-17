@@ -35,7 +35,8 @@ export default {
       user_role: null,
       tabs: [
         {name: "Member", route: `MemberIndex`},
-        {name: "App", route: `ClassroomModuleIndex`}
+        {name: "Score", route: `ScoreIndex`},
+        {name: "App", route: `ClassroomModuleIndex`},
       ]
     }
   },
@@ -43,7 +44,9 @@ export default {
     if (!this.classroom) {
       await this.$store.dispatch('classroom/retrieveClassroom', this.$route.params.id)
     }
-    // this.router_push('MemberIndex')
+    if (this.$route.name === 'MainClassroom') {
+      this.router_push('MemberIndex')
+    }
     await this.loadData()
     await this.checkUserRole()
 

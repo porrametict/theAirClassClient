@@ -2,7 +2,7 @@
   <div v-if="data_table">
     <ContentHeader class="my-2">
       <div class="">
-        <span>Attendance : View</span>
+        <span>Score : View</span>
       </div>
     </ContentHeader>
     <v-card>
@@ -20,13 +20,6 @@
               {{ item.student_data.first_name }} {{ item.student_data.last_name }}
             </div>
           </template>
-          <template v-slot:item.present="{item}">
-            <div>
-              <v-icon :color="item.present ? 'green' : 'red'">
-                {{ item.present ? 'mdi-check' : 'mdi-close' }}
-              </v-icon>
-            </div>
-          </template>
         </v-data-table>
         <v-divider></v-divider>
       </v-card-text>
@@ -41,15 +34,14 @@ import ContentHeader from "@/components/share/ContentHeader";
 import ConfirmDialog from "@/components/share/ConfirmDialog";
 
 export default {
-  name: "AttendanceView",
+  name: "ScoreView",
   components: {ConfirmDialog, ContentHeader, ButtonIcon, ButtonPrimary},
   data() {
     return {
       data: null,
       data_table: null,
       headers: [
-        {text: 'Name', value: 'student_data', sortable: false},
-        {text: 'Present', value: 'present', sortable: false},
+        {text: 'student name', value: 'student_data', sortable: false},
         {text: 'point', value: 'point', sortable: false},
       ]
     }
@@ -66,10 +58,10 @@ export default {
       this.total_page = Math.ceil(data.count / 10)
     },
     async loadData() {
-      let id = this.$route.params.attendance_play_id
-      let data = await this.$store.dispatch('classroom_modules/attendance/getAttendancePlay', id)
+      let id = this.$route.params.score_id
+      let data = await this.$store.dispatch('classroom_modules/score/getScore', id)
       this.data = data
-      this.data_table = data.studentplay_set_data
+      this.data_table = data.studentscore_set_data
     },
   }
 }
