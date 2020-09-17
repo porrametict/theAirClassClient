@@ -152,7 +152,9 @@ export default {
         self.get_current_state()
       }
       this.module_socket.onclose = function (e) {
-        console.error('Attendant socket closed unexpectedly', e);
+        if (e.code !== 1000) {
+          console.log('GameQuestion socket closed unexpectedly', e);
+        }
       }
       let commands = {
         'on_get_current_state': self.on_get_current_state,
@@ -164,7 +166,6 @@ export default {
       this.module_socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
         let command = data['command']
-        console.log(command)
         commands[command](data)
       }
     },
@@ -183,11 +184,13 @@ export default {
       this.socket_send(content);
     },
     async on_get_current_state(e) {
+      if (!e['data']['state']['data']['all_students']) {
+        this.get_current_state()
+      }
       let state = e['data']['state']
       state['component'] = this.get_component_by_state(state)
       this.state = state
       this.component_key += 1
-      console.log(this.state)
     },
     get_component_by_state(state, component_index = 0) {
       let state_name = state.state
@@ -269,7 +272,12 @@ export default {
     }
 
 
-  }
+  },
+  destroyed() {
+    if (this.module_socket) {
+      this.module_socket.close(1000)
+    }
+  },
 }
 </script>
 

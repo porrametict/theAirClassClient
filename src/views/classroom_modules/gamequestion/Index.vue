@@ -36,6 +36,28 @@
             </div>
           </template>
 
+          <template v-slot:item.manage=" { item } ">
+            <div class="d-flex justify-center">
+              <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
+              <ConfirmDialog
+                  message="remove this item ?"
+                  @change="deleteItem($event,item)"
+              >
+                <template v-slot:activator="{on}">
+                  <v-btn
+                      icon
+                      outlined
+                      color="red"
+                      v-on="on"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+
+              </ConfirmDialog>
+            </div>
+          </template>
+
 
         </v-data-table>
 
@@ -76,6 +98,9 @@ export default {
       game_question_plays: null,
       headers: [
         {text: 'Name', value: 'module_data.name', sortable: false},
+        {text: 'Created', value: 'created', sortable: false},
+        {text: 'Manage', align: 'center', value: 'manage', sortable: false},
+
       ]
     }
   },
@@ -89,13 +114,29 @@ export default {
       this.loadData()
     },
     generate_page(data) {
-      this.total_page = Math.ceil(data.count / 10)
+      this.form_params.total_page = Math.ceil(data.count / 10)
     },
     async loadData() {
       let data = await this.$store.dispatch('classroom_modules/gamequestion/getGameQuestionPlays', this.form_params)
       this.generate_page(data)
       this.game_question_plays = data.results
     },
+    async gotoView(item) {
+      await this.$router.push({
+        name: 'GameQuestionView',
+        params: {
+          game_question_play_id: item.id
+        }
+      })
+    },
+    async deleteItem(e, item) {
+      if (e) {
+        let data = await this.$store.dispatch('classroom_modules/gamequestion/deleteGameQuestionPlay', item.id)
+        if (data != null) {
+          await this.loadData()
+        }
+      }
+    }
   }
 }
 </script>

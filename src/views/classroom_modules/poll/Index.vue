@@ -10,16 +10,6 @@
       <v-card-title class="d-flex justify-space-between ">
         <v-row align="center" justify="end">
           <v-col cols="12" md="4">
-            <!--            <v-text-field-->
-            <!--                filled-->
-            <!--                rounded-->
-            <!--                hide-details-->
-            <!--                dense-->
-            <!--                append-icon="mdi-magnify"-->
-            <!--                placeholder="search"-->
-            <!--                v-model="form_params.search"-->
-            <!--                @keydown.13="loadData"-->
-            <!--            ></v-text-field>-->
           </v-col>
         </v-row>
       </v-card-title>
@@ -40,6 +30,30 @@
               {{ get_th_time(item.created) }}
             </div>
           </template>
+
+
+          <template v-slot:item.manage=" { item } ">
+            <div class="d-flex justify-center">
+              <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
+              <ConfirmDialog
+                  message="remove this item ?"
+                  @change="deleteItem($event,item)"
+              >
+                <template v-slot:activator="{on}">
+                  <v-btn
+                      icon
+                      outlined
+                      color="red"
+                      v-on="on"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+
+              </ConfirmDialog>
+            </div>
+          </template>
+
         </v-data-table>
 
 
@@ -79,8 +93,8 @@ export default {
       poll_plays: null,
       headers: [
         {text: 'Name', value: 'module_data.name', sortable: false},
-        {text: 'Result', value: 'results_count', sortable: false},
         {text: 'Created', value: 'created', sortable: false},
+        {text: 'Manage', value: 'manage', sortable: false},
       ]
     }
   },
@@ -94,13 +108,29 @@ export default {
       this.loadData()
     },
     generate_page(data) {
-      this.total_page = Math.ceil(data.count / 10)
+      this.form_params.total_page = Math.ceil(data.count / 10)
     },
     async loadData() {
       let data = await this.$store.dispatch('classroom_modules/poll/getPollPlays', this.form_params)
       this.generate_page(data)
       this.poll_plays = data.results
     },
+    async gotoView(item) {
+      await this.$router.push({
+        name: 'PollView',
+        params: {
+          poll_play_id: item.id
+        }
+      })
+    },
+    async deleteItem(e, item) {
+      if (e) {
+        let data = await this.$store.dispatch('classroom_modules/poll/deletePollPlay', item.id)
+        if (data != null) {
+          await this.loadData()
+        }
+      }
+    }
   }
 }
 </script>

@@ -1,5 +1,7 @@
 import classroom_module_index from "../classroom_modules/classroom_module_index";
 import member from "@/router/classroom/member";
+import score from "@/router/classroom_modules/score";
+
 export default {
     path: '/classroom',
     component: () => import('../../views/classroom/Template'),
@@ -38,6 +40,7 @@ export default {
             component: () => import('../../views/classroom/Main'),
             children: [
                 member,
+                score,
                 classroom_module_index
             ]
         },

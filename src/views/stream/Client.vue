@@ -32,11 +32,8 @@
 
         <!--show-->
         <div class="d-flex justify-center">
-          <v-card
-              height="600px"
-              width="1000px"
-          >
-            <video ref="video" style="max-height: 600px; max-width: 1000px;"></video>
+          <v-card>
+            <video ref="video" height="600px" width="1000px" playsinline autoplay controls></video>
           </v-card>
         </div>
 
@@ -64,12 +61,12 @@
               <v-icon>mdi-laptop</v-icon>
             </v-btn>
 
-            <v-btn>
+            <v-btn >
               <span>Show Chat</span>
               <v-icon>mdi-forum</v-icon>
             </v-btn>
 
-            <v-btn>
+            <v-btn color="red">
               <span>End Call</span>
               <v-icon>mdi-phone-off-outline</v-icon>
             </v-btn>
@@ -112,10 +109,8 @@ export default {
   },
   data: () => ({
     peer: null,
-    peerId: "002",
-    peerConnectTo: "001",
-      my_stream : null,
-      microphone: false,
+    peerId: "02",
+    peerConnectTo: "01",
   }),
   created() {
     this.initPeer();

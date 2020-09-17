@@ -24,12 +24,13 @@ export default {
   data() {
     return {
       question: {
-        text : null
+        text: null
       }
     }
   },
   methods: {
     on_click() {
+      this.question.text = this.question.text ? this.question.text : 'คำถามปากเปล่า'
       this.$emit('change', {'event': 'new_question', 'data': this.question})
     }
   }

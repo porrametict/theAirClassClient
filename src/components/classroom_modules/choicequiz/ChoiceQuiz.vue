@@ -181,7 +181,9 @@ export default {
         self.get_current_state()
       }
       this.module_socket.onclose = function (e) {
-        console.error('Choice Quiz socket closed unexpectedly', e);
+        if (e.code !== 1000) {
+          console.log('Choice Quiz socket closed ', e);
+        }
       }
       let commands = {
         'on_get_current_state': self.on_get_current_state,
@@ -213,20 +215,21 @@ export default {
       this.socket_send(content);
     },
     async on_get_current_state(e) {
+      if (!e['data']['state']['data']['all_students']) {
+        this.get_current_state()
+        return;
+      }
       let state = e['data']['state']
       if (!state['data']['choice_quizzes']) {
         this.get_current_state()
         return;
       }
-      this.state = state
-
-      if (state['state'] === 'newQuestion' && !this.is_host && !this.is_viewer) {
-
-        state['component'] = this.get_component_by_state(state, this.student_replied() ? 1 : 0)
-      } else {
-        state['component'] = this.get_component_by_state(state)
+      let component_index = 0
+      if (state['state'] === 'newQuestion' && this.role === 3) {
+        component_index = this.student_replied() ? 1 : 0
       }
-
+      state['component'] = await this.get_component_by_state(state, component_index)
+      this.state = state
       this.component_key += 1
 
     },
@@ -256,7 +259,6 @@ export default {
       )
     },
     on_new_game(e) {
-      console.log(e)
       this.state = e['data']['state']
       this.state.component = this.get_component_by_state(this.state)
       this.component_key += 1
@@ -271,7 +273,7 @@ export default {
     },
     on_student_select(e) {
       this.state = e['data']['state']
-      if (!this.is_host) {
+      if (!this.is_host && !this.is_viewer) {
         if (this.student_replied()) {
           this.state.state = 'newQuestion'
           this.state.component = this.get_component_by_state(this.state, 1)
@@ -362,7 +364,12 @@ export default {
           'ended', {event: 'choice_quiz'}
       )
     }
-  }
+  },
+  destroyed() {
+    if (this.module_socket) {
+      this.module_socket.close(1000)
+    }
+  },
 }
 </script>
 

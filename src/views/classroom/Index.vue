@@ -8,7 +8,7 @@
                 <v-row>
                     <v-col cols="12" md="6">
                     </v-col>
-                    <!--        Search-->
+                    <!--Search-->
                     <v-col cols="12" md="4">
                         <v-text-field
                                 v-model="form_params.search"
@@ -27,7 +27,7 @@
                         </v-text-field>
                     </v-col>
                     <v-col>
-                        <!--        Filter-->
+                        <!--Filter-->
                         <div>
                             <v-select label="filter"
                                       v-model="form_params.role"
