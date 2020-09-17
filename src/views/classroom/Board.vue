@@ -135,7 +135,6 @@ export default {
       this.room_form.classroom = this.$route.params.id
       this.room_form.name = name
       let room = await this.$store.dispatch('classroom/room/createRoom', this.room_form)
-      console.log(room)
       if (room) {
         await this.gotoRoom(room)
       }

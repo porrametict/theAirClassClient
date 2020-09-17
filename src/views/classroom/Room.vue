@@ -126,6 +126,7 @@
         </template>
       </v-col>
     </v-row>
+
   </div>
 </template>
 
@@ -190,10 +191,7 @@ export default {
       // }
 
     },
-
-    async end() {
-      await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
-    },
+    
     async end() {
       await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
     },
