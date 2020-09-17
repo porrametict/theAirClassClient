@@ -12,6 +12,7 @@
                 width="1000px"
             >
               <div>
+                <Webcam :room="room"></Webcam>
                 <video id="video" playsinline autoplay muted></video>
               </div>
             </v-card>
@@ -132,7 +133,6 @@
 
 <script>
 import ContentHeader from "@/components/share/ContentHeader";
-import ScreenSharing from "../../components/classroom_modules/screensharing/ScreenSharing";
 import Chat from "../../components/classroom_modules/chat/Chat";
 import ChoiceQuiz from "../../components/classroom_modules/choicequiz/ChoiceQuiz";
 import {mapState} from "vuex";
@@ -140,10 +140,11 @@ import Attendance from "@/components/classroom_modules/attendance/Attendance";
 import GameQuestion from "@/components/classroom_modules/gamequestion/GameQuestion";
 import Poll from "@/components/classroom_modules/poll/Poll";
 import ParticipantCard from "@/components/classroom/room/ParticipantCard";
+import Webcam from "@/components/classroom_modules/web_rtc/Webcam";
 
 export default {
   name: "ClassroomRoom",
-  components: {ParticipantCard, Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz, ContentHeader},
+  components: {Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader},
   data() {
     return {
       my_role: null,
@@ -191,7 +192,7 @@ export default {
       // }
 
     },
-    
+
     async end() {
       await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
     },
