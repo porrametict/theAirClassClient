@@ -18,9 +18,9 @@
           </div>
 
           <!--button-->
-          <div class=" d-flex justify-space-around ma-4 " >
+          <div class=" d-flex justify-space-around ma-4 ">
             <v-bottom-navigation
-                v-model ="button"
+                v-model="button"
                 multiple
                 rounded-pill
                 height="50"
@@ -41,52 +41,50 @@
                 <span>Share Screen</span>
                 <v-icon>mdi-laptop</v-icon>
               </v-btn>
+              <v-bottom-sheet v-model="sheet">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                  >
+                    <span>Other</span>
+                    <v-icon>mdi-dots-horizontal</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                      @click="sheet = false"
+                  >
+                    <v-list-item-title>
+                      <div class=" d-flex justify-space-around ma-4 ">
+                        <v-btn @click="new_action('ChoiceQuiz')" :disabled="room_state.state !== 'normal'">
+                          <v-icon>mdi-clipboard-edit-outline</v-icon>
+                          <span> Start Choice Quiz</span>
+                        </v-btn>
 
-                <v-bottom-sheet v-model="sheet">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                        v-bind="attrs"
-                        v-on="on"
-                    >
-                      <span>Other</span>
-                      <v-icon>mdi-dots-horizontal</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item
-                        @click="sheet = false"
-                    >
-                      <v-list-item-title>
-                        <div class=" d-flex justify-space-around ma-4 " >
-                          <v-btn @click="new_action('ChoiceQuiz')" :disabled="room_state.state !== 'normal'" >
-                            <v-icon>mdi-clipboard-edit-outline</v-icon>
-                            <span> Start Choice Quiz</span>
-                          </v-btn>
+                        <v-btn @click="new_action('Attendance')" :disabled="room_state.state !== 'normal'">
+                          <v-icon>mdi-account-multiple</v-icon>
+                          <span> Start Attendance</span>
+                        </v-btn>
 
-                          <v-btn @click="new_action('Attendance')" :disabled="room_state.state !== 'normal'">
-                            <v-icon>mdi-account-multiple</v-icon>
-                            <span> Start Attendance</span>
-                          </v-btn>
+                        <v-btn @click="new_action('GameQuestion')" :disabled="room_state.state !== 'normal'">
+                          <v-icon>mdi-gamepad-variant-outline</v-icon>
+                          <span> Start Game Question</span>
+                        </v-btn>
 
-                          <v-btn @click="new_action('GameQuestion')" :disabled="room_state.state !== 'normal'" >
-                            <v-icon>mdi-gamepad-variant-outline</v-icon>
-                            <span> Start Game Question</span>
-                          </v-btn>
-
-                          <v-btn @click="new_action('Poll')" :disabled="room_state.state !== 'normal'" >
+                        <v-btn @click="new_action('Poll')" :disabled="room_state.state !== 'normal'">
                           <v-icon>mdi-chart-line</v-icon>
                           <span> Start Poll</span>
                         </v-btn>
-                        </div>
-                      </v-list-item-title>
-                    </v-list-item>
-                  </v-list>
-                </v-bottom-sheet>
 
-
-              <v-btn>
-                <span>Show Chat</span>
-                <v-icon>mdi-forum</v-icon>
+                      </div>
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-bottom-sheet>
+              <v-btn v-if="room_state.state === 'normal'" @click="SwitchChatParticipant">
+                <span> Show {{ room_state.module === 'Chat' ? 'Participant' : 'Chat' }}</span>
+                <v-icon>mdi-{{ room_state.module === 'Chat' ? 'account-group' : 'forum' }}</v-icon>
               </v-btn>
 
               <v-btn
@@ -99,57 +97,33 @@
           </div>
         </div>
       </v-col>
-    <v-row style="box-sizing: border-box" class="fill-height">
-      <v-col>
-        <div>
-          <v-row>
-            <v-col>
-              <ScreenSharing></ScreenSharing>
-
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <div class="d-flex justify-center align-center flex-column">
-                <div v-if="my_role <=2">
-                  <v-btn @click="new_action('ChoiceQuiz')" :disabled="room_state.state !== 'normal'">
-                    start choice quiz
-                  </v-btn>
-                  <v-btn @click="new_action('Attendance')" :disabled="room_state.state !== 'normal'">
-                    start Attendance
-                  </v-btn>
-                  <v-btn @click="new_action('GameQuestion')" :disabled="room_state.state !== 'normal'">
-                    start Game Question
-                  </v-btn>
-                  <v-btn @click="new_action('Poll')" :disabled="room_state.state !== 'normal'">
-                    start Poll
-                  </v-btn>
-                </div>
-                <v-btn color="red" large class="white--text" @click="end" :disabled="room_state.state !== 'normal'">
-                  End
-                </v-btn>
-              </div>
-            </v-col>
-          </v-row>
-        </div>
-      </v-col>
-
       <v-col cols="3">
-        <component
-            class="text-center"
-            v-if="room_state.module"
-            :is="room_state.module"
-            :room="room"
-            :role="my_role"
-            :host="room_state.host"
-            @ended="module_end"
-        >
-        </component>
-        <Chat
-            v-if="room_state.state === 'normal'"
-            :room="room"
-            :classroom-id="classroom_id"
-        ></Chat>
+        <template v-if="room_state.state ==='playing'">
+          <component
+              class="text-center"
+              v-if="room_state.module"
+              :is="room_state.module"
+              :room="room"
+              :role="my_role"
+              :host="room_state.host"
+              @ended="module_end"
+          >
+          </component>
+        </template>
+        <template v-if="room_state.state === 'normal'">
+          <KeepAlive>
+            <component
+                class="text-center"
+                v-if="room_state.module"
+                :is="room_state.module"
+                :room="room"
+                :classroom-id="classroom_id"
+                :member="member"
+                @ended="module_end"
+            >
+            </component>
+          </KeepAlive>
+        </template>
       </v-col>
     </v-row>
   </div>
@@ -164,18 +138,18 @@ import {mapState} from "vuex";
 import Attendance from "@/components/classroom_modules/attendance/Attendance";
 import GameQuestion from "@/components/classroom_modules/gamequestion/GameQuestion";
 import Poll from "@/components/classroom_modules/poll/Poll";
+import ParticipantCard from "@/components/classroom/room/ParticipantCard";
 
 export default {
   name: "ClassroomRoom",
-  components: {Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz},
-  components: {Poll, GameQuestion, Attendance, Chat, ChoiceQuiz,ContentHeader},
+  components: {ParticipantCard, Poll, GameQuestion, Attendance, Chat, ScreenSharing, ChoiceQuiz, ContentHeader},
   data() {
     return {
       my_role: null,
       room: null,
       button: [],
-      member: [],
       sheet: false,
+      member: [],
       classroom_id: this.$route.params.id,
       room_state: {
         state: "normal", // normal $$ playing,
@@ -190,7 +164,6 @@ export default {
     }
     await this.loadData()
     this.newWebSocket()
-
   },
   computed: {
     ...mapState({
@@ -198,23 +171,33 @@ export default {
     })
   },
   methods: {
+    SwitchChatParticipant() {
+      if (this.room_state.module === 'Chat') {
+        this.room_state.module = 'ParticipantCard'
+      } else {
+        this.room_state.module = 'Chat'
+
+      }
+
+    },
 
     //GE functions
     async loadData() {
       this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
+
+      // if (this.room['status'] === false) {
+      //   await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
+      // }
+
     },
 
     async end() {
-      this.room['status'] = false
-      let data = await this.$store.dispatch('classroom/room/updateRoom', this.room)
-      if (data && data['status'] === false) {
-        await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
-      }
+      await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
     },
-
-
+    async end() {
+      await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
+    },
     module_end(e) {
-
       let events = {
         'choice_quiz': this.choice_quiz_end,
         'attendance': this.attendance_end,
@@ -222,25 +205,18 @@ export default {
         'poll': this.poll_end,
       }
       events[e.event](e.data)
-
     },
     choice_quiz_end(e) {
       let host = this.room_state.host
-
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
-
       if (host.pk === this.user.pk) {
         this.set_room_state()
       }
-
-
     },
     attendance_end(e) {
       let host = this.room_state.host
-
-
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
@@ -250,8 +226,6 @@ export default {
     },
     game_question_end(e) {
       let host = this.room_state.host
-
-
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
@@ -260,8 +234,6 @@ export default {
       }
     }, poll_end(e) {
       let host = this.room_state.host
-
-
       this.room_state.state = "normal"
       this.room_state.module = null
       this.room_state.host = null
@@ -269,7 +241,6 @@ export default {
         this.set_room_state()
       }
     },
-
     // main WebSocket
     newWebSocket() {
       let self = this
@@ -279,14 +250,16 @@ export default {
       this.room_socket.onopen = function () {
         self.join_room()
         self.get_current_state()
-
       }
       this.room_socket.onclose = function (e) {
-        console.error('Room socket closed unexpectedly', e);
+        if (e.code !== 1000) {
+          console.log('Room socket closed', e);
+        }
       }
       let commands = {
         'on_new_action': self.on_new_action,
         'on_member_join': self.on_member_join,
+        'on_member_leave': self.on_member_leave,
         'on_get_current_state': self.on_get_current_state,
       }
       this.room_socket.onmessage = function (e) {
@@ -298,8 +271,6 @@ export default {
     socket_send(data) {
       this.room_socket.send(JSON.stringify(data));
     },
-
-
     // WebSocket functions
     join_room() {
       let content = {
@@ -312,10 +283,13 @@ export default {
       this.socket_send(content);
     },
     on_member_join(e) {
-      this.member.push(e['data'])
-      if (e['data']['user'] === this.user.pk) { // is me
-        this.my_role = e['data']['role']
+      this.member = e['data']['member']
+      if (e['data']['user']['user'] === this.user.pk) { // is me
+        this.my_role = e['data']['user']['role']
       }
+    },
+    on_member_leave(e) {
+      this.member = e['data']['member']
     },
     get_current_state() {
       let content = {
@@ -328,6 +302,7 @@ export default {
     },
     on_get_current_state(e) {
       this.room_state = e['data']['state']
+      this.room_state.module = 'Chat'
     },
     set_room_state() {
       let content = {
@@ -353,12 +328,18 @@ export default {
     },
     on_new_action(e) {
       this.room_state = e['data']['state']
+      this.room_state.module = this.room_state.module ? this.room_state.module : 'Chat'
+
     },
 
-  }
+  },
+  destroyed() {
+    if (this.room_socket) {
+      this.room_socket.close(1000)
+    }
+  },
 }
 </script>
 
 <style scoped>
-
 </style>

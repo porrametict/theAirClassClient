@@ -16,6 +16,14 @@ export default {
             path: ":choice_quiz_id/edit",
             name: "ChoiceQuizEdit",
             component: () => import('../../views/classroom_modules/choicequiz/Edit')
+        }, {
+            path: ":choice_quiz_id/play",
+            name: "ChoiceQuizPlayIndex",
+            component: () => import('../../views/classroom_modules/choicequiz/PlayIndex')
+        },{
+            path: ":choice_quiz_play_id/play-view",
+            name: "ChoiceQuizPlayView",
+            component: () => import('../../views/classroom_modules/choicequiz/PlayView')
         },
     ]
 }
