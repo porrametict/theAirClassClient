@@ -46,18 +46,13 @@ export default {
       this.myPeer = new Peer()
       this.myPeer.on('open', id => {
         this.join_room(id)
-        console.log("PeerOpen",id)
       })
       this.myPeer.on('call', call => {
-        console.log(
-            'peer call'
-        )
         call.answer(this.myVideoStream)
         const video = document.createElement('video')
         video.setAttribute('width','400px')
         video.setAttribute('height','300px')
         call.on('stream', userVideoStream => {
-          console.log('peer stream')
           this.addVideoStream(video, userVideoStream)
         })
       })
@@ -83,16 +78,13 @@ export default {
     },
     connectToNewUser(userId, stream){
       const call = this.myPeer.call(userId, stream)
-      console.log('call',call)
       const video = document.createElement('video')
       video.setAttribute('width','400px')
       video.setAttribute('height','300px')
       call.on('stream', userVideoStream => {
-        console.log('on stream')
         this.addVideoStream(video, userVideoStream)
       })
       call.on('close', (e) => {
-        console.log('close',e)
         video.remove()
       })
       this.peers[userId] = call
@@ -107,7 +99,7 @@ export default {
       }
       this.room_socket.onclose = function (e) {
         if (e.code !== 1000) {
-          console.log('Room socket closed', e);
+          console.log('Web RTC Room socket closed', e);
         }
       }
       let commands = {
@@ -136,18 +128,18 @@ export default {
       this.socket_send(content);
     },
     on_member_join(e) {
-      console.log("member Join", e['data']['user'])
       this.member = e['data']['member']
       if (e['data']['user']['user'] === this.user.pk) { // is me
         this.my_role = e['data']['user']['role']
       }else {
-        console.log('join to user')
         this.connectToNewUser(e['data']['peer_id'], this.myVideoStream)
       }
     },
     on_member_leave(e) {
-      console.log("member leave", e['data']['user'])
       this.member = e['data']['member']
+      let userId = e['data']['peer_id']
+      if (this.peers[userId]) this.peers[userId].close()
+
     },
   },
   destroyed() {
