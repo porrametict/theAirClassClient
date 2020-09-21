@@ -1,7 +1,11 @@
 <template>
   <div>
-    {{ room }}
-    <div ref="video-grid" ></div>
+    <div ref="video-grid">
+      <video :src-object.prop.camel="myVideoStream" width="400px" height="360" autoplay></video>
+      <div v-for="(stream_peer,index) in stream_peers" :key="index">
+        <video :src-object.prop.camel="stream_peer.streamObj" width="400px" height="360" autoplay></video>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -17,85 +21,118 @@ export default {
       require: true
     }
   },
-  data() {
-    return {
-      my_role: null,
-      room_socket: null,
-      member: [],
-      myVideoStream: null,
-      myPeer: null,
-      videoGrid: null,
-      peers: {},
-    }
-  },
+  data: () => ({
+    my_role: null,
+    room_socket: null,
+    member: [],
+    myVideoStream: null,
+    myPeer: null,
+    videoGrid: null,
+    peers: {},
+    stream_peers: []
+  }),
   async mounted() {
     this.videoGrid = this.$refs[`video-grid`]
     if (!this.user) {
       await this.$store.dispatch('user/getUser')
     }
+    let media = await this.getMyVideoStream()
     this.newWebSocket()
-    this.newPeer()
-    this.setVideoStream()
+    if (media) {
+      await this.newPeer()
+    }
+
+
   },
   computed: {
     ...mapState({
       user: state => state.user.user
     })
-  }, methods: {
-    newPeer(){
-      this.myPeer = new Peer()
-      this.myPeer.on('open', id => {
-        this.join_room(id)
-      })
-      this.myPeer.on('call', call => {
-        call.answer(this.myVideoStream)
-        const video = document.createElement('video')
-        video.setAttribute('width','400px')
-        video.setAttribute('height','300px')
-        call.on('stream', userVideoStream => {
-          this.addVideoStream(video, userVideoStream)
-        })
-      })
-    },
-    setVideoStream(){
-      const myVideo = document.createElement('video')
-      myVideo.setAttribute('width','400px')
-      myVideo.setAttribute('height','300px')
-      navigator.mediaDevices.getUserMedia({
+  },
+  methods: {
+    // Media
+    async getMyVideoStream() {
+      let media = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true
       }).then(stream => {
-        this.myVideoStream = stream
-        this.addVideoStream(myVideo, stream)
+        return stream
+      }).catch(error => {
+        console.log(error)
+      })
+      if (!this.myVideoStream)  this.myVideoStream = media
+      return media
+    },
+    // Peer
+    async newPeer() {
+      this.myPeer = new Peer()
+      this.myPeer.on('open', id => {
+        console.log('my peer', id)
+        this.join_room(id)
+      })
+      this.myPeer.on('call', async call => {
+        let myVideo = await this.getMyVideoStream()
+        call.answer(myVideo)
+        call.on('stream', userVideoStream => {
+          this.stream_peers.push({
+            peer: call['peer'],
+            streamObj: userVideoStream
+          })
+        })
+        call.on('close', (e) => {
+          console.log('new Peer call close', call['peer'])
+        })
+        this.peers[call['peer']] = call
       })
     },
-    addVideoStream(video, stream){
-      video.srcObject = stream
-      video.addEventListener('loadedmetadata', () => {
-        video.play()
-      })
-      this.videoGrid.append(video)
-    },
-    connectToNewUser(userId, stream){
-      const call = this.myPeer.call(userId, stream)
-      const video = document.createElement('video')
-      video.setAttribute('width','400px')
-      video.setAttribute('height','300px')
+
+    async connectToNewUser(userId) {
+      let myVideo = await this.getMyVideoStream()
+      const call = this.myPeer.call(userId, myVideo)
+      console.log('connect new', userId)
       call.on('stream', userVideoStream => {
-        this.addVideoStream(video, userVideoStream)
+        this.stream_peers.push({
+          peer: call['peer'],
+          streamObj: userVideoStream
+        })
       })
       call.on('close', (e) => {
-        video.remove()
+        console.log('call close in connect', call['peer'])
       })
       this.peers[userId] = call
+      console.log(this.peers)
+
+
     },
+     connectToUsers(member) {
+      member.forEach( (e) => {
+        let peer_id = e['peer_id']
+        if (peer_id !== this.myPeer.id) { // not connect to my self
+          if (!this.peers[peer_id]) {
+             this.connectToNewUser((e['peer_id']))
+          }
+        }
+      })
+    },
+    disconnectToUser(peer_id) {
+      if (this.peers[peer_id]) {
+        this.peers[peer_id].close()
+        delete this.peers[peer_id]
+        this.stream_peers = _.remove(this.stream_peers, (e) => {
+          return e['peer'] === peer_id
+        })
+      }
+    },
+
+
+    // Main WebSocket
     newWebSocket() {
       let self = this
       this.room_socket = new WebSocket(
           `${window.baseWsURL}/web-rtc-room/${self.room.room_code}/`
       )
       this.room_socket.onopen = function () {
-        // self.join_room()
+
       }
       this.room_socket.onclose = function (e) {
         if (e.code !== 1000) {
@@ -131,15 +168,12 @@ export default {
       this.member = e['data']['member']
       if (e['data']['user']['user'] === this.user.pk) { // is me
         this.my_role = e['data']['user']['role']
-      }else {
-        this.connectToNewUser(e['data']['peer_id'], this.myVideoStream)
       }
+      this.connectToUsers(e['data']['member'])
     },
     on_member_leave(e) {
       this.member = e['data']['member']
-      let userId = e['data']['peer_id']
-      if (this.peers[userId]) this.peers[userId].close()
-
+      this.disconnectToUser(e['data']['peer_id'])
     },
   },
   destroyed() {
