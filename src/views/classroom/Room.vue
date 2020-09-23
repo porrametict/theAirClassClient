@@ -143,7 +143,7 @@ import Webcam from "@/components/classroom_modules/web_rtc/Webcam";
 
 export default {
   name: "ClassroomRoom",
-  components: {Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader},
+  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader},
   data() {
     return {
       my_role: null,

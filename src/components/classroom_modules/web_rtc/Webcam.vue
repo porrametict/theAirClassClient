@@ -118,8 +118,8 @@ export default {
       if (this.peers[peer_id]) {
         this.peers[peer_id].close()
         delete this.peers[peer_id]
-        this.stream_peers = _.remove(this.stream_peers, (e) => {
-          return e['peer'] === peer_id
+        this.stream_peers = this.stream_peers.filter(function (e) {
+          return e['peer'] !== peer_id
         })
       }
     },
