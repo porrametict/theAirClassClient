@@ -134,7 +134,7 @@ export default {
         audio: true,
       });
       let call = this.peer.call(this.peerConnectTo, stream);
-      call.on("stream", (remoteStream) => {
+        call.on("stream", (remoteStream) => {
         console.log(remoteStream);
         let video = this.$refs["video"];
         video.srcObject = stream;
