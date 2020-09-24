@@ -145,7 +145,7 @@ import Sharescreen from "@/components/classroom_modules/sharescreen/Sharescreen"
 
 export default {
   name: "ClassroomRoom",
-  components: {Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, Sharescreen},
+  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, Sharescreen },
   data() {
     return {
       my_role: null,
@@ -181,8 +181,6 @@ export default {
         this.room_state.module = 'Chat'
       }
     },
-
-    // // share screen
 
     //GE functions
     async loadData() {

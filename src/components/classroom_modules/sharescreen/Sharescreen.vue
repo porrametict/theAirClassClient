@@ -51,11 +51,6 @@ export default {
     if (!this.user) {
       await this.$store.dispatch('user/getUser')
     }
-    // let media = await this.getMySharescreen()
-    // this.newWebSocket()
-    // if (media) {
-    //   await this.newPeer()
-    // }
   },
   computed: {
     ...mapState({
