@@ -1,9 +1,9 @@
 <template>
   <div>
     <div ref="video-grid">
-      <video :src-object.prop.camel="myVideoStream" width="400px" height="360" autoplay controls></video>
+      <video :src-object.prop.camel="myVideoStream" width="100px" height="100" autoplay controls></video>
       <div v-for="(stream_peer,index) in stream_peers" :key="index">
-        <video :src-object.prop.camel="stream_peer.streamObj" width="400px" height="360" autoplay ></video>
+        <video :src-object.prop.camel="stream_peer.streamObj" width="100px" height="100" autoplay ></video>
       </div>
     </div>
   </div>
@@ -118,8 +118,8 @@ export default {
       if (this.peers[peer_id]) {
         this.peers[peer_id].close()
         delete this.peers[peer_id]
-        this.stream_peers = _.remove(this.stream_peers, (e) => {
-          return e['peer'] === peer_id
+        this.stream_peers = this.stream_peers.filter(function (e) {
+          return e['peer'] !== peer_id
         })
       }
     },
