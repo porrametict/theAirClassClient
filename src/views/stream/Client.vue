@@ -38,6 +38,7 @@
         </div>
 
         <!--button-->
+<<<<<<< HEAD
 <!--    <ButtonNavigation></ButtonNavigation>-->
 <!--        <div class=" d-flex justify-space-around ma-4 ">-->
 <!--          <v-bottom-navigation-->
@@ -72,6 +73,42 @@
 <!--            </v-btn>-->
 <!--          </v-bottom-navigation>-->
 <!--        </div>-->
+=======
+        <div class=" d-flex justify-space-around ma-4 ">
+          <v-bottom-navigation
+              rounded-pill
+              height="50"
+              width="800"
+              dark
+          >
+              <v-btn @click="ToggleMicEnable">
+                  <span >Mute</span>
+                  <v-icon> {{ microphone == true? 'mdi-microphone' :'mdi-microphone-off' }} </v-icon>
+
+              </v-btn>
+
+            <v-btn>
+              <span>Pause Video</span>
+              <v-icon>mdi-video</v-icon>
+            </v-btn>
+
+            <v-btn @click="startSteam">
+              <span>Share Screen</span>
+              <v-icon>mdi-laptop</v-icon>
+            </v-btn>
+
+            <v-btn >
+              <span>Show Chat</span>
+              <v-icon>mdi-forum</v-icon>
+            </v-btn>
+
+            <v-btn color="red">
+              <span>End Call</span>
+              <v-icon>mdi-phone-off-outline</v-icon>
+            </v-btn>
+          </v-bottom-navigation>
+        </div>
+>>>>>>> fe53987c312c915c04ff9b4a77292737790858c7
   </div>
 </template>
 
@@ -139,13 +176,27 @@ export default {
 
       this.peer.on("call", this.peerCall);
     },
-    async peerCall(call) {
+      async startSteam() {
+          let stream = await navigator.mediaDevices.getDisplayMedia({
+              video: true,
+              audio: true,
+          });
+          let call = this.peer.call(this.peerConnectTo, stream);
+          call.on("stream", (remoteStream) => {
+              console.log(remoteStream);
+              let video = this.$refs["video"];
+              video.srcObject = stream;
+              video.play();
+          });
+      },
+
+      async peerCall(call) {
       // await this.checkForVideoAudioAccess()
-      let stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+      let my_stream = await navigator.mediaDevices.getUserMedia({
+        video: false,
         audio: true,
       });
-      call.answer(stream);
+      call.answer(my_stream);
       call.on("stream", (remoteStream) => {
         let video = this.$refs["video"];
         video.srcObject = remoteStream;
@@ -154,6 +205,13 @@ export default {
       });
 
     },
+      async ToggleMicEnable() {
+
+          this.microphone = !this.microphone
+          this.my_stream.getAudioTracks()[0].enabled = this.microphone;
+
+
+      },
 
   }
 
