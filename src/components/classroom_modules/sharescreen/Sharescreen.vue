@@ -1,15 +1,7 @@
 <template>
   <div class="d-flex ml-2" v-if="state">
-    <video :src-object.prop.camel="mySharescreen" width="100px" height="100" autoplay controls></video>
+    <video :src-object.prop.camel="mySharescreen" width="1000px" height="600px" autoplay controls></video>
     <video :src-object.prop.camel="remoteVideo" width="100px" height="100" autoplay controls></video>
-    <v-btn @click="sharescreen" :disabled="!!state.host">
-      <span>Share Screen</span>
-      <v-icon>mdi-laptop</v-icon>
-    </v-btn>
-    <v-btn @click="exit_sharescreen" :disabled="!state.host || state.host.pk !== user.pk">
-      <span>Disconnect Share Screen</span>
-      <v-icon>mdi-laptop</v-icon>
-    </v-btn>
   </div>
 </template>
 
@@ -38,13 +30,16 @@ export const createEmptyVideoTrack = ({width, height}) => {
 
   return Object.assign(track, {enabled: false});
 };
-
 export default {
   name: "ShareScreen",
   props: {
     room: {
       type: Object,
       require: true
+    },
+    buttonsharescreen: {
+      type: Boolean,
+      require: false
     }
   },
   data: () => ({
@@ -56,7 +51,6 @@ export default {
     mySharescreen: null,
     myEmptyVideo: null,
     remoteVideo: null,
-    state: null,
   }),
   async mounted() {
     await this.getEmptyVideo()
@@ -65,8 +59,22 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.user.user
+      user: state => state.user.user,
+      state :state => state.classroom_modules.web_rtc.sharescreenState,
+      sharescreenactive :state => state.classroom_modules.web_rtc.shareScreenActive
     })
+  },
+  watch : {
+    sharescreenactive :{
+      deep :false,
+      handler : function (newVal,oldVal){
+        if(newVal){
+          this.sharescreen()
+        }else{
+          this.exit_sharescreen()
+        }
+      }
+    }
   },
   methods: {
     // share screen
@@ -192,12 +200,13 @@ export default {
       this.socket_send(content);
     },
     on_sharescreen(e) {
-      this.state = e['data']['state']
+      this.$store.dispatch('classroom_modules/web_rtc/setSharescreenState' ,e['data']['state'])
       if (this.state.host && this.state.host.pk === this.user.pk) {
         this.connectToUsers(this.member)
       }
     },
     exit_sharescreen() {
+      console.log('exit share')
       if (this.mySharescreen){
         this.mySharescreen.getTracks().forEach(function (track) {
           track.stop();
@@ -214,7 +223,7 @@ export default {
     on_exit_sharescreen(e) {
       this.remoteVideo = null
       this.disconnectAllUser()
-      this.state = e['data']['state']
+      this.$store.dispatch('classroom_modules/web_rtc/setSharescreenState' ,e['data']['state'])
     },
 
     on_member_join(e) {
@@ -245,7 +254,7 @@ export default {
       this.socket_send(content);
     },
     on_get_current_state(e) {
-      this.state = e['data']['state']
+      this.$store.dispatch('classroom_modules/web_rtc/setSharescreenState' ,e['data']['state'])
     },
   },
   destroyed() {

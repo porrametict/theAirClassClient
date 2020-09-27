@@ -3,11 +3,19 @@ import Peer from 'peerjs'
 export default {
     namespaced: true,
     state: {
-        my_peer: null
+        my_peer: null,
+        sharescreenState: {},
+        shareScreenActive : false
     },
     mutations: {
         set_my_peer(state, data) {
             state.my_peer = data
+        },
+        set_sharescreenState(state, data) {
+            state.sharescreenState = data
+        },
+        set_share_screen_active(state,data){
+            state.shareScreenActive = data
         }
 
     },
@@ -24,7 +32,12 @@ export default {
                 my_peer = await context.dispatch('createPeer')
             }
             return my_peer
-        }
+        },
+        async setSharescreenState(context,state) {
+            context.commit('set_sharescreenState', state)
+            return state
+
+        },
     }
 
 }

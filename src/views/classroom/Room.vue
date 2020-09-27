@@ -13,92 +13,21 @@
             >
               <div>
                 <Webcam :room="room"></Webcam>
-                <Sharescreen :room="room"></Sharescreen>
+                <Sharescreen
+                    :room="room"
+                    :buttonsharescreen="buttonsharescreen"
+                ></Sharescreen>
                 <video id="video" playsinline autoplay muted></video>
               </div>
             </v-card>
           </div>
 
           <!--button-->
-          <div class=" d-flex justify-space-around ma-4 ">
-            <v-bottom-navigation
-                v-model="button"
-                multiple
-                rounded-pill
-                height="50"
-                width="800"
-                dark
-            >
-              <v-btn>
-                <span>Mute</span>
-                <v-icon>mdi-microphone</v-icon>
-              </v-btn>
-
-              <v-btn>
-                <span>Pause Video</span>
-                <v-icon>mdi-video</v-icon>
-              </v-btn>
-
-              <!-- <Sharescreen></Sharescreen> -->
-<!--              <v-btn>-->
-<!--                <span>Share Screen</span>-->
-<!--                <v-icon>mdi-laptop</v-icon>-->
-<!--              </v-btn>-->
-
-              <v-bottom-sheet v-model="sheet">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                      v-bind="attrs"
-                      v-on="on"
-                  >
-                    <span>Other</span>
-                    <v-icon>mdi-dots-horizontal</v-icon>
-                  </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item
-                      @click="sheet = false"
-                  >
-                    <v-list-item-title>
-                      <div class=" d-flex justify-space-around ma-4 ">
-                        <v-btn @click="new_action('ChoiceQuiz')" :disabled="room_state.state !== 'normal'">
-                          <v-icon>mdi-clipboard-edit-outline</v-icon>
-                          <span> Start Choice Quiz</span>
-                        </v-btn>
-
-                        <v-btn @click="new_action('Attendance')" :disabled="room_state.state !== 'normal'">
-                          <v-icon>mdi-account-multiple</v-icon>
-                          <span> Start Attendance</span>
-                        </v-btn>
-
-                        <v-btn @click="new_action('GameQuestion')" :disabled="room_state.state !== 'normal'">
-                          <v-icon>mdi-gamepad-variant-outline</v-icon>
-                          <span> Start Game Question</span>
-                        </v-btn>
-
-                        <v-btn @click="new_action('Poll')" :disabled="room_state.state !== 'normal'">
-                          <v-icon>mdi-chart-line</v-icon>
-                          <span> Start Poll</span>
-                        </v-btn>
-
-                      </div>
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-bottom-sheet>
-              <v-btn v-if="room_state.state === 'normal'" @click="SwitchChatParticipant">
-                <span> Show {{ room_state.module === 'Chat' ? 'Participant' : 'Chat' }}</span>
-                <v-icon>mdi-{{ room_state.module === 'Chat' ? 'account-group' : 'forum' }}</v-icon>
-              </v-btn>
-
-              <v-btn
-                  @click="end"
-                  :disabled="room_state.state !== 'normal'">
-                <span>End Call</span>
-                <v-icon>mdi-phone-off-outline</v-icon>
-              </v-btn>
-            </v-bottom-navigation>
-          </div>
+          <ButtonMenu
+              :room_state="room_state"
+              @sharescreen="ToggleShareScreen($event)"
+              :sharescreenState="sharescreenState"
+          ></ButtonMenu>
         </div>
       </v-col>
       <v-col cols="3">
@@ -144,10 +73,11 @@ import Poll from "@/components/classroom_modules/poll/Poll";
 import ParticipantCard from "@/components/classroom/room/ParticipantCard";
 import Webcam from "@/components/classroom_modules/web_rtc/Webcam";
 import Sharescreen from "@/components/classroom_modules/sharescreen/Sharescreen";
+import ButtonMenu from "@/components/classroom/room/ButtonMenu";
 
 export default {
   name: "ClassroomRoom",
-  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader, Sharescreen},
+  components: {ButtonMenu, Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader, Sharescreen},
   data() {
     return {
       my_role: null,
@@ -160,7 +90,9 @@ export default {
         state: "normal", // normal $$ playing,
         module: null,   // null && module_name
         host: null
-      }
+      },
+      buttonsharescreen: false,
+      shareScreenKey : 0,
     }
   },
   async mounted() {
@@ -172,7 +104,8 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.user.user
+      user: state => state.user.user,
+      sharescreenState :state => state.classroom_modules.web_rtc.sharescreenState
     })
   },
   methods: {
@@ -181,8 +114,12 @@ export default {
         this.room_state.module = 'ParticipantCard'
       } else {
         this.room_state.module = 'Chat'
-
       }
+    },
+
+    ToggleShareScreen(e){
+      this.buttonsharescreen = e
+      this.shareScreenKey +=1
 
     },
 
