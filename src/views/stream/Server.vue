@@ -42,16 +42,16 @@
           dark
       >
         <v-btn @click="peerCall">
-          <span>Mute</span>
-          <v-icon>mdi-microphone</v-icon>
+          <span>Start Video</span>
+          <v-icon>mdi-video-account</v-icon>
         </v-btn>
 
         <v-btn @click="myVideoStream">
           <span>Pause Video</span>
-          <v-icon>mdi-video</v-icon>
+          <v-icon>{{ camera == true? 'mdi-video' : 'mdi-video-off' }}</v-icon>
         </v-btn>
 
-        <v-btn @click="startSteam">
+        <v-btn @click="startSteam" class="mute">
           <span>Share Screen</span>
           <v-icon>mdi-laptop</v-icon>
         </v-btn>
@@ -131,14 +131,15 @@ export default {
     async startSteam() {
       let stream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
-        audio: true,
+        audio: this.peerCall()
       });
-      let call = this.peer.call(this.peerConnectTo, stream);
-        call.on("stream", (remoteStream) => {
+      let call = this.peer.call(this.peerConnectTo, stream, );
+      call.on("my_stream", (remoteStream) => {
         console.log(remoteStream);
         let video = this.$refs["video"];
         video.srcObject = stream;
         video.play();
+
       });
     },
 
@@ -168,6 +169,14 @@ export default {
         video.srcObject = remoteStream;
         video.play();
       });
+
+     },
+     async ToggleMicEnable() {
+       this.microphone = !this.microphone
+       this.my_stream.getAudioTracks()[0].enabled = this.microphone;
+
+
+
     },
   }
 };

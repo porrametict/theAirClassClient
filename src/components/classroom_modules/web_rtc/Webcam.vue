@@ -1,9 +1,9 @@
 <template>
   <div>
     <div ref="video-grid">
-      <video :src-object.prop.camel="myVideoStream" width="400px" height="360" autoplay controls></video>
+      <video :src-object.prop.camel="myVideoStream" width="100px" height="100" autoplay controls></video>
       <div v-for="(stream_peer,index) in stream_peers" :key="index">
-        <video :src-object.prop.camel="stream_peer.streamObj" width="400px" height="360" autoplay ></video>
+        <video :src-object.prop.camel="stream_peer.streamObj" width="100px" height="100" autoplay ></video>
       </div>
     </div>
   </div>

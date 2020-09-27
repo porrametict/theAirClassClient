@@ -1,6 +1,5 @@
 <template>
   <div class="fill-height overflow-hidden" v-if="room">
-    <ContentHeader text="Classroom Teacher"></ContentHeader>
     <br style="box-sizing: border-box" class="fill-height">
     <v-row>
       <v-col cols="9">
@@ -13,7 +12,6 @@
             >
               <div>
                 <Webcam :room="room"></Webcam>
-                <Sharescreen :room="room"></Sharescreen>
                 <video id="video" playsinline autoplay muted></video>
               </div>
             </v-card>
@@ -39,8 +37,9 @@
                 <v-icon>mdi-video</v-icon>
               </v-btn>
 
-              <!-- <Sharescreen></Sharescreen> -->
-<!--              <v-btn>-->
+
+              <Sharescreen></Sharescreen>
+<!--              <v-btn @click="ShareScreen">-->
 <!--                <span>Share Screen</span>-->
 <!--                <v-icon>mdi-laptop</v-icon>-->
 <!--              </v-btn>-->
@@ -134,7 +133,6 @@
 </template>
 
 <script>
-import ContentHeader from "@/components/share/ContentHeader";
 import Chat from "../../components/classroom_modules/chat/Chat";
 import ChoiceQuiz from "../../components/classroom_modules/choicequiz/ChoiceQuiz";
 import {mapState} from "vuex";
@@ -147,7 +145,7 @@ import Sharescreen from "@/components/classroom_modules/sharescreen/Sharescreen"
 
 export default {
   name: "ClassroomRoom",
-  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader, Sharescreen},
+  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, Sharescreen },
   data() {
     return {
       my_role: null,
@@ -181,22 +179,17 @@ export default {
         this.room_state.module = 'ParticipantCard'
       } else {
         this.room_state.module = 'Chat'
-
       }
-
     },
-
 
     //GE functions
     async loadData() {
       this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
-
       // if (this.room['status'] === false) {
       //   await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
       // }
 
     },
-
     async end() {
       await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
     },
