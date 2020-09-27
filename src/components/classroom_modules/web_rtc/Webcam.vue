@@ -1,29 +1,53 @@
 <template>
-    <div ref="video-grid" class="d-flex">
-      <v-row>
-        <v-col cols="3">
+  <div ref="video-grid" class="d-flex">
+    <v-row no-gutters>
+      <v-col cols="3">
+        <div style="border: grey 1px solid">
           <video
+              v-if="videoStream_active"
               :src-object.prop.camel="myVideoStream"
               width="100%"
               height="100%"
               autoplay
           ></video>
-        </v-col>
-        <v-col cols="3" v-for="(stream_peer, index) in stream_peers" :key="index">
+          <div v-else class="title text-center">
+            {{ user.first_name }} {{ user.last_name }}(me)
+          </div>
+          <div>
+            {{ user.first_name }} {{ user.last_name }}(me)
+            |
+            {{ videoStream_active }}
+            {{ microphone_active }}
+          </div>
+        </div>
+
+      </v-col>
+      <v-col cols="3" v-for="(stream_peer, index) in stream_peers" :key="index">
+        <div style="border: grey 1px solid">
           <video
+              v-if="stream_peer.video_active"
               :src-object.prop.camel="stream_peer.streamObj"
               width="100%"
               height="100%"
               autoplay
           ></video>
-        </v-col>
-      </v-row>
-    </div>
+          <div v-else class="title text-center">
+            {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
+          </div>
+          <div>
+            {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
+            |
+            {{ stream_peer.video_active }} {{ stream_peer.microphone_active }}
+          </div>
+        </div>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
 import Peer from "peerjs";
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "Webcam",
@@ -49,7 +73,6 @@ export default {
     let media = await this.getMyVideoStream();
     this.newWebSocket();
     if (media) {
-      console.log(media.getVideoTracks()[0].enabled,'media')
       await this.newPeer();
     }
   },
@@ -58,9 +81,9 @@ export default {
     ...mapState({
       user: (state) => state.user.user,
       microphone_active: (state) =>
-        state.classroom_modules.web_rtc.microphoneActive,
+          state.classroom_modules.web_rtc.microphoneActive,
       videoStream_active: (state) =>
-        state.classroom_modules.web_rtc.videoStreamActive,
+          state.classroom_modules.web_rtc.videoStreamActive,
     }),
   },
   watch: {
@@ -69,6 +92,7 @@ export default {
       handler: function (newVal, oldVal) {
         // console.log('active',newVal);
         this.myVideoStream.getAudioTracks()[0].enabled = newVal;
+        this.change_media_active()
       },
     },
     videoStream_active: {
@@ -76,6 +100,7 @@ export default {
       handler: function (newVal, oldVal) {
         // console.log('active',newVal);
         this.myVideoStream.getVideoTracks()[0].enabled = newVal;
+        this.change_media_active()
       },
     }
   },
@@ -84,16 +109,16 @@ export default {
     // Media
     async getMyVideoStream() {
       let media = await navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: true,
-        })
-        .then((stream) => {
-          return stream;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+          .getUserMedia({
+            video: true,
+            audio: true,
+          })
+          .then((stream) => {
+            return stream;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       if (!this.myVideoStream) this.myVideoStream = media;
       return media;
     },
@@ -108,7 +133,10 @@ export default {
         let myVideo = this.myVideoStream;
         call.answer(myVideo);
         call.on("stream", (userVideoStream) => {
-          this.collectToStreamPeer(call["peer"], userVideoStream);
+          let user = this.getMemberFromPeer(call['peer'])
+          if (user) {
+            this.collectToStreamPeer(call["peer"], userVideoStream, user);
+          }
         });
         call.on("close", (e) => {
           // console.log('new Peer call close', call['peer'])
@@ -116,13 +144,21 @@ export default {
         this.peers[call["peer"]] = call;
       });
     },
-
-    async connectToNewUser(userId,member) {
+    getMemberFromPeer(peer_id) {
+      let user = null
+      this.member.forEach((e) => {
+        if (peer_id === e.peer_id) {
+          user = e
+        }
+      })
+      return user
+    },
+    async connectToNewUser(userId, member) {
       let myVideo = this.myVideoStream;
       const call = this.myPeer.call(userId, myVideo);
       // console.log('connect new', userId)
       call.on("stream", (userVideoStream) => {
-        this.collectToStreamPeer(call["peer"], userVideoStream,member);
+        this.collectToStreamPeer(call["peer"], userVideoStream, member);
       });
       call.on("close", (e) => {
         // console.log('call close in connect', call['peer'])
@@ -135,16 +171,16 @@ export default {
         if (peer_id !== this.myPeer.id) {
           // not connect to my self
           if (!this.peers[peer_id]) {
-            this.connectToNewUser(e["peer_id"],e);
+            this.connectToNewUser(e["peer_id"], e);
           }
         }
       });
     },
-    collectToStreamPeer(peer_id, video,member) {
+    collectToStreamPeer(peer_id, video, member) {
       if (!this.checkExistInStreamPeer(peer_id)) {
         this.stream_peers.push({
-          member : member,
-          microphone_active : member['microphone_active'],
+          member: member,
+          microphone_active: member['microphone_active'],
           video_active: member['video_active'],
           peer: peer_id,
           streamObj: video,
@@ -174,9 +210,11 @@ export default {
     newWebSocket() {
       let self = this;
       this.room_socket = new WebSocket(
-        `${window.baseWsURL}/web-rtc-room/${self.room.room_code}/`
+          `${window.baseWsURL}/web-rtc-room/${self.room.room_code}/`
       );
-      this.room_socket.onopen = function () {};
+      this.room_socket.onopen = function () {
+        self.get_current_state()
+      };
       this.room_socket.onclose = function (e) {
         if (e.code !== 1000) {
           console.log("Web RTC Room socket closed", e);
@@ -185,6 +223,8 @@ export default {
       let commands = {
         on_member_join: self.on_member_join,
         on_member_leave: self.on_member_leave,
+        on_change_media_active: self.on_change_media_active,
+        on_get_current_state: self.on_get_current_state,
       };
       this.room_socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
@@ -196,18 +236,50 @@ export default {
       this.room_socket.send(JSON.stringify(data));
     },
     // WebSocket functions
+    get_current_state() {
+      let content = {
+        "command": "get_current_state",
+        "data": {
+          "user": this.user,
+        }
+      }
+      this.socket_send(content);
+    },
+    on_get_current_state(e) {
+      this.member = e["data"]["member"];
+    },
     join_room(id) {
       let content = {
         command: "member_join",
         data: {
-          microphone_active :true,
-          video_active : this.videoStream_active,
+          microphone_active: this.microphone_active,
+          video_active: this.videoStream_active,
           peer_id: id,
           user: this.user,
           classroom: this.room.classroom,
         },
-      };
+      }
       this.socket_send(content);
+    },
+    change_media_active() {
+      let content = {
+        command: "change_media_active",
+        data: {
+          microphone_active: this.microphone_active,
+          video_active: this.videoStream_active,
+          user: this.user,
+        },
+      }
+      this.socket_send(content);
+    },
+    on_change_media_active(e) {
+      for (let i = 0; i < this.stream_peers.length; i++) {
+        if (this.stream_peers[i]['member']['pk'] === e['data']['user']['pk']) {
+          this.stream_peers[i]['member'] = e['data']['user']
+          this.stream_peers[i]['microphone_active'] = e['data']['user']['microphone_active']
+          this.stream_peers[i]['video_active'] = e['data']['user']['video_active']
+        }
+      }
     },
     on_member_join(e) {
       this.member = e["data"]["member"];
@@ -222,14 +294,14 @@ export default {
       this.disconnectToUser(e["data"]["peer_id"]);
     },
   },
+
+
   destroyed() {
-    if(this.myVideoStream){
+    if (this.myVideoStream) {
       this.myVideoStream.getTracks().forEach(function (track) {
         track.stop();
       });
     }
-
-
     if (this.room_socket) {
       this.room_socket.close(1000);
     }
