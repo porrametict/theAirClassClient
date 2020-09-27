@@ -1,12 +1,15 @@
 <template>
-  <div class="d-flex ml-2">
-     <video :src-object.prop.camel="mySharescreen" width="100px" height="100" autoplay controls></video>
-     <v-text-field  label="box" v-model="shareconnect"></v-text-field>
-    <v-btn @click="sharescreen">
-        <span>Share Screen</span>
-        <v-icon>mdi-laptop</v-icon>
+  <div class="d-flex ml-2" v-if="state">
+    <video :src-object.prop.camel="mySharescreen" width="100px" height="100" autoplay controls></video>
+    <video :src-object.prop.camel="remoteVideo" width="100px" height="100" autoplay controls></video>
+    <v-btn @click="sharescreen" :disabled="!!state.host">
+      <span>Share Screen</span>
+      <v-icon>mdi-laptop</v-icon>
     </v-btn>
-    
+    <v-btn @click="exit_sharescreen" :disabled="!state.host || state.host.pk !== user.pk">
+      <span>Disconnect Share Screen</span>
+      <v-icon>mdi-laptop</v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -20,10 +23,10 @@ export const createEmptyAudioTrack = () => {
   const dst = oscillator.connect(ctx.createMediaStreamDestination());
   oscillator.start();
   const track = dst.stream.getAudioTracks()[0];
-  return Object.assign(track, { enabled: false });
+  return Object.assign(track, {enabled: false});
 };
 
-export const createEmptyVideoTrack = ({ width, height }) => {
+export const createEmptyVideoTrack = ({width, height}) => {
   const canvas = Object.assign(document.createElement("canvas"), {
     width,
     height,
@@ -33,12 +36,12 @@ export const createEmptyVideoTrack = ({ width, height }) => {
   const stream = canvas.captureStream();
   const track = stream.getVideoTracks()[0];
 
-  return Object.assign(track, { enabled: false });
+  return Object.assign(track, {enabled: false});
 };
 
 export default {
   name: "ShareScreen",
-   props: {
+  props: {
     room: {
       type: Object,
       require: true
@@ -51,17 +54,14 @@ export default {
     myPeer: null,
     peers: {},
     mySharescreen: null,
-    stream_peers: [],
-    shareconnect: null,
+    myEmptyVideo: null,
+    remoteVideo: null,
     state: null,
   }),
   async mounted() {
-    // this.videoGrid = this.$refs[`video-grid`]
-    // if (!this.user) {
-    //   await this.$store.dispatch('user/getUser')
-    // }
+    await this.getEmptyVideo()
     this.newWebSocket()
-      await this.newPeer()
+    await this.newPeer()
   },
   computed: {
     ...mapState({
@@ -75,82 +75,67 @@ export default {
         video: true,
         audio: true,
       });
-
-      // let call = this.peer.call(this.connectToUsers,stream);
-      // call.on("stream", (remoteStream) => {
-      //   console.log(remoteStream);
-      //   let video = this.$refs["video"];
-      //   video.srcObject = stream;
-      //   video.play();
-      // });
       return this.mySharescreen
+    },
+    async getEmptyVideo() {
+      let audioTrack = createEmptyAudioTrack();
+      let videoTrack = createEmptyVideoTrack({width: 1, height: 1});
+      this.myEmptyVideo = new MediaStream([audioTrack, videoTrack]);
     },
 
     // Peer
     async newPeer() {
       this.myPeer = new Peer()
       this.myPeer.on('open', id => {
-        console.log('share conncet ', id)
+        console.log('my peer on share screen', id)
         this.join_room(id)
       })
       this.myPeer.on('call', async call => {
-        // let myVideo = await this.getMySharescreen()
-        // call.answer(myVideo)
-        let audioTrack = createEmptyAudioTrack();
-        let videoTrack = createEmptyVideoTrack({ width: 640, height: 480 });
-        let stream = new MediaStream([audioTrack, videoTrack]);
-        call.answer(stream);
+        call.answer(this.myEmptyVideo);
         call.on('stream', userVideoStream => {
-          // this.stream_peers.push({
-          //   peer: call['peer'],
-          //   streamObj: userVideoStream
-          // })
-
-          console.log("connect");
-          this.mySharescreen = userVideoStream
+          this.remoteVideo = userVideoStream
         })
         call.on('close', (e) => {
           console.log('new Peer call close', call['peer'])
+          this.exit_sharescreen()  // host disconnect
         })
         this.peers[call['peer']] = call
       })
     },
-
-    async connectToNewUser(userId) {
-      let myVideo = await this.getMySharescreen()
-      const call = this.myPeer.call(userId, myVideo)
-      console.log('connect new', userId)
-      call.on('stream', userVideoStream => {
-        this.stream_peers.push({
-          peer: call['peer'],
-          streamObj: userVideoStream
-        })
-      })
-      call.on('close', (e) => {
-        console.log('call close in connect', call['peer'])
-      })
-      this.peers[userId] = call
-      console.log(this.peers)
-
-
-    },
-     connectToUsers(member) {
-      member.forEach( (e) => {
+    connectToUsers(member) {
+      member.forEach((e) => {
         let peer_id = e['peer_id']
         if (peer_id !== this.myPeer.id) { // not connect to my self
           if (!this.peers[peer_id]) {
-             this.connectToNewUser((e['peer_id']))
+            this.connectToNewUser((e['peer_id']))
           }
         }
       })
+    },
+    async connectToNewUser(userId) {
+      if (this.mySharescreen) {
+        const call = this.myPeer.call(userId, this.mySharescreen)
+        console.log('connect new', userId)
+        call.on('stream', userVideoStream => {
+          // pass
+        })
+        call.on('close', (e) => {
+          console.log('call close in connect', call['peer'])
+        })
+        this.peers[userId] = call
+      }
+
+    },
+    disconnectAllUser() {
+      for (const [key, value] of Object.entries(this.peers)) {
+        this.peers[key].close()
+      }
+      this.peers = {}
     },
     disconnectToUser(peer_id) {
       if (this.peers[peer_id]) {
         this.peers[peer_id].close()
         delete this.peers[peer_id]
-        this.stream_peers = this.stream_peers.filter(function (e) {
-          return e['peer'] !== peer_id
-        })
       }
     },
     // Main WebSocket
@@ -171,7 +156,8 @@ export default {
         'on_sharescreen': self.on_sharescreen,
         'on_member_join': self.on_member_join,
         'on_member_leave': self.on_member_leave,
-        'on_get_current_state': self.on_get_current_state
+        'on_get_current_state': self.on_get_current_state,
+        'on_exit_sharescreen': self.on_exit_sharescreen,
       }
       this.room_socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
@@ -194,10 +180,9 @@ export default {
       }
       this.socket_send(content);
     },
-    sharescreen() {
-      this.getMySharescreen()
-      console.log('sharescreen');
-       let content = {
+    async sharescreen() {
+      await this.getMySharescreen()
+      let content = {
         "command": "sharescreen",
         "data": {
           "peer_id": this.myPeer.id,
@@ -206,18 +191,45 @@ export default {
       }
       this.socket_send(content);
     },
-    on_sharescreen(e){
-      console.log(e);
+    on_sharescreen(e) {
+      this.state = e['data']['state']
+      if (this.state.host && this.state.host.pk === this.user.pk) {
+        this.connectToUsers(this.member)
+      }
     },
+    exit_sharescreen() {
+      if (this.mySharescreen){
+        this.mySharescreen.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
+      this.mySharescreen=null
+      this.disconnectAllUser()
+      let content = {
+        "command": "exit_sharescreen",
+        "data": {}
+      }
+      this.socket_send(content);
+    },
+    on_exit_sharescreen(e) {
+      this.remoteVideo = null
+      this.disconnectAllUser()
+      this.state = e['data']['state']
+    },
+
     on_member_join(e) {
       this.member = e['data']['member']
       if (e['data']['user']['user'] === this.user.pk) { // is me
         this.my_role = e['data']['user']['role']
       }
-      if(this.state.host && (e['data']['user']['user' ]=== this.state.host.pk)){
-        console.log('sharescreen', this.state);
-        this.connectToNewUser(e['data']['peer_id'])
-      }   
+      if (this.state.host) {
+        if (e['data']['user']['user'] !== this.user.pk) {  // isn't me
+          if (this.state.host.pk !== e['data']['user']['user']) { //isn't host
+            console.log(this.state.host, e['data']['user'])
+            this.connectToNewUser(e['data']['peer_id'])
+          }
+        }
+      }
     },
     on_member_leave(e) {
       this.member = e['data']['member']
@@ -232,12 +244,26 @@ export default {
       }
       this.socket_send(content);
     },
-    on_get_current_state(e) { ;
-      console.log(e);
+    on_get_current_state(e) {
       this.state = e['data']['state']
     },
   },
   destroyed() {
+    if (this.host && this.host.pk === this.user.pk){
+    this.exit_sharescreen()
+    }
+    if (this.mySharescreen) {
+      this.mySharescreen.getTracks().forEach(function (track) {
+        track.stop();
+      });
+    }
+    if (this.myEmptyVideo) {
+      this.myEmptyVideo.getTracks().forEach(function (track) {
+        track.stop();
+      });
+
+    }
+
     if (this.room_socket) {
       this.room_socket.close(1000)
     }
