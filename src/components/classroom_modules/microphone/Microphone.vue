@@ -11,14 +11,11 @@
 </template>
 
 <script>
-
     export default {
         name: "Microphone",
-
         data: () => ({
             microphone: true,
             // my_stream: true
-
         }),
         methods: {
             async getMyVideoStream() {
@@ -34,12 +31,8 @@
                 return media
             },
             async ToggleMicEnable() {
-
                 this.microphone = !this.microphone
                 this.myVideoStream.getAudioTracks()[0].enabled = this.microphone;
-
-
-
             },
         }
     }

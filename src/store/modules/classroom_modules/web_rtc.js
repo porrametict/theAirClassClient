@@ -5,7 +5,8 @@ export default {
     state: {
         my_peer: null,
         sharescreenState: {},
-        shareScreenActive : false
+        shareScreenActive : false,
+        microphoneActive: true,
     },
     mutations: {
         set_my_peer(state, data) {
@@ -16,6 +17,9 @@ export default {
         },
         set_share_screen_active(state,data){
             state.shareScreenActive = data
+        },
+        set_microphone_active (state,data){
+            state.microphoneActive =data
         }
 
     },
