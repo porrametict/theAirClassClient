@@ -1,9 +1,7 @@
 <template>
   <div class="d-flex ml-2" v-if="state">
-    <video :src-object.prop.camel="mySharescreen" width="1000px" height="600px" autoplay controls
-           v-if="mySharescreen"
-    ></video>
-    <video :src-object.prop.camel="remoteVideo" width="1000px" height="600px" autoplay controls  v-if="remoteVideo"></video>
+    <video :src-object.prop.camel="mySharescreen" width="100%" height="100%" autoplay v-if="mySharescreen"></video>
+    <video :src-object.prop.camel="remoteVideo" width="100%%" height="100%" autoplay controls  v-if="remoteVideo"></video>
   </div>
 </template>
 

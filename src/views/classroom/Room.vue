@@ -1,36 +1,31 @@
 <template>
   <div class="fill-height overflow-hidden" v-if="room">
-    <ContentHeader text="Classroom Teacher"></ContentHeader>
-    <br style="box-sizing: border-box" class="fill-height">
-    <v-row>
-      <v-col cols="9">
-        <div>
-          <!--show-->
-          <div class="d-flex justify-center ma-3">
-            <v-card
-                height="600px"
-                width="1000px"
-            >
-              <div>
-                <Webcam :room="room"></Webcam>
-                <Sharescreen
-                    :room="room"
-                    :buttonsharescreen="buttonsharescreen"
-                ></Sharescreen>
-                <video id="video" playsinline autoplay muted></video>
-              </div>
-            </v-card>
-          </div>
+    <v-row class="fill-height">
+      <v-col cols="9" class="fill-height d-flex flex-column">
+        <v-row class="flex-grow-1">
+          <v-col cols="12">
+            <Webcam v-if="!sharescreenState.host" :room="room" ></Webcam>
+                            <Sharescreen
+                                :room="room"
+                                :buttonsharescreen="buttonsharescreen"
+                            ></Sharescreen>
+          </v-col>
 
-          <!--button-->
-          <ButtonMenu
-              :room_state="room_state"
-              @sharescreen="ToggleShareScreen($event)"
-              :sharescreenState="sharescreenState"
-          ></ButtonMenu>
-        </div>
+        </v-row>
+        <v-row class="flex-grow-0">
+          <v-col>
+            <ButtonMenu
+                :room_state="room_state"
+                @sharescreen="ToggleShareScreen($event)"
+                :sharescreenState="sharescreenState"
+            ></ButtonMenu>
+          </v-col>
+        </v-row>
+
+
+
       </v-col>
-      <v-col cols="3">
+      <v-col cols="3" class="fill-height">
         <template v-if="room_state.state ==='playing'">
           <component
               class="text-center"

@@ -1,24 +1,24 @@
 <template>
-  <div>
     <div ref="video-grid" class="d-flex">
-      <video
-        :src-object.prop.camel="myVideoStream"
-        width="100px"
-        height="100"
-        autoplay
-        controls
-      ></video>
-
-      <div v-for="(stream_peer, index) in stream_peers" :key="index">
-        <video
-          :src-object.prop.camel="stream_peer.streamObj"
-          width="100px"
-          height="100"
-          autoplay
-        ></video>
-      </div>
+      <v-row>
+        <v-col cols="3">
+          <video
+              :src-object.prop.camel="myVideoStream"
+              width="100%"
+              height="100%"
+              autoplay
+          ></video>
+        </v-col>
+        <v-col cols="3" v-for="(stream_peer, index) in stream_peers" :key="index">
+          <video
+              :src-object.prop.camel="stream_peer.streamObj"
+              width="100%"
+              height="100%"
+              autoplay
+          ></video>
+        </v-col>
+      </v-row>
     </div>
-  </div>
 </template>
 
 <script>
@@ -39,18 +39,17 @@ export default {
     member: [],
     myVideoStream: null,
     myPeer: null,
-    videoGrid: null,
     peers: {},
     stream_peers: [],
   }),
   async mounted() {
-    this.videoGrid = this.$refs[`video-grid`];
     if (!this.user) {
       await this.$store.dispatch("user/getUser");
     }
     let media = await this.getMyVideoStream();
     this.newWebSocket();
     if (media) {
+      console.log(media.getVideoTracks()[0].enabled,'media')
       await this.newPeer();
     }
   },
@@ -118,12 +117,12 @@ export default {
       });
     },
 
-    async connectToNewUser(userId) {
+    async connectToNewUser(userId,member) {
       let myVideo = this.myVideoStream;
       const call = this.myPeer.call(userId, myVideo);
       // console.log('connect new', userId)
       call.on("stream", (userVideoStream) => {
-        this.collectToStreamPeer(call["peer"], userVideoStream);
+        this.collectToStreamPeer(call["peer"], userVideoStream,member);
       });
       call.on("close", (e) => {
         // console.log('call close in connect', call['peer'])
@@ -136,14 +135,17 @@ export default {
         if (peer_id !== this.myPeer.id) {
           // not connect to my self
           if (!this.peers[peer_id]) {
-            this.connectToNewUser(e["peer_id"]);
+            this.connectToNewUser(e["peer_id"],e);
           }
         }
       });
     },
-    collectToStreamPeer(peer_id, video) {
+    collectToStreamPeer(peer_id, video,member) {
       if (!this.checkExistInStreamPeer(peer_id)) {
         this.stream_peers.push({
+          member : member,
+          microphone_active : member['microphone_active'],
+          video_active: member['video_active'],
           peer: peer_id,
           streamObj: video,
         });
@@ -198,6 +200,8 @@ export default {
       let content = {
         command: "member_join",
         data: {
+          microphone_active :true,
+          video_active : this.videoStream_active,
           peer_id: id,
           user: this.user,
           classroom: this.room.classroom,
@@ -219,9 +223,12 @@ export default {
     },
   },
   destroyed() {
-    this.myVideoStream.getTracks().forEach(function (track) {
-      track.stop();
-    });
+    if(this.myVideoStream){
+      this.myVideoStream.getTracks().forEach(function (track) {
+        track.stop();
+      });
+    }
+
 
     if (this.room_socket) {
       this.room_socket.close(1000);
