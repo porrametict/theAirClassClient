@@ -29,8 +29,9 @@
                 dark
             >
               <v-btn>
-                <span>Mute</span>
-                <v-icon>mdi-microphone</v-icon>
+                <!--<span>Mute</span>-->
+                <!--<v-icon>mdi-microphone</v-icon>-->
+                <Microphone></Microphone>
               </v-btn>
 
               <v-btn>
@@ -140,10 +141,11 @@ import GameQuestion from "@/components/classroom_modules/gamequestion/GameQuesti
 import Poll from "@/components/classroom_modules/poll/Poll";
 import ParticipantCard from "@/components/classroom/room/ParticipantCard";
 import Webcam from "@/components/classroom_modules/web_rtc/Webcam";
+import  Microphone from "../../components/classroom_modules/microphone/Microphone";
 
 export default {
   name: "ClassroomRoom",
-  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader},
+  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader, Microphone},
   data() {
     return {
       my_role: null,
