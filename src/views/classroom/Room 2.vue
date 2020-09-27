@@ -1,6 +1,5 @@
 <template>
   <div class="fill-height overflow-hidden" v-if="room">
-    <ContentHeader text="Classroom Teacher"></ContentHeader>
     <br style="box-sizing: border-box" class="fill-height">
     <v-row>
       <v-col cols="9">
@@ -13,7 +12,6 @@
             >
               <div>
                 <Webcam :room="room"></Webcam>
-                <Sharescreen :room="room"></Sharescreen>
                 <video id="video" playsinline autoplay muted></video>
               </div>
             </v-card>
@@ -30,9 +28,8 @@
                 dark
             >
               <v-btn>
-                <!--<span>Mute</span>-->
-                <!--<v-icon>mdi-microphone</v-icon>-->
-                <Microphone></Microphone>
+                <span>Mute</span>
+                <v-icon>mdi-microphone</v-icon>
               </v-btn>
 
               <v-btn>
@@ -40,8 +37,9 @@
                 <v-icon>mdi-video</v-icon>
               </v-btn>
 
-              <!-- <Sharescreen></Sharescreen> -->
-<!--              <v-btn>-->
+
+              <Sharescreen></Sharescreen>
+<!--              <v-btn @click="ShareScreen">-->
 <!--                <span>Share Screen</span>-->
 <!--                <v-icon>mdi-laptop</v-icon>-->
 <!--              </v-btn>-->
@@ -135,7 +133,6 @@
 </template>
 
 <script>
-import ContentHeader from "@/components/share/ContentHeader";
 import Chat from "../../components/classroom_modules/chat/Chat";
 import ChoiceQuiz from "../../components/classroom_modules/choicequiz/ChoiceQuiz";
 import {mapState} from "vuex";
@@ -144,11 +141,11 @@ import GameQuestion from "@/components/classroom_modules/gamequestion/GameQuesti
 import Poll from "@/components/classroom_modules/poll/Poll";
 import ParticipantCard from "@/components/classroom/room/ParticipantCard";
 import Webcam from "@/components/classroom_modules/web_rtc/Webcam";
-import  Microphone from "../../components/classroom_modules/microphone/Microphone";
+import Sharescreen from "@/components/classroom_modules/sharescreen/Sharescreen";
 
 export default {
   name: "ClassroomRoom",
-  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader, Microphone},
+  components: { Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, Sharescreen },
   data() {
     return {
       my_role: null,
@@ -182,22 +179,17 @@ export default {
         this.room_state.module = 'ParticipantCard'
       } else {
         this.room_state.module = 'Chat'
-
       }
-
     },
-
 
     //GE functions
     async loadData() {
       this.room = await this.$store.dispatch('classroom/room/getRoom', this.$route.params.room_id)
-
       // if (this.room['status'] === false) {
       //   await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
       // }
 
     },
-
     async end() {
       await this.$router.push({name: 'BoardClassroom', params: {id: this.$route.params.id}})
     },

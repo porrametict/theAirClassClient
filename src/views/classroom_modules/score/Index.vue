@@ -22,7 +22,7 @@
       <div v-if="members">
         <v-card>
           <v-card-title>
-            Member
+            Score
           </v-card-title>
 
           <v-data-table

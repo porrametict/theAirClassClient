@@ -38,6 +38,42 @@
         </div>
 
         <!--button-->
+<<<<<<< HEAD
+<!--    <ButtonNavigation></ButtonNavigation>-->
+<!--        <div class=" d-flex justify-space-around ma-4 ">-->
+<!--          <v-bottom-navigation-->
+<!--              rounded-pill-->
+<!--              height="50"-->
+<!--              width="800"-->
+<!--              dark-->
+<!--          >-->
+<!--            <v-btn>-->
+<!--              <span>Mute</span>-->
+<!--              <v-icon>mdi-microphone</v-icon>-->
+<!--            </v-btn>-->
+
+<!--            <v-btn>-->
+<!--              <span>Pause Video</span>-->
+<!--              <v-icon>mdi-video</v-icon>-->
+<!--            </v-btn>-->
+
+<!--            <v-btn>-->
+<!--              <span>Share Screen</span>-->
+<!--              <v-icon>mdi-laptop</v-icon>-->
+<!--            </v-btn>-->
+
+<!--            <v-btn >-->
+<!--              <span>Show Chat</span>-->
+<!--              <v-icon>mdi-forum</v-icon>-->
+<!--            </v-btn>-->
+
+<!--            <v-btn color="red">-->
+<!--              <span>End Call</span>-->
+<!--              <v-icon>mdi-phone-off-outline</v-icon>-->
+<!--            </v-btn>-->
+<!--          </v-bottom-navigation>-->
+<!--        </div>-->
+=======
         <div class=" d-flex justify-space-around ma-4 ">
           <v-bottom-navigation
               rounded-pill
@@ -72,12 +108,14 @@
             </v-btn>
           </v-bottom-navigation>
         </div>
+>>>>>>> fe53987c312c915c04ff9b4a77292737790858c7
   </div>
 </template>
 
 <script>
 import ContentHeader from "../../components/share/ContentHeader";
 import Peer from "peerjs";
+// import ButtonNavigation from "../../components/share/ButtonNavigation"
 
 export const createEmptyAudioTrack = () => {
   const ctx = new AudioContext();
@@ -106,6 +144,7 @@ export default {
   name: "ClientIndex",
   components: {
     ContentHeader,
+    // ButtonNavigation
   },
   data: () => ({
     peer: null,

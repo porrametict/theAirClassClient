@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div ref="video-grid">
-      <video :src-object.prop.camel="myVideoStream" width="400px" height="360" autoplay controls></video>
+    <div ref="video-grid" class="d-flex">
+      <video :src-object.prop.camel="myVideoStream" width="100px" height="100" autoplay controls></video>
       <div v-for="(stream_peer,index) in stream_peers" :key="index">
-        <video :src-object.prop.camel="stream_peer.streamObj" width="400px" height="360" autoplay ></video>
+        <video :src-object.prop.camel="stream_peer.streamObj" width="100px" height="100" autoplay></video>
       </div>
     </div>
   </div>
@@ -60,59 +60,69 @@ export default {
       }).catch(error => {
         console.log(error)
       })
-      if (!this.myVideoStream)  this.myVideoStream = media
+      if (!this.myVideoStream) this.myVideoStream = media
       return media
     },
     // Peer
     async newPeer() {
       this.myPeer = new Peer()
       this.myPeer.on('open', id => {
-        console.log('my peer', id)
+        // console.log('my peer', id)
         this.join_room(id)
       })
       this.myPeer.on('call', async call => {
-        let myVideo = await this.getMyVideoStream()
+        let myVideo = this.myVideoStream
         call.answer(myVideo)
         call.on('stream', userVideoStream => {
-          this.stream_peers.push({
-            peer: call['peer'],
-            streamObj: userVideoStream
-          })
+          this.collectToStreamPeer(call['peer'], userVideoStream)
         })
         call.on('close', (e) => {
-          console.log('new Peer call close', call['peer'])
+          // console.log('new Peer call close', call['peer'])
         })
         this.peers[call['peer']] = call
       })
     },
 
     async connectToNewUser(userId) {
-      let myVideo = await this.getMyVideoStream()
+      let myVideo = this.myVideoStream
       const call = this.myPeer.call(userId, myVideo)
-      console.log('connect new', userId)
+      // console.log('connect new', userId)
       call.on('stream', userVideoStream => {
-        this.stream_peers.push({
-          peer: call['peer'],
-          streamObj: userVideoStream
-        })
+        this.collectToStreamPeer(call['peer'], userVideoStream)
       })
       call.on('close', (e) => {
-        console.log('call close in connect', call['peer'])
+        // console.log('call close in connect', call['peer'])
       })
       this.peers[userId] = call
-      console.log(this.peers)
-
 
     },
-     connectToUsers(member) {
-      member.forEach( (e) => {
+    connectToUsers(member) {
+      member.forEach((e) => {
         let peer_id = e['peer_id']
         if (peer_id !== this.myPeer.id) { // not connect to my self
           if (!this.peers[peer_id]) {
-             this.connectToNewUser((e['peer_id']))
+            this.connectToNewUser((e['peer_id']))
           }
         }
       })
+    },
+    collectToStreamPeer(peer_id, video) {
+      if (!this.checkExistInStreamPeer(peer_id)) {
+        this.stream_peers.push({
+          peer: peer_id,
+          streamObj: video
+        })
+      }
+    },
+    checkExistInStreamPeer(peer_id) {
+      let IsExist = false
+      this.stream_peers.forEach((e) => {
+        if (e['peer'] === peer_id) {
+          IsExist = true
+        }
+      })
+      return IsExist
+
     },
     disconnectToUser(peer_id) {
       if (this.peers[peer_id]) {
@@ -177,6 +187,10 @@ export default {
     },
   },
   destroyed() {
+    this.myVideoStream.getTracks().forEach(function(track) {
+      track.stop();
+    });
+
     if (this.room_socket) {
       this.room_socket.close(1000)
     }
