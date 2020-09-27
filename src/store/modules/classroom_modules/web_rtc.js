@@ -7,6 +7,7 @@ export default {
         sharescreenState: {},
         shareScreenActive : false,
         microphoneActive: true,
+        videoStreamActive: true,
     },
     mutations: {
         set_my_peer(state, data) {
@@ -20,8 +21,10 @@ export default {
         },
         set_microphone_active (state,data){
             state.microphoneActive =data
+        },
+        set_videoStream_active (state,data){
+            state.videoStreamActive = data
         }
-
     },
     actions: {
         async createPeer(context,) {

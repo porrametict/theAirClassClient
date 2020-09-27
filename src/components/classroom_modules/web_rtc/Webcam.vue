@@ -60,16 +60,25 @@ export default {
       user: (state) => state.user.user,
       microphone_active: (state) =>
         state.classroom_modules.web_rtc.microphoneActive,
+      videoStream_active: (state) =>
+        state.classroom_modules.web_rtc.videoStreamActive,
     }),
   },
   watch: {
     microphone_active: {
       deep: false,
       handler: function (newVal, oldVal) {
-        console.log('active',newVal);
+        // console.log('active',newVal);
         this.myVideoStream.getAudioTracks()[0].enabled = newVal;
       },
     },
+    videoStream_active: {
+      deep: false,
+      handler: function (newVal, oldVal) {
+        // console.log('active',newVal);
+        this.myVideoStream.getVideoTracks()[0].enabled = newVal;
+      },
+    }
   },
 
   methods: {

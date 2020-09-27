@@ -12,9 +12,13 @@
             }}
           </v-icon>
         </v-btn>
-        <v-btn>
+        <v-btn id="media"  @click="set_videoStream_active">
           <span>Pause Video</span>
-          <v-icon>mdi-video</v-icon>
+          <v-icon>{{
+              videoStream_active === true
+                ? "mdi-video"
+                : "mdi-video-off-outline"
+            }}</v-icon>
         </v-btn>
 
         <v-btn @click="sharescreen(true)" v-if="!sharescreenState.host">
@@ -126,6 +130,8 @@ export default {
         state.classroom_modules.web_rtc.sharescreenState,
       microphone_active: (state) =>
         state.classroom_modules.web_rtc.microphoneActive,
+      videoStream_active: (state) =>
+        state.classroom_modules.web_rtc.videoStreamActive,
     }),
   },
   methods: {
@@ -157,6 +163,13 @@ export default {
         !this.microphone_active
       );
     },
+    set_videoStream_active() {
+      this.$store.commit(
+        "classroom_modules/web_rtc/set_videoStream_active",
+        !this.videoStream_active
+      );
+    },
+
   },
 };
 </script>
