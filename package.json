@@ -40,5 +40,17 @@
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.4.4",
     "websocket-extensions": "^0.1.4"
-  }
+  },
+  "description": "```\r npm install\r ```",
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/porrametict/theAirClassClient.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/porrametict/theAirClassClient/issues"
+  },
+  "homepage": "https://github.com/porrametict/theAirClassClient#readme"
 }
