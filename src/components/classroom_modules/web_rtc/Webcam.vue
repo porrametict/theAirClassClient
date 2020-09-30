@@ -1,5 +1,6 @@
 <template>
   <div ref="video-grid" id="video-grid" >
+<<<<<<< HEAD
         <div style="margin: 3px;">
           <video
               v-if="videoStream_active"
@@ -56,6 +57,38 @@
           </v-card>
         </div>
   </div>
+=======
+
+            </v-col>
+            <v-col cols="4" v-for="(stream_peer, index) in stream_peers" :key="index">
+                <v-card
+                        class="pa-2"
+                        outlined
+                        tile
+                >
+                    <div style="border: grey 1px solid">
+                        <video
+                                v-if="stream_peer.video_active"
+                                :src-object.prop.camel="stream_peer.streamObj"
+                                width="100%"
+                                height="100%"
+                                autoplay
+                        ></video>
+                        <div v-else class="title text-center" width="100%"
+                             height="100%"
+                             autoplay>
+                            {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
+                        </div>
+                        <div>
+                            {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
+                            <!--{{ stream_peer.video_active }} {{ stream_peer.microphone_active  }}-->
+                        </div>
+                    </div>
+                </v-card>
+            </v-col>
+        </v-row>
+    </div>
+>>>>>>> d3e8841d9d58a7a86f7dfb16b011efb8624291d2
 </template>
 
 <script>
