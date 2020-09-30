@@ -1,7 +1,6 @@
 <template>
   <div ref="video-grid" id="video-grid" >
-
-        <div style="border: grey 1px solid">
+        <div style="margin: 3px;">
           <video
               v-if="videoStream_active"
               :src-object.prop.camel="myVideoStream"
@@ -9,18 +8,28 @@
               height="100%"
               autoplay
           ></video>
-          <div v-else class="title text-center">
+          <div v-else class="title text-center pa-2">
+            <ImageProfile :user="user"
+                          :square ="true"
+                          width="100%"
+                          height="100%"
+                          font_size_class="title"
+            ></ImageProfile>
+          </div>
+          <v-card
+              class="pa-2"
+              outlined
+              tile
+          >
+          <div class="title text-center">
             {{ user.first_name }} {{ user.last_name }}(me)
           </div>
-          <div>
-            {{ user.first_name }} {{ user.last_name }}(me)
-            |
-            {{ videoStream_active }}
-            {{ microphone_active }}
-          </div>
+          </v-card>
+
         </div>
 
-        <div style="border: grey 1px solid" v-for="(stream_peer, index) in stream_peers" :key="index">
+
+        <div  style="margin: 3px" v-for="(stream_peer, index) in stream_peers" :key="index">
           <video
               v-if="stream_peer.video_active"
               :src-object.prop.camel="stream_peer.streamObj"
@@ -28,14 +37,23 @@
               height="100%"
               autoplay
           ></video>
-          <div v-else class="title text-center">
+          <div v-else class="title text-center pa-2">
+            <ImageProfile :user="stream_peer.member"
+                          :square="true"
+                          width="100%"
+                          height="100%"
+                          font_size_class="title"
+            ></ImageProfile>
+          </div>
+          <v-card
+              class="pa-2"
+              outlined
+              tile
+          >
+          <div class="title text-center">
             {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
           </div>
-          <div>
-            {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
-            |
-            {{ stream_peer.video_active }} {{ stream_peer.microphone_active }}
-          </div>
+          </v-card>
         </div>
   </div>
 </template>
@@ -43,10 +61,12 @@
 <script>
     import Peer from "peerjs";
     import {mapState} from "vuex";
+    import ImageProfile from "@/components/core/user/ImageProfile";
 
     export default {
         name: "Webcam",
-        props: {
+      components: {ImageProfile},
+      props: {
             room: {
                 type: Object,
                 require: true,
@@ -305,7 +325,6 @@
 </script>
 
 <style scoped>
-<<<<<<< HEAD
 #video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);
@@ -317,6 +336,3 @@ video {
   object-fit: cover;
 }
 </style>
-=======
-</style>
->>>>>>> edcdfe8d352983aced58cb9a58f69eb959ba32e6
