@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex justify-space-around ma-4">
       <v-bottom-navigation multiple rounded-pill height="50" width="800" dark>
-        <v-btn id="media" @click="set_microphone_active">
+        <v-btn  @click="set_microphone_active">
           <span>Mute</span>
           <v-icon
             >{{
@@ -12,7 +12,7 @@
             }}
           </v-icon>
         </v-btn>
-        <v-btn id="media"  @click="set_videoStream_active">
+        <v-btn  @click="set_videoStream_active">
           <span>Pause Video</span>
           <v-icon>{{
               videoStream_active === true
@@ -148,7 +148,9 @@ export default {
         this.room_state.module = "Chat";
       }
     },
-    new_action(module_name) {},
+    new_action(module_name) {
+      this.$emit('new_action',module_name)
+    },
 
     sharescreen(e) {
       this.$store.commit(

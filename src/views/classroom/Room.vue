@@ -18,6 +18,7 @@
                 :room_state="room_state"
                 @sharescreen="ToggleShareScreen($event)"
                 :sharescreenState="sharescreenState"
+                @new_action="new_action"
             ></ButtonMenu>
           </v-col>
         </v-row>

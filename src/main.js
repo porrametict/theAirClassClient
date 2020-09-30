@@ -23,7 +23,7 @@ Vue.prototype.get_th_time = function (time) {
 
 
 const baseURL = process.env.VUE_APP_BASE_BACKEND_URL
-window.baseWsURL = "ws://10.94.0.233:8000/ws"
+window.baseWsURL = process.env.VUE_APP_BASE_WEBSOCKET_URL
 window.axios = new Axios.create({
     baseURL: baseURL,
     timeout: 60000

@@ -16,16 +16,6 @@ const routes = [
         name: 'Register',
         component: () => import('../views/Register')
     },
-    {
-        path: '/sc101',
-        name: 'SC101',
-        component: () => import('../views/ShareComponentUsage')
-    },
-    {
-        path: '/ts101',
-        name: 'TS101',
-        component: () => import('../views/testSpace')
-    },
     core,
 ]
 
