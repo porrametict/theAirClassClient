@@ -6,7 +6,7 @@
         <v-card-text class="text-center">
           <div v-if="index===0">
             <div>
-              <v-icon large color="primary">mdi-crown</v-icon>
+              <v-icon large color="primary" v-if="item.point !==0">mdi-crown</v-icon>
             </div>
             <p class="ma-0 pa-0 ">
               {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
@@ -14,7 +14,7 @@
           </div>
           <div v-else-if="index===1">
             <div>
-              <v-icon large color="blue">mdi-chess-queen</v-icon>
+              <v-icon large color="blue" v-if="item.point !==0">mdi-chess-queen</v-icon>
             </div>
             <p class="ma-0 pa-0 ">
               {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
@@ -22,7 +22,7 @@
           </div>
           <div v-else-if="index===2">
             <div>
-              <v-icon large color="black">mdi-sword-cross</v-icon>
+              <v-icon large color="black" v-if="item.point !==0">mdi-sword-cross</v-icon>
             </div>
             <p class="ma-0 pa-0 ">
               {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
