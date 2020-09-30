@@ -1,7 +1,6 @@
 <template>
-  <div ref="video-grid" class="d-flex">
-    <v-row no-gutters>
-      <v-col cols="3">
+  <div ref="video-grid" id="video-grid" >
+
         <div style="border: grey 1px solid">
           <video
               v-if="videoStream_active"
@@ -21,9 +20,7 @@
           </div>
         </div>
 
-      </v-col>
-      <v-col cols="3" v-for="(stream_peer, index) in stream_peers" :key="index">
-        <div style="border: grey 1px solid">
+        <div style="border: grey 1px solid" v-for="(stream_peer, index) in stream_peers" :key="index">
           <video
               v-if="stream_peer.video_active"
               :src-object.prop.camel="stream_peer.streamObj"
@@ -40,8 +37,6 @@
             {{ stream_peer.video_active }} {{ stream_peer.microphone_active }}
           </div>
         </div>
-      </v-col>
-    </v-row>
   </div>
 </template>
 
@@ -310,4 +305,14 @@ export default {
 </script>
 
 <style scoped>
+#video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 300px);
+  grid-auto-rows: 300px;
+}
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
