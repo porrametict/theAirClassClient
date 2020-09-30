@@ -1,87 +1,77 @@
 <template>
+  <div>
+    <!--        classroom detail -->
+    <ClassroomDetail :classroom="classroom" :show_edit_delete="user_role === 1 "></ClassroomDetail>
+    <v-divider class="mt-2"></v-divider>
+    <!--        content-->
     <div>
-        <!--        classroom detail -->
-        <div class="d-flex">
-            <v-img :src="img_url" width="100" max-width="100" class="ma-2" height="100" max-height="100"/>
-            <div class="ma-2">
-                <p class="display-1 font-weight-bold ma-0">Usage of Thai Language</p>
-                <div>
-                    <span class="mx-2"><span class="font-weight-bold">Course code :</span> E3310</span>
-                    <span class="mx-2"><span class="font-weight-bold">Section :</span> 1</span>
-                    <br>
-                    <span class="mx-2"><span class="font-weight-bold">Credit :</span> 3(2-1-0)</span>
-                    <span class="mx-2"><span class="font-weight-bold">Amount :</span> 30</span>
-                    <br>
-                    <span class="mx-2"><span class="font-weight-bold">Classroom code :</span> 1345798</span>
-                    <br>
-                    <span class="mx-2">
-                        <span class="font-weight-bold">Detail :</span>
-                          การสื่อสารด้วยคำ วลี
-                            การแต่งประโยค สำนวน และโวหารในภาษาไทย
-                            การจับใจความสำคัญจากการฟังและการอ่าน การเขียนย่อหน้า
-                            การสรุปความ และการแสดงความคิดผ่านทักษะการใช้ภาษาไทยที่เหมาะสม
-                    </span>
-                </div>
-            </div>
-        </div>
-        <v-divider class="mt-2"></v-divider>
-        <!--        content-->
-        <div>
-            <!--            head-->
-            <div>
-                <v-tabs
-                        fixed-tabs
-                >
-                    <v-tab
-                            exact
-                            @click="router_push('MemberIndex')"
-                    >
-                        Member
-                    </v-tab>
-                    <v-tab
-                            exact
-                            @click="router_push('ScoreIndex')"
-                    >
-                        Score
-                    </v-tab>
-                    <v-tab
-                            exact
-
-                    >
-                        another
-                    </v-tab> <v-tab
-                            exact
-
-                    >
-                        another
-                    </v-tab>
-
-                </v-tabs>
-            </div>
-            <div>
-                <router-view></router-view>
-            </div>
-        </div>
+      <v-tabs v-model="activeTab" grow>
+        <v-tab v-for="(tab,index) of tabs" :key="index" :to="{name : tab.route}" exact>
+          {{ tab.name }}
+        </v-tab>
+      </v-tabs>
+      <router-view v-if="classroom"></router-view>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "ClassroomMain",
-        data() {
-            return {
-                img_url: "https://png.pngtree.com/png-clipart/20190903/original/pngtree-a-stack-of-books-and-plants-together-png-image_4429927.jpg"
-            }
-        }, methods: {
-            router_push(name) {
-                if (this.$router.currentRoute.name !== name) {
-                    this.$router.replace({name: name}).catch((any) => {
-                        console.log(any)
-                    })
-                }
-            }
-        }
+import ClassroomDetail from "../../components/classroom/ClassroomDetail";
+import {mapState} from "vuex";
+
+export default {
+  name: "ClassroomMain",
+  components: {ClassroomDetail},
+  computed: {
+    ...mapState({
+      classroom: state => state.classroom.classroom,
+      user: state => state.user.user
+
+    })
+  },
+  data() {
+    return {
+      activeTab: null,
+      user_role: null,
+      tabs: [
+        {name: "Member", route: `MemberIndex`},
+        {name: "Score", route: `ScoreIndex`},
+        {name: "App", route: `ClassroomModuleIndex`},
+      ]
     }
+  },
+  async mounted() {
+    if (!this.classroom) {
+      await this.$store.dispatch('classroom/retrieveClassroom', this.$route.params.id)
+    }
+    if (this.$route.name === 'MainClassroom') {
+      this.router_push('MemberIndex')
+    }
+    await this.loadData()
+    await this.checkUserRole()
+
+  },
+  methods: {
+    async checkUserRole() {
+      let data = await this.$store.dispatch('classroom/getListClassroomByUser', {
+        'user__id': this.user.pk,
+        'classroom_id': this.classroom.id
+      })
+      this.user_role = data.results[0]['role']
+    },
+    async loadData() {
+      let id = this.$route.params.id
+      await this.$store.dispatch('classroom/retrieveClassroom', id)
+    },
+    router_push(name) {
+      if (this.$router.currentRoute.name !== name) {
+        this.$router.replace({name: name}).catch((any) => {
+          console.log(any)
+        })
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>

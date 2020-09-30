@@ -11,6 +11,6 @@ export default {
             component: () => import('../../views/core/Home')
         },
         user,
-        classroom
+        classroom,
     ]
 }

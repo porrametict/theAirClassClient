@@ -3,7 +3,8 @@ export default {
     component: () => import('../../views/core/user/Template'),
     children: [
         {
-            path: "profile",
+            path: "",
+            redirect: {name: 'EditProfile'},
             name: "Profile",
             component: () => import('../../views/core/user/Profile')
         },
