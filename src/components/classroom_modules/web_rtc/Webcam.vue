@@ -51,8 +51,7 @@
                         </div>
                         <div>
                             {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
-                            |
-                            {{ stream_peer.video_active }} {{ stream_peer.microphone_active }}
+                            <!--{{ stream_peer.video_active }} {{ stream_peer.microphone_active  }}-->
                         </div>
                     </div>
                 </v-card>
