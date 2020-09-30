@@ -1,33 +1,5 @@
 <template>
-    <div ref="video-grid" class="d-flex">
-        <v-row no-gutters>
-            <v-col cols="4">
-                <v-card
-                        class="pa-2"
-                        outlined
-                        tile
-                >
-                    <div style="border: grey 1px solid">
-                        <video
-                                v-if="videoStream_active"
-                                :src-object.prop.camel="myVideoStream"
-                                width="100%"
-                                height="100%"
-                                autoplay
-                        ></video>
-                        <div v-else class="title text-center" width="100%"
-                             height="100%"
-                             autoplay>
-                            {{ user.first_name }} {{ user.last_name }}(me)
-                        </div>
-                        <div>
-                            {{ user.first_name }} {{ user.last_name }}(me)
-                            |
-                            {{ videoStream_active }}
-                            {{ microphone_active }}
-                        </div>
-                    </div>
-                </v-card>
+  <div ref="video-grid" id="video-grid" >
 
             </v-col>
             <v-col cols="4" v-for="(stream_peer, index) in stream_peers" :key="index">
@@ -325,4 +297,14 @@
 </script>
 
 <style scoped>
+#video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 300px);
+  grid-auto-rows: 300px;
+}
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
