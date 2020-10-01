@@ -95,7 +95,6 @@ export default {
     async newPeer() {
       this.myPeer = new Peer()
       this.myPeer.on('open', id => {
-        console.log('my peer on share screen', id)
         this.join_room(id)
       })
       this.myPeer.on('call', async call => {
@@ -123,7 +122,6 @@ export default {
     async connectToNewUser(userId) {
       if (this.mySharescreen) {
         const call = this.myPeer.call(userId, this.mySharescreen)
-        console.log('connect new', userId)
         call.on('stream', userVideoStream => {
           // pass
         })
@@ -206,7 +204,6 @@ export default {
       }
     },
     exit_sharescreen() {
-      console.log('exit share')
       if (this.mySharescreen){
         this.mySharescreen.getTracks().forEach(function (track) {
           track.stop();
@@ -254,6 +251,7 @@ export default {
       this.socket_send(content);
     },
     on_get_current_state(e) {
+      console.log('state',e)
       this.$store.dispatch('classroom_modules/web_rtc/setSharescreenState' ,e['data']['state'])
     },
   },
