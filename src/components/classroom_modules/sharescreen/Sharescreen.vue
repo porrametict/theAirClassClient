@@ -43,6 +43,7 @@ export default {
     }
   },
   data: () => ({
+    webSocketOpen: false,
     my_role: null,
     room_socket: null,
     member: [],
@@ -55,7 +56,6 @@ export default {
   async mounted() {
     await this.getEmptyVideo()
     this.newWebSocket()
-    await this.newPeer()
   },
   computed: {
     ...mapState({
@@ -65,6 +65,14 @@ export default {
     })
   },
   watch : {
+    webSocketOpen: {
+      deep: false,
+      handler: function (newVal, oldVal) {
+        if (this.webSocketOpen) {
+          this.newPeer();
+        }
+      },
+    },
     sharescreenactive :{
       deep :false,
       handler : function (newVal,oldVal){
@@ -93,7 +101,11 @@ export default {
 
     // Peer
     async newPeer() {
-      this.myPeer = new Peer()
+      this.myPeer = new Peer(undefined, {
+        host: process.env.VUE_APP_BASE_PEER_SERVER_HOST,
+        port:  process.env.VUE_APP_BASE_PEER_SERVER_PORT,
+        path: process.env.VUE_APP_BASE_PEER_SERVER_PATH
+      })
       this.myPeer.on('open', id => {
         this.join_room(id)
       })
@@ -152,6 +164,8 @@ export default {
       )
       this.room_socket.onopen = function () {
         self.get_current_state()
+        self.webSocketOpen = true
+
       }
       this.room_socket.onclose = function (e) {
         if (e.code !== 1000) {
@@ -251,11 +265,14 @@ export default {
       this.socket_send(content);
     },
     on_get_current_state(e) {
-      console.log('state',e)
       this.$store.dispatch('classroom_modules/web_rtc/setSharescreenState' ,e['data']['state'])
     },
   },
   destroyed() {
+    this.$store.commit(
+        "classroom_modules/web_rtc/set_share_screen_active",
+        false
+    );
     if (this.host && this.host.pk === this.user.pk){
     this.exit_sharescreen()
     }
