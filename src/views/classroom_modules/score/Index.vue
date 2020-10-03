@@ -19,15 +19,15 @@
     </div>
     <div>
       <!-- Member-->
-      <div v-if="members">
+      <div v-if="data_table">
         <v-card>
           <v-card-title>
             Score
           </v-card-title>
 
           <v-data-table
-              :headers="headers_member"
-              :items="members"
+              :headers="headers"
+              :items="data_table"
               hide-default-footer
           >
             <template v-slot:item.module="{item}">
@@ -44,8 +44,8 @@
               <div class="d-flex justify-center">
                 <ButtonIcon class="mx-1" icon="mdi-eye" tooltip_text="view" @click="gotoView(item)"></ButtonIcon>
                 <ConfirmDialog
-                    message="remove this user form classroom ?"
-                    @change="delete_member($event,item)"
+                    message="remove this score form classroom ?"
+                    @change="delete_score($event,item)"
                 >
                   <template v-slot:activator="{on}">
                     <v-btn
@@ -91,14 +91,14 @@ export default {
   data() {
     return {
       user_role: null,
-      members: null,
+      data_table: null,
       form_params: {
         search: null,
         room__classroom__id: null,
         page: 1,
         length: 0,
       },
-      headers_member: [
+      headers: [
         {
           text: 'Name',
           align: 'start',
@@ -151,18 +151,11 @@ export default {
     async loadData() {
       let data = await this.$store.dispatch('classroom_modules/score/getScores', this.form_params)
       this.form_params.length = Math.ceil(data.count / 10)
-      this.members = data.results
+      this.data_table = data.results
     },
     changePage(page) {
       this.form_params.page = page
       this.loadData()
-    },
-    async changeMemberRole(item, new_role) {
-      item.role = new_role
-      let data = await this.$store.dispatch('classroom/member/updateMember', item)
-      if (data != null) {
-        await this.loadData()
-      }
     },
     gotoView(item) {
       this.$router.push({
@@ -173,9 +166,9 @@ export default {
       })
 
     },
-    async delete_member(e, item) {
+    async delete_score(e, item) {
       if (e) {
-        let data = await this.$store.dispatch('classroom/member/deleteMember', item.id)
+        let data = await this.$store.dispatch('classroom_modules/score/deleteScore', item.id)
         if (data != null) {
           await this.loadData()
         }

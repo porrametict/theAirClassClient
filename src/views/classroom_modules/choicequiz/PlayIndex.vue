@@ -2,7 +2,7 @@
   <div v-if="data">
     <ContentHeader class="my-2">
       <div class="">
-        <span>Choice Quiz : Play</span>
+        <span>Quiz : Play</span>
       </div>
     </ContentHeader>
 

@@ -2,7 +2,7 @@
   <div v-if="data_table">
     <ContentHeader class="my-2">
       <div class="">
-        <span>Choice Quiz Play : View</span>
+        <span>Quiz Play : View</span>
       </div>
     </ContentHeader>
     <v-card>

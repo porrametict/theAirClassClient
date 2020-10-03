@@ -23,7 +23,7 @@
         <v-card-text class="grey lighten-2">
           <p class=" ma-0 pa-0">{{ data.message }}</p>
           <ImageMessage :data="data"></ImageMessage>
-          <p class="caption ma-0 pa-0  ">{{ getTimeFormat(data.timestamp) }}</p>
+          <p class="caption ma-0 pa-0 text-end">{{ getTimeFormat(data.timestamp) }}</p>
         </v-card-text>
       </v-card>
     </div>

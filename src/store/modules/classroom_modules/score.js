@@ -20,5 +20,14 @@ export default {
                     return null
                 })
         },
+        async deleteScore(context, id) {
+            return await axios.delete(`${score_api}${id}/`)
+                .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
     }
 }

@@ -79,7 +79,7 @@
                  class="white--text"
                  block
                  @click="add_choice"
-                 v-if="question.choice_set.length <4"
+                 v-if="question.choice_set.length <10"
           >
             Add Choice
           </v-btn>

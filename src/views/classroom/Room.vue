@@ -15,6 +15,7 @@
         <v-row class="flex-grow-0">
           <v-col>
             <ButtonMenu
+                :role="my_role"
                 :room_state="room_state"
                 @sharescreen="ToggleShareScreen($event)"
                 :sharescreenState="sharescreenState"
@@ -155,7 +156,7 @@ export default {
     choice_quiz_end(e) {
       let host = this.room_state.host
       this.room_state.state = "normal"
-      this.room_state.module = null
+      this.room_state.module = 'Chat'
       this.room_state.host = null
       if (host.pk === this.user.pk) {
         this.set_room_state()
@@ -164,7 +165,7 @@ export default {
     attendance_end(e) {
       let host = this.room_state.host
       this.room_state.state = "normal"
-      this.room_state.module = null
+      this.room_state.module = 'Chat'
       this.room_state.host = null
       if (host.pk === this.user.pk) {
         this.set_room_state()
@@ -173,7 +174,7 @@ export default {
     game_question_end(e) {
       let host = this.room_state.host
       this.room_state.state = "normal"
-      this.room_state.module = null
+      this.room_state.module = 'Chat'
       this.room_state.host = null
       if (host.pk === this.user.pk) {
         this.set_room_state()
@@ -181,7 +182,7 @@ export default {
     }, poll_end(e) {
       let host = this.room_state.host
       this.room_state.state = "normal"
-      this.room_state.module = null
+      this.room_state.module = 'Chat'
       this.room_state.host = null
       if (host.pk === this.user.pk) {
         this.set_room_state()
@@ -248,7 +249,9 @@ export default {
     },
     on_get_current_state(e) {
       this.room_state = e['data']['state']
-      this.room_state.module = 'Chat'
+      if (e['data']['state']['state'] === 'normal') {
+        this.room_state.module = 'Chat'
+      }
     },
     set_room_state() {
       let content = {

@@ -39,7 +39,7 @@
       </div>
 
       <div class="black under_video text-right white--text">
-        {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
+        {{ stream_peer.member.first_name }} {{ stream_peer.member.last_name }}
       </div>
     </div>
   </div>

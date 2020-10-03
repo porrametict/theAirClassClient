@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ContentHeader class="my-2">Edit : Choice Quiz</ContentHeader>
+    <ContentHeader class="my-2">Edit : Quiz</ContentHeader>
     <v-card>
       <v-card-title>
         <!-- Name -->

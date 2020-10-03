@@ -57,7 +57,7 @@ export default {
     },
   },
   created() {
-    this.getResult()
+    this.sortResult()
   },
   computed: {
     ...mapState({
@@ -67,16 +67,51 @@ export default {
   data() {
     return {
       student_scores: [],
+      rank_score: [0, 0, 0]
+
     }
   },
   methods: {
-    isMe(user) {
-      return user.pk === this.user.pk;
+    isMe(user_id) {
+      return user_id === this.user.pk;
     },
-    getResult() {
+    sortResult() {
+      // sort descending
+      this.data.all_students.sort(function (a, b) {
+        if (a['point'] < b['point']) {
+          return 1;
+        } else if (a['point'] === b['point']) {
+          return 0;
+        } else {
+          return -1;
+        }
+      })
       this.student_scores = this.data.all_students
-      _.sortBy(this.student_scores, ['point'])
-      // this.student_scores.reverse()
+
+
+      this.student_scores.forEach(e => {
+        this.rank_score.push(e['point'])
+      })
+      this.rank_score = this.sort_unique_score(this.rank_score)
+    },
+    sort_unique_score(arr) {
+      if (arr.length === 0) return arr;
+      arr = arr.sort(function (a, b) {
+        if (a < b) {
+          return 1;
+        } else if (a === b) {
+          return 0;
+        } else {
+          return -1;
+        }
+      });
+      let ret = [arr[0]];
+      for (let i = 1; i < arr.length; i++) { //Start loop at 1: arr[0] can never be a duplicate
+        if (arr[i - 1] !== arr[i]) {
+          ret.push(arr[i]);
+        }
+      }
+      return ret;
     },
     on_click() {
       this.$emit('change', {'event': 'end_choice_quiz'})

@@ -12,10 +12,10 @@
     </div>
 
     <div>
-      <v-btn large block color="green" class="white--text ma-1" @click="on_click(true)">
+      <v-btn large block color="green" class="white--text ma-1" @click="on_click(true)" :disabled="clicked">
         Correct
       </v-btn>
-      <v-btn large block color="red" class="white--text ma-1" @click="on_click(false)">
+      <v-btn large block color="red" class="white--text ma-1" @click="on_click(false)"  :disabled="clicked">
         InCorrect
       </v-btn>
     </div>
@@ -31,8 +31,14 @@ export default {
       require: true
     },
   },
+  data (){
+    return {
+        clicked : false
+    }
+  },
   methods: {
     on_click(e) {
+      this.clicked = true
       this.$emit('change', {'event': 'get_answer', data: {'result': e}})
     }
   }

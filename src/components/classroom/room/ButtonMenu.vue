@@ -36,7 +36,7 @@
           <v-icon>mdi-laptop-off</v-icon>
         </v-btn>
 
-        <v-bottom-sheet v-model="sheet">
+        <v-bottom-sheet v-model="sheet" v-if="role <3">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on">
               <span>Other</span>
@@ -52,7 +52,7 @@
                     :disabled="room_state.state !== 'normal'"
                   >
                     <v-icon>mdi-clipboard-edit-outline</v-icon>
-                    <span> Start Choice Quiz</span>
+                    <span> Start Quiz</span>
                   </v-btn>
 
                   <v-btn
@@ -113,6 +113,10 @@ import { mapState } from "vuex";
 export default {
   name: "ButtonMenu",
   props: {
+    role: {
+      type: Number,
+      require: true,
+    },
     room_state: {
       type: Object,
       require: true,
