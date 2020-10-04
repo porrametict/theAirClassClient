@@ -152,6 +152,11 @@ export default {
       let data = await this.$store.dispatch('classroom_modules/score/getScores', this.form_params)
       this.form_params.length = Math.ceil(data.count / 10)
       this.data_table = data.results
+      this.data_table.forEach(element => {
+        if (element.module_data.resourcetype === 'ChoiceQuiz'){
+          element.module_data.resourcetype = "Quiz"
+        }
+      });
     },
     changePage(page) {
       this.form_params.page = page

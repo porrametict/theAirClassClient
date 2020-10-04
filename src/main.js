@@ -12,7 +12,6 @@ Vue.use(VueChatScroll)
 
 window._ = lodash()
 
-
 window.moment = moment()
 moment.locale('th')
 
@@ -21,6 +20,14 @@ Vue.prototype.get_th_time = function (time) {
     return moment(time).format('ll')
 }
 
+window.loadCSVFile = (csvString, fileName) => {
+    const bom = "\uFEFF"
+    let a = window.document.createElement('a');
+    a.setAttribute('href', 'data:text/csv; charset=utf-8,' + bom + encodeURIComponent(csvString));
+    a.setAttribute('download', `${fileName}.csv`);
+    window.document.body.appendChild(a);
+    a.click();
+}
 
 const baseURL = process.env.VUE_APP_BASE_BACKEND_URL
 window.baseWsURL = process.env.VUE_APP_BASE_WEBSOCKET_URL

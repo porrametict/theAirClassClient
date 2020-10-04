@@ -1,5 +1,6 @@
 const attendance_api = '/api/v1/classroom-module/attendance/attendance/'
 const attendance_play_api = '/api/v1/classroom-module/attendance/attendance-play/'
+const attendance_play_export_api = '/api/v1/classroom-module/attendance/attendance-play/export/'
 export default {
     namespaced: true,
     actions: {
@@ -25,6 +26,16 @@ export default {
             return await axios.delete(`${attendance_play_api}${id}`)
                 .then((response) => {
                     context.dispatch("success/setSuccess", response.data, {root: true});
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
+        async exportAttendancePlay(context, params) {
+            return await axios.get(`${attendance_play_export_api}${params.id}/`)
+                .then((response) => {
+                    loadCSVFile(response.data, params.file_name)
                     return response.data
                 }).catch((error) => {
                     context.dispatch("error/setError", error.response.data, {root: true});

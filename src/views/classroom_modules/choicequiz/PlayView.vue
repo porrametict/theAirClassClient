@@ -6,9 +6,11 @@
       </div>
     </ContentHeader>
     <v-card>
-      <!--      <v-card-title>-->
-      <!--        <span>{{ data.module_data.name }}</span>-->
-      <!--      </v-card-title>-->
+      <v-card-title>
+        <span>{{ data.module_data.name }}</span>
+        <v-spacer></v-spacer>
+        <v-btn color="green" class="white--text" @click="exportData">Export</v-btn>
+      </v-card-title>
       <v-card-text>
         <div>
           <p class="title">Question</p>
@@ -25,7 +27,7 @@
             <tr v-for="item in props.items">
               <td v-for="(header, index) in headers">
                 <span v-if="header.value ==='student_data'">
-                    {{item.student_data.first_name}}  {{item.student_data.last_name}}
+                    {{ item.student_data.first_name }}  {{ item.student_data.last_name }}
                 </span>
                 <span v-else>
 
@@ -37,9 +39,9 @@
                               dark
                               v-bind="attrs"
                               v-on="on"
-                          >mdi-{{item.question_reply[index -1]['is_true'] ? 'check' : 'close'}}</v-icon>
+                          >mdi-{{ item.question_reply[index - 1]['is_true'] ? 'check' : 'close' }}</v-icon>
                         </template>
-                        <span>{{ item.question_reply[index -1]['is_true'] ? 'correct' : 'incorrect' }}</span>
+                        <span>{{ item.question_reply[index - 1]['is_true'] ? 'correct' : 'incorrect' }}</span>
                       </v-tooltip>
                   </span>
 
@@ -111,6 +113,11 @@ export default {
       this.data_table = data.studentplay_set_data
       this.generate_question_column()
     },
+    async exportData() {
+      let file_name = this.data.module_data.name
+      let id = this.$route.params.choice_quiz_play_id
+      await this.$store.dispatch('classroom_modules/choicequiz/exportChoiceQuizPlay', {id: id, file_name: file_name})
+    }
   }
 }
 </script>
