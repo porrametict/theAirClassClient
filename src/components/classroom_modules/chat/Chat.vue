@@ -137,7 +137,7 @@ export default {
         content_type = 'text'
       }
 
-      if (this.text_message.trim().length > 0) {
+      if (true) {
         let data = {
           "command": "new_message",
           "data": {
@@ -145,7 +145,7 @@ export default {
             'user': this.user,
             'content_type': content_type,
             'image_url': this.image.image_url,
-            "message": this.text_message,
+            "message": this.text_message ? this.text_message : '',
           },
         }
         this.socket_send(data);
