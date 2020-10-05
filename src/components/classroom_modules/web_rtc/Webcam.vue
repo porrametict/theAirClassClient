@@ -6,6 +6,7 @@
           v-if="videoStream_active"
           :src-object.prop.camel="myVideoStream"
           autoplay
+          muted
       ></video>
       <div v-else class="d-flex fill-height justify-center align-center  grey lighten-2">
         <ImageProfile :user="user"
