@@ -8,6 +8,8 @@
     <v-card>
       <v-card-title>
         <span>{{ data.module_data.name }}</span>
+        <v-spacer></v-spacer>
+        <v-btn color="green" class="white--text" @click="exportData">Export</v-btn>
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -24,6 +26,17 @@
             <div>
               <v-icon :color="item.is_reply ? 'green' : 'red'">
                 {{ item.is_reply ? 'mdi-check' : 'mdi-close' }}
+              </v-icon>
+            </div>
+          </template>
+
+          <template v-slot:item.is_true="{item}">
+            <div>
+              <v-icon color="green" v-if="item.is_true===true">
+                mdi-check
+              </v-icon>
+              <v-icon color="red" v-else-if="item.is_true===false">
+                mdi-close
               </v-icon>
             </div>
           </template>
@@ -50,6 +63,7 @@ export default {
       headers: [
         {text: 'Name', value: 'student_data', sortable: false},
         {text: 'attend', value: 'is_reply', sortable: false},
+        {text: 'answer', value: 'is_true', sortable: false},
         {text: 'point', value: 'point', sortable: false},
       ]
     }
@@ -71,6 +85,11 @@ export default {
       this.data = data
       this.data_table = data.studentplay_set_data
     },
+    async exportData() {
+      let file_name = this.data.module_data.name
+      let id = this.$route.params.game_question_play_id
+      await this.$store.dispatch('classroom_modules/gamequestion/exportGameQuestionPlay', {id: id, file_name: file_name})
+    }
   }
 }
 </script>

@@ -33,7 +33,7 @@ export default {
           color: 'pink'
         },
         {
-          label: "Choice Quiz",
+          label: "Quiz",
           route_name: "ChoiceQuizIndex",
           icon: 'mdi-order-bool-ascending-variant',
           color: 'green'

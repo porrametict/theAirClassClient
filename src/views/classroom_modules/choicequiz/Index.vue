@@ -2,7 +2,7 @@
   <div v-if="choice_quizzes">
     <ContentHeader class="my-2">
       <div class="">
-        <span>Choice Quiz</span> |
+        <span>Quiz</span> |
       </div>
     </ContentHeader>
 

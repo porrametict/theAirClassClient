@@ -1,5 +1,6 @@
 const choice_quiz_api = '/api/v1/classroom-module/choice-quiz/choice-quiz/'
 const choice_quiz_play_api = '/api/v1/classroom-module/choice-quiz/choice-quiz-play/'
+const choice_quiz_play_export_api = '/api/v1/classroom-module/choice-quiz/choice-quiz-play/export/'
 export default {
     namespaced: true,
     actions: {
@@ -63,7 +64,7 @@ export default {
                 })
         },
         async getChoiceQuizPlay(context, id) {
-            return await axios.get(`${choice_quiz_play_api}${id}/`, )
+            return await axios.get(`${choice_quiz_play_api}${id}/`,)
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
@@ -72,8 +73,18 @@ export default {
                 })
         },
         async deleteChoiceQuizPlay(context, id) {
-            return await axios.delete(`${choice_quiz_play_api}${id}/`, )
+            return await axios.delete(`${choice_quiz_play_api}${id}/`,)
                 .then((response) => {
+                    return response.data
+                }).catch((error) => {
+                    context.dispatch("error/setError", error.response.data, {root: true});
+                    return null
+                })
+        },
+        async exportChoiceQuizPlay(context, params) {
+            return await axios.get(`${choice_quiz_play_export_api}${params.id}/`,)
+                .then((response) => {
+                    loadCSVFile(response.data, params.file_name)
                     return response.data
                 }).catch((error) => {
                     context.dispatch("error/setError", error.response.data, {root: true});

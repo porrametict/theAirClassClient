@@ -6,6 +6,9 @@
     <div>
       <p class="headline red--text">Incorrect : {{ data.count_current_incorrect_responders }}</p>
     </div>
+    <div>
+      <p class="headline grey--text">Not Answer : {{ data.all_students.length - (data.count_current_incorrect_responders + data.count_current_correct_responders)  }}</p>
+    </div>
     <div v-if="data.current_question_index < data.choice_quiz.questions.length -1">
       <ButtonPrimary @click="on_click('next_question')">Next</ButtonPrimary>
     </div>

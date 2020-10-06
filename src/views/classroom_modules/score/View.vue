@@ -8,6 +8,8 @@
     <v-card>
       <v-card-title>
         <span>{{ data.module_data.name }}</span>
+        <v-spacer></v-spacer>
+        <v-btn color="green" class="white--text" @click="exportData">Export</v-btn>
       </v-card-title>
       <v-card-text>
         <v-data-table
@@ -63,6 +65,11 @@ export default {
       this.data = data
       this.data_table = data.studentscore_set_data
     },
+    async exportData() {
+      let file_name = this.data.module_data.name
+      let id = this.$route.params.score_id
+      await this.$store.dispatch('classroom_modules/score/exportScore', {id: id, file_name: file_name})
+    }
   }
 }
 </script>

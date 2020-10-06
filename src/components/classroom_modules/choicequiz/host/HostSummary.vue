@@ -1,12 +1,12 @@
 <template>
   <div>
-
     <div v-if="student_scores.length">
       <v-card v-for="(item,index) in student_scores" :key="index" class="ma-1">
         <v-card-text class="text-center">
-          <div v-if="index===0">
+
+          <div v-if="item.point && item.point===rank_score[0]">
             <div>
-              <v-icon large color="primary" v-if="item.point !==0">
+              <v-icon large color="primary">
                 mdi-crown
               </v-icon>
             </div>
@@ -14,17 +14,17 @@
               {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
             </p>
           </div>
-          <div v-else-if="index===1">
+          <div v-else-if="item.point && item.point===rank_score[1]">
             <div>
-              <v-icon large color="blue" v-if="item.point !==0">mdi-chess-queen</v-icon>
+              <v-icon large color="blue">mdi-chess-queen</v-icon>
             </div>
             <p class="ma-0 pa-0 ">
               {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
             </p>
           </div>
-          <div v-else-if="index===2">
+          <div v-else-if="item.point && item.point===rank_score[2]">
             <div>
-              <v-icon large color="black" v-if="item.point !==0">mdi-sword-cross</v-icon>
+              <v-icon large color="black" >mdi-sword-cross</v-icon>
             </div>
             <p class="ma-0 pa-0 ">
               {{ item.user_data.first_name }} {{ item.user_data.last_name }} <br/> {{ item.point }} points
@@ -46,7 +46,7 @@
       </v-card-text>
     </v-card>
     <div class="text-center">
-      <ButtonPrimary @click.native="on_click">End</ButtonPrimary>
+      <v-btn :disabled="clicked" rounded color="primary" @click.native="on_click">End</v-btn>
     </div>
 
   </div>
@@ -66,7 +66,7 @@ export default {
     },
   },
   created() {
-    this.getResult()
+    this.sortResult()
   },
   computed: {
     ...mapState({
@@ -75,17 +75,54 @@ export default {
   },
   data() {
     return {
+      clicked: false,
       student_scores: [],
       div_key: 0,
+      rank_score: [0, 0, 0]
     }
   },
   methods: {
-    getResult() {
+    sortResult() {
+      // sort descending
+      this.data.all_students.sort(function (a, b) {
+        if (a['point'] < b['point']) {
+          return 1;
+        } else if (a['point'] === b['point']) {
+          return 0;
+        } else {
+          return -1;
+        }
+      })
       this.student_scores = this.data.all_students
-      _.sortBy(this.student_scores, ['point'])
-      // this.student_scores.reverse()
+
+
+      this.student_scores.forEach(e => {
+        this.rank_score.push(e['point'])
+      })
+      this.rank_score = this.sort_unique_score(this.rank_score)
     },
+    sort_unique_score(arr) {
+      if (arr.length === 0) return arr;
+      arr = arr.sort(function (a, b) {
+        if (a < b) {
+          return 1;
+        } else if (a === b) {
+          return 0;
+        } else {
+          return -1;
+        }
+      });
+      let ret = [arr[0]];
+      for (let i = 1; i < arr.length; i++) { //Start loop at 1: arr[0] can never be a duplicate
+        if (arr[i - 1] !== arr[i]) {
+          ret.push(arr[i]);
+        }
+      }
+      return ret;
+    },
+
     on_click() {
+      this.clicked = true
       this.$emit('change', {'event': 'end_choice_quiz'})
     },
 

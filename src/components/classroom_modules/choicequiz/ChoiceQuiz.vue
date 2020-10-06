@@ -2,7 +2,7 @@
   <v-card class="fill-height" outlined>
     <v-card-title class="ma-0 pa-2">
       <slot>
-        Choice Quiz
+         Quiz
       </slot>
     </v-card-title>
     <v-divider></v-divider>
@@ -159,7 +159,6 @@ export default {
     },
     on_answer_event() {
       this.answer()
-
     },
     on_next_question_event() {
       this.next_question()
@@ -277,17 +276,20 @@ export default {
         if (this.student_replied()) {
           this.state.state = 'newQuestion'
           this.state.component = this.get_component_by_state(this.state, 1)
+        }else {
+          this.state.state = 'newQuestion'
+          this.state.component = this.get_component_by_state(this.state)
         }
       } else {
+        console.log('else')
         this.state.component = this.get_component_by_state(this.state)
       }
-      this.component_key += 1
     },
     student_replied() {
       let replied = false
       let current_question_index = this.state.data.current_question_index
       this.state.data.question_replies[current_question_index].students.forEach(e => {
-        if (e.student === this.user.pk) {
+        if ((e.student === this.user.pk) && e.is_reply) {
           replied = true
         }
       })

@@ -8,11 +8,12 @@
     <v-card>
       <v-card-title>
         <span>{{ data.module_data.name }}</span>
-
+        <v-spacer></v-spacer>
+        <v-btn color="green" class="white--text" @click="exportData">Export</v-btn>
       </v-card-title>
       <v-card-text>
         <div v-for="choice in data.results_count">
-          {{choice.text}}
+          {{ choice.text }}
           <PercentageProgressBar :key="choice.id" :numerator="choice.count"
                                  :population="data.studentplay_set_data.length">
 
@@ -80,6 +81,11 @@ export default {
       this.data = data
       this.data_table = data.studentplay_set_data
     },
+    async exportData() {
+      let file_name = this.data.module_data.name
+      let id = this.$route.params.poll_play_id
+      await this.$store.dispatch('classroom_modules/poll/exportPollPlay', {id: id, file_name: file_name})
+    }
   }
 }
 </script>

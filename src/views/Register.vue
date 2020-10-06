@@ -2,7 +2,12 @@
   <v-content>
     <v-container fluid class="fill-height ma-0 pa-0">
       <div class="flex-grow-1 fill-height primary  justify-center align-center d-none d-md-flex">
-        <p class="display-2">The Air Class</p>
+        <div>
+          <v-img :src="require(`@/assets/logo_theairclass.png`)"
+                 width="100%"
+                 height="100%"
+          />
+        </div>
       </div>
       <div class="d-flex flex-column flex-grow-1 pa-5">
         <h1 class="display-3 text-center my-5">Register</h1>

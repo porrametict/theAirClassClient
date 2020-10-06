@@ -1,4 +1,4 @@
-# theairclass_client
+# The Air Class Project : Peer Server
 
 ## Project setup
 ```

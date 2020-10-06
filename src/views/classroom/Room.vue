@@ -4,17 +4,18 @@
       <v-col cols="9" class="fill-height d-flex flex-column">
         <v-row class="flex-grow-1">
           <v-col cols="12">
-            <Webcam v-if="!sharescreenState.host" :room="room" ></Webcam>
-                            <Sharescreen
-                                :room="room"
-                                :buttonsharescreen="buttonsharescreen"
-                            ></Sharescreen>
+            <Webcam v-show="!sharescreenState.host" :room="room"></Webcam>
+            <Sharescreen
+                :room="room"
+                :buttonsharescreen="buttonsharescreen"
+            ></Sharescreen>
           </v-col>
 
         </v-row>
         <v-row class="flex-grow-0">
           <v-col>
             <ButtonMenu
+                :role="my_role"
                 :room_state="room_state"
                 @sharescreen="ToggleShareScreen($event)"
                 :sharescreenState="sharescreenState"
@@ -22,7 +23,6 @@
             ></ButtonMenu>
           </v-col>
         </v-row>
-
 
 
       </v-col>
@@ -73,7 +73,18 @@ import ButtonMenu from "@/components/classroom/room/ButtonMenu";
 
 export default {
   name: "ClassroomRoom",
-  components: {ButtonMenu, Webcam, ParticipantCard, Poll, GameQuestion, Attendance, Chat, ChoiceQuiz, ContentHeader, Sharescreen},
+  components: {
+    ButtonMenu,
+    Webcam,
+    ParticipantCard,
+    Poll,
+    GameQuestion,
+    Attendance,
+    Chat,
+    ChoiceQuiz,
+    ContentHeader,
+    Sharescreen
+  },
   data() {
     return {
       my_role: null,
@@ -88,7 +99,7 @@ export default {
         host: null
       },
       buttonsharescreen: false,
-      shareScreenKey : 0,
+      shareScreenKey: 0,
     }
   },
   async mounted() {
@@ -101,7 +112,7 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user.user,
-      sharescreenState :state => state.classroom_modules.web_rtc.sharescreenState
+      sharescreenState: state => state.classroom_modules.web_rtc.sharescreenState
     })
   },
   methods: {
@@ -113,9 +124,9 @@ export default {
       }
     },
 
-    ToggleShareScreen(e){
+    ToggleShareScreen(e) {
       this.buttonsharescreen = e
-      this.shareScreenKey +=1
+      this.shareScreenKey += 1
 
     },
 
@@ -145,7 +156,7 @@ export default {
     choice_quiz_end(e) {
       let host = this.room_state.host
       this.room_state.state = "normal"
-      this.room_state.module = null
+      this.room_state.module = 'Chat'
       this.room_state.host = null
       if (host.pk === this.user.pk) {
         this.set_room_state()
@@ -154,7 +165,7 @@ export default {
     attendance_end(e) {
       let host = this.room_state.host
       this.room_state.state = "normal"
-      this.room_state.module = null
+      this.room_state.module = 'Chat'
       this.room_state.host = null
       if (host.pk === this.user.pk) {
         this.set_room_state()
@@ -163,7 +174,7 @@ export default {
     game_question_end(e) {
       let host = this.room_state.host
       this.room_state.state = "normal"
-      this.room_state.module = null
+      this.room_state.module = 'Chat'
       this.room_state.host = null
       if (host.pk === this.user.pk) {
         this.set_room_state()
@@ -171,7 +182,7 @@ export default {
     }, poll_end(e) {
       let host = this.room_state.host
       this.room_state.state = "normal"
-      this.room_state.module = null
+      this.room_state.module = 'Chat'
       this.room_state.host = null
       if (host.pk === this.user.pk) {
         this.set_room_state()
@@ -238,7 +249,9 @@ export default {
     },
     on_get_current_state(e) {
       this.room_state = e['data']['state']
-      this.room_state.module = 'Chat'
+      if (e['data']['state']['state'] === 'normal') {
+        this.room_state.module = 'Chat'
+      }
     },
     set_room_state() {
       let content = {

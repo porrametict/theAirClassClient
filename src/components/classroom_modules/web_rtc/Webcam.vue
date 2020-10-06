@@ -2,11 +2,12 @@
   <div ref="video-grid" id="video-grid">
 
     <div class="video_field">
-        <video
-            v-if="videoStream_active"
-            :src-object.prop.camel="myVideoStream"
-            autoplay
-        ></video>
+      <video
+          v-if="videoStream_active"
+          :src-object.prop.camel="myVideoStream"
+          autoplay
+          muted
+      ></video>
       <div v-else class="d-flex fill-height justify-center align-center  grey lighten-2">
         <ImageProfile :user="user"
                       :circle="true"
@@ -15,9 +16,9 @@
                       font_size_class="headline"
         ></ImageProfile>
       </div>
-        <div class="black under_video text-right white--text">
-          {{ user.first_name }} {{ user.last_name }} (me)
-        </div>
+      <div class="black under_video text-right white--text">
+        {{ user.first_name }} {{ user.last_name }} (me)
+      </div>
 
     </div>
 
@@ -39,7 +40,7 @@
       </div>
 
       <div class="black under_video text-right white--text">
-        {{ stream_peer.member.first_name }} {{ stream_peer.member.first_name }}
+        {{ stream_peer.member.first_name }} {{ stream_peer.member.last_name }}
       </div>
     </div>
   </div>
@@ -60,6 +61,7 @@ export default {
     },
   },
   data: () => ({
+    webSocketOpen: false,
     my_role: null,
     room_socket: null,
     member: [],
@@ -73,9 +75,8 @@ export default {
       await this.$store.dispatch("user/getUser");
     }
     let media = await this.getMyVideoStream();
-    this.newWebSocket();
     if (media) {
-      await this.newPeer();
+    this.newWebSocket();
     }
   },
 
@@ -89,6 +90,14 @@ export default {
     }),
   },
   watch: {
+    webSocketOpen: {
+      deep: false,
+      handler: function (newVal, oldVal) {
+        if (this.webSocketOpen) {
+          this.newPeer();
+        }
+      },
+    },
     microphone_active: {
       deep: false,
       handler: function (newVal, oldVal) {
@@ -126,28 +135,47 @@ export default {
     },
     // Peer
     async newPeer() {
-      this.myPeer = new Peer();
+      this.myPeer = new Peer(undefined, {
+        host: process.env.VUE_APP_BASE_PEER_SERVER_HOST,
+        port:  process.env.VUE_APP_BASE_PEER_SERVER_PORT,
+        path: process.env.VUE_APP_BASE_PEER_SERVER_PATH
+      });
+      console.log('host', process.env.VUE_APP_BASE_PEER_SERVER_HOST)
+      console.log('port', process.env.VUE_APP_BASE_PEER_SERVER_PORT)
+      console.log('path', process.env.VUE_APP_BASE_PEER_SERVER_PATH)
+
       this.myPeer.on("open", (id) => {
-        // console.log('my peer', id)
+        console.log('my webcam peer',id)
         this.join_room(id);
       });
       this.myPeer.on("call", async (call) => {
+        console.log(' on call',call['peer'])
         let myVideo = this.myVideoStream;
         call.answer(myVideo);
         call.on("stream", (userVideoStream) => {
           let user = this.getMemberFromPeer(call['peer'])
           if (user) {
             this.collectToStreamPeer(call["peer"], userVideoStream, user);
+          }else {
+            console.log('else',call)
           }
         });
         call.on("close", (e) => {
           // console.log('new Peer call close', call['peer'])
         });
         this.peers[call["peer"]] = call;
+        console.log(this.peers)
       });
+      this.myPeer.on("close", (msg) => {
+        console.log('peer close', msg)
+      })
+      this.myPeer.on("error", (msg) => {
+        console.log('peer error', msg)
+      })
     },
     getMemberFromPeer(peer_id) {
       let user = null
+      console.log('member',this.member)
       this.member.forEach((e) => {
         if (peer_id === e.peer_id) {
           user = e
@@ -158,12 +186,11 @@ export default {
     async connectToNewUser(userId, member) {
       let myVideo = this.myVideoStream;
       const call = this.myPeer.call(userId, myVideo);
-      // console.log('connect new', userId)
       call.on("stream", (userVideoStream) => {
         this.collectToStreamPeer(call["peer"], userVideoStream, member);
       });
       call.on("close", (e) => {
-        // console.log('call close in connect', call['peer'])
+        console.log('call close in connect', call['peer'])
       });
       this.peers[userId] = call;
     },
@@ -216,6 +243,7 @@ export default {
       );
       this.room_socket.onopen = function () {
         self.get_current_state()
+        self.webSocketOpen = true
       };
       this.room_socket.onclose = function (e) {
         if (e.code !== 1000) {
@@ -324,13 +352,15 @@ video {
   height: 100%;
   object-fit: cover;
 }
+
 .video_field {
   position: relative
 }
+
 .under_video {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding-right:5px;
+  padding-right: 5px;
 }
 </style>

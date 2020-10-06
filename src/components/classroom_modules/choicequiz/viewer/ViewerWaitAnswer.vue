@@ -3,7 +3,7 @@
     <div>
       <p>count responder</p>
       <p class="title">
-        {{data.count_current_question_responders}}
+        {{data.count_current_question_responders}}  /{{data.all_students.length}}
       </p>
     </div>
   </div>

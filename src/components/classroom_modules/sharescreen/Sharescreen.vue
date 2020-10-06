@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex ml-2" v-if="state">
-    <video :src-object.prop.camel="mySharescreen" width="100%" height="100%" autoplay v-if="mySharescreen"></video>
+    <video :src-object.prop.camel="mySharescreen" width="100%" height="100%" autoplay muted v-if="mySharescreen"></video>
     <video :src-object.prop.camel="remoteVideo" width="100%%" height="100%" autoplay controls  v-if="remoteVideo"></video>
   </div>
 </template>
@@ -43,6 +43,7 @@ export default {
     }
   },
   data: () => ({
+    webSocketOpen: false,
     my_role: null,
     room_socket: null,
     member: [],
@@ -55,7 +56,6 @@ export default {
   async mounted() {
     await this.getEmptyVideo()
     this.newWebSocket()
-    await this.newPeer()
   },
   computed: {
     ...mapState({
@@ -65,6 +65,14 @@ export default {
     })
   },
   watch : {
+    webSocketOpen: {
+      deep: false,
+      handler: function (newVal, oldVal) {
+        if (this.webSocketOpen) {
+          this.newPeer();
+        }
+      },
+    },
     sharescreenactive :{
       deep :false,
       handler : function (newVal,oldVal){
@@ -93,9 +101,12 @@ export default {
 
     // Peer
     async newPeer() {
-      this.myPeer = new Peer()
+      this.myPeer = new Peer(undefined, {
+        host: process.env.VUE_APP_BASE_PEER_SERVER_HOST,
+        port:  process.env.VUE_APP_BASE_PEER_SERVER_PORT,
+        path: process.env.VUE_APP_BASE_PEER_SERVER_PATH
+      })
       this.myPeer.on('open', id => {
-        console.log('my peer on share screen', id)
         this.join_room(id)
       })
       this.myPeer.on('call', async call => {
@@ -123,7 +134,6 @@ export default {
     async connectToNewUser(userId) {
       if (this.mySharescreen) {
         const call = this.myPeer.call(userId, this.mySharescreen)
-        console.log('connect new', userId)
         call.on('stream', userVideoStream => {
           // pass
         })
@@ -154,6 +164,8 @@ export default {
       )
       this.room_socket.onopen = function () {
         self.get_current_state()
+        self.webSocketOpen = true
+
       }
       this.room_socket.onclose = function (e) {
         if (e.code !== 1000) {
@@ -206,7 +218,6 @@ export default {
       }
     },
     exit_sharescreen() {
-      console.log('exit share')
       if (this.mySharescreen){
         this.mySharescreen.getTracks().forEach(function (track) {
           track.stop();
@@ -258,6 +269,10 @@ export default {
     },
   },
   destroyed() {
+    this.$store.commit(
+        "classroom_modules/web_rtc/set_share_screen_active",
+        false
+    );
     if (this.host && this.host.pk === this.user.pk){
     this.exit_sharescreen()
     }
