@@ -1,4 +1,4 @@
-# The Air Class Project : Peer Server
+# The Air Class Project : Client
 
 ## Project setup
 ```
