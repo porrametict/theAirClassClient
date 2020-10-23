@@ -55,6 +55,15 @@
           </p>
         </div>
       </div>
+      <div style="position: fixed; bottom: 10px ;right: 10px">
+        <a href="https://github.com/porrametict/theAirClassClient"
+           style=" margin: 0 ;text-decoration: none;"
+        >
+          <v-icon>
+            mdi-github
+          </v-icon>
+        </a>
+      </div>
     </v-container>
   </v-content>
 </template>
