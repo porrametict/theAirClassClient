@@ -7,6 +7,7 @@ import Axios from 'axios'
 import lodash from 'lodash'
 import moment from 'moment'
 import VueChatScroll from 'vue-chat-scroll'
+import Konami from 'konami'
 
 Vue.use(VueChatScroll)
 
@@ -28,6 +29,9 @@ window.loadCSVFile = (csvString, fileName) => {
     window.document.body.appendChild(a);
     a.click();
 }
+
+const easter_egg = new Konami('https://github.com/porrametict/theAirClassClient');
+
 
 const baseURL = process.env.VUE_APP_BASE_BACKEND_URL
 window.baseWsURL = process.env.VUE_APP_BASE_WEBSOCKET_URL
