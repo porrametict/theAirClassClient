@@ -73,7 +73,7 @@ import ButtonPrimary from "../../../components/share/ButtonPrimary";
 import ButtonIcon from "@/components/share/ButtonIcon";
 import ContentHeader from "@/components/share/ContentHeader";
 import ConfirmDialog from "@/components/share/ConfirmDialog";
-
+import moment from 'moment'
 export default {
   name: "AttendanceView",
   components: {ConfirmDialog, ContentHeader, ButtonIcon, ButtonPrimary},
@@ -114,7 +114,7 @@ export default {
       this.generate_question_column()
     },
     async exportData() {
-      let file_name = this.data.module_data.name
+      let file_name = `${this.data.module_data.name} ${moment(this.data.created).format('lll')}`
       let id = this.$route.params.choice_quiz_play_id
       await this.$store.dispatch('classroom_modules/choicequiz/exportChoiceQuizPlay', {id: id, file_name: file_name})
     }

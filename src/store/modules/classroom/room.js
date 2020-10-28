@@ -5,7 +5,7 @@ export default {
     namespaced: true,
     actions: {
         async getRooms(context, params) {
-            return await axios.get(`${room_lof_api}`, params)
+            return await axios.get(`${room_lof_api}`, params={params})
                 .then((response) => {
                     return response.data
                 }).catch((error) => {
