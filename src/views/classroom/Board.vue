@@ -114,7 +114,7 @@ export default {
     },
     async loadRooms() {
       let classroom_id = this.$route.params.id
-      this.rooms = await this.$store.dispatch('classroom/room/getRooms', {'classroom__id': classroom_id})
+      this.rooms = await this.$store.dispatch('classroom/room/getRooms', {'classroom_id': classroom_id})
       this.checkLastRoomStatus()
     },
     checkLastRoomStatus () {

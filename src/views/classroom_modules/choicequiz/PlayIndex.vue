@@ -94,6 +94,7 @@ export default {
     }
   },
   async mounted() {
+    this.form_params.room__classroom__id = this.$route.params.id
     await this.loadData()
   },
   methods: {
@@ -107,7 +108,7 @@ export default {
     },
     async loadData() {
       let id = this.$route.params.choice_quiz_id
-      let data = await this.$store.dispatch('classroom_modules/choicequiz/getChoiceQuizPlays', id)
+      let data = await this.$store.dispatch('classroom_modules/choicequiz/getChoiceQuizPlays', this.form_params)
       this.data = data
       this.data_table = data.results
     },

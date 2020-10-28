@@ -50,6 +50,7 @@ import ContentHeader from "@/components/share/ContentHeader";
 import ConfirmDialog from "@/components/share/ConfirmDialog";
 import Poll from "@/components/classroom_modules/poll/Poll";
 import PercentageProgressBar from "@/components/share/PercentageProgressBar";
+import moment from "moment";
 
 export default {
   name: "PollView",
@@ -82,7 +83,7 @@ export default {
       this.data_table = data.studentplay_set_data
     },
     async exportData() {
-      let file_name = this.data.module_data.name
+      let file_name = `${this.data.module_data.name} ${moment(this.data.created).format('lll')}`
       let id = this.$route.params.poll_play_id
       await this.$store.dispatch('classroom_modules/poll/exportPollPlay', {id: id, file_name: file_name})
     }
